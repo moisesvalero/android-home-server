@@ -1,0 +1,5 @@
+name: megaphone
+version: 1.0.0
+description: Megafono TTS para emitir mensajes por el altavoz fisico del movil Android a volumen maximo sin coste de tokens ni latencia LLM.
+author: Android Home Server Project
+kind: standalone

@@ -1,0 +1,60 @@
+{
+  "jobs": [
+    {
+      "id": "battery_guard_job",
+      "name": "battery-guard",
+      "prompt": "Monitoriza la temperatura y nivel de batería del dispositivo Android",
+      "skills": [],
+      "script": "cron_battery_guard.py",
+      "no_agent": true,
+      "schedule": {
+        "kind": "cron",
+        "expr": "*/30 * * * *",
+        "display": "Cada 30 minutos"
+      },
+      "enabled": true
+    },
+    {
+      "id": "job_radar_job",
+      "name": "job-radar",
+      "prompt": "Escaneo diario de ofertas de empleo con deduplicación y reporte por Telegram",
+      "skills": [],
+      "script": "cron_job_radar.py",
+      "no_agent": true,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 8 * * 1-5",
+        "display": "Lunes a Viernes a las 08:00"
+      },
+      "enabled": true
+    },
+    {
+      "id": "deals_radar_job",
+      "name": "deals-radar",
+      "prompt": "Rastreo diario de chollos, tecnología y errores de precio",
+      "skills": [],
+      "script": "cron_deals_radar.py",
+      "no_agent": true,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 12 * * *",
+        "display": "Todos los días a las 12:00"
+      },
+      "enabled": true
+    },
+    {
+      "id": "news_digest_job",
+      "name": "news-digest",
+      "prompt": "Resumen diario de noticias tecnológicas e inteligencia artificial",
+      "skills": [],
+      "script": "cron_news_digest.py",
+      "no_agent": true,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 14 * * *",
+        "display": "Todos los días a las 14:00"
+      },
+      "enabled": true
+    }
+  ]
+}

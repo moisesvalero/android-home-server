@@ -1,0 +1,3018 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Media Server · Dashboard</title>
+  <meta name="description" content="A clean media server dashboard for managing your library, storage, and uploads.">
+  <meta name="theme-color" content="#287df0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  
+  <script>
+    // Inmediata ejecución para evitar parpadeo de tema (FOUC)
+    (function() {
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
+
+  <style>
+@layer properties{@supports (((-webkit-hyphens:none)) and (not (margin-trim:inline))) or ((-moz-orient:inline) and (not (color:rgb(from red r g b)))){:root,:host{--shimmer-angle:20deg}*,:before,:after,::backdrop{--tw-rotate-x:initial;--tw-rotate-y:initial;--tw-rotate-z:initial;--tw-skew-x:initial;--tw-skew-y:initial;--tw-border-style:solid;--tw-gradient-position:initial;--tw-gradient-from:#0000;--tw-gradient-via:#0000;--tw-gradient-to:#0000;--tw-gradient-stops:initial;--tw-gradient-via-stops:initial;--tw-gradient-from-position:0%;--tw-gradient-via-position:50%;--tw-gradient-to-position:100%;--tw-font-weight:initial;--tw-tracking:initial;--tw-shadow:0 0 #0000;--tw-shadow-color:initial;--tw-shadow-alpha:100%;--tw-inset-shadow:0 0 #0000;--tw-inset-shadow-color:initial;--tw-inset-shadow-alpha:100%;--tw-ring-color:initial;--tw-ring-shadow:0 0 #0000;--tw-inset-ring-color:initial;--tw-inset-ring-shadow:0 0 #0000;--tw-ring-inset:initial;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-offset-shadow:0 0 #0000;--tw-outline-style:solid;--tw-backdrop-blur:initial;--tw-backdrop-brightness:initial;--tw-backdrop-contrast:initial;--tw-backdrop-grayscale:initial;--tw-backdrop-hue-rotate:initial;--tw-backdrop-invert:initial;--tw-backdrop-opacity:initial;--tw-backdrop-saturate:initial;--tw-backdrop-sepia:initial;--tw-duration:initial;--tw-ease:initial;--tw-translate-x:0;--tw-translate-y:0;--tw-translate-z:0;--tw-scale-x:1;--tw-scale-y:1;--tw-scale-z:1;--tw-animation-delay:0s;--tw-animation-direction:normal;--tw-animation-duration:initial;--tw-animation-fill-mode:none;--tw-animation-iteration-count:1;--tw-enter-blur:0;--tw-enter-opacity:1;--tw-enter-rotate:0;--tw-enter-scale:1;--tw-enter-translate-x:0;--tw-enter-translate-y:0;--tw-exit-blur:0;--tw-exit-opacity:1;--tw-exit-rotate:0;--tw-exit-scale:1;--tw-exit-translate-x:0;--tw-exit-translate-y:0;--scroll-fade-t:0px;--scroll-fade-b:0px;--scroll-fade-s:0px;--scroll-fade-e:0px;--scroll-fade-mask:initial;--shimmer-image:initial;--shimmer-text-fill:initial}}}@layer theme{:root,:host{--font-sans:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";--font-mono:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;--color-red-500:#fb2c36;--color-orange-400:#ff8b1a;--color-orange-600:#f05100;--color-amber-300:#ffd236;--color-green-400:#05df72;--color-emerald-600:#009767;--color-cyan-400:#00d2ef;--color-blue-100:#dbeafe;--color-blue-200:#bedbff;--color-blue-400:#54a2ff;--color-blue-500:#3080ff;--color-blue-600:#155dfc;--color-blue-900:#1c398e;--color-indigo-600:#4f39f6;--color-violet-400:#a685ff;--color-slate-400:#90a1b9;--color-slate-600:#45556c;--color-white:#fff;--spacing:.25rem;--text-xs:.75rem;--text-xs--line-height:calc(1 / .75);--text-sm:.875rem;--text-sm--line-height:calc(1.25 / .875);--text-xl:1.25rem;--text-xl--line-height:calc(1.75 / 1.25);--text-2xl:1.5rem;--text-2xl--line-height:calc(2 / 1.5);--text-4xl:2.25rem;--text-4xl--line-height:calc(2.5 / 2.25);--text-5xl:3rem;--text-5xl--line-height:1;--font-weight-normal:400;--font-weight-medium:500;--font-weight-semibold:600;--radius-md:calc(var(--radius) * .8);--ease-out:cubic-bezier(0, 0, .2, 1);--blur-xl:24px;--blur-2xl:40px;--default-transition-duration:.15s;--default-transition-timing-function:cubic-bezier(.4, 0, .2, 1);--default-font-family:var(--font-sans);--default-mono-font-family:var(--font-mono)}@supports (color:lab(0% 0 0)){:root,:host{--color-red-500:lab(55.4814% 75.0732 48.8528);--color-orange-400:lab(70.0429% 42.5156 75.8207);--color-orange-600:lab(57.1026% 64.2584 89.8886);--color-amber-300:lab(86.4156% 6.13147 78.3961);--color-green-400:lab(78.503% -64.9265 39.7492);--color-emerald-600:lab(55.0481% -49.9246 15.93);--color-cyan-400:lab(76.6045% -40.9406 -29.6231);--color-blue-100:lab(92.0301% -2.24757 -11.6453);--color-blue-200:lab(86.15% -4.04379 -21.0797);--color-blue-400:lab(65.0361% -1.42065 -56.9802);--color-blue-500:lab(54.1736% 13.3369 -74.6839);--color-blue-600:lab(44.0605% 29.0279 -86.0352);--color-blue-900:lab(26.1542% 15.7545 -51.5504);--color-indigo-600:lab(38.4009% 52.6132 -92.3857);--color-violet-400:lab(62.8239% 34.9159 -60.0512);--color-slate-400:lab(65.5349% -2.25151 -14.5072);--color-slate-600:lab(35.5623% -1.74978 -15.4316)}}}@layer base{*,:after,:before,::backdrop{box-sizing:border-box;border:0 solid;margin:0;padding:0}::file-selector-button{box-sizing:border-box;border:0 solid;margin:0;padding:0}html,:host{-webkit-text-size-adjust:100%;tab-size:4;line-height:1.5;font-family:var(--default-font-family,-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");font-feature-settings:var(--default-font-feature-settings,normal);font-variation-settings:var(--default-font-variation-settings,normal);-webkit-tap-highlight-color:transparent}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:var(--default-mono-font-family,ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);font-feature-settings:var(--default-mono-font-feature-settings,normal);font-variation-settings:var(--default-mono-font-variation-settings,normal);font-size:1em}small{font-size:80%}sub,sup{vertical-align:baseline;font-size:75%;line-height:0;position:relative}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}:-moz-focusring:where(:not(iframe)){outline:auto}progress{vertical-align:baseline}summary{display:list-item}ol,ul,menu{list-style:none}img,svg,video,canvas,audio,iframe,embed,object{vertical-align:middle;display:block}img,video{max-width:100%;height:auto}button,input,select,optgroup,textarea{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}::file-selector-button{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}:where(select:is([multiple],[size])) optgroup{font-weight:bolder}:where(select:is([multiple],[size])) optgroup option{padding-inline-start:20px}::file-selector-button{margin-inline-end:4px}::placeholder{opacity:1}@supports (not ((-webkit-appearance:-apple-pay-button))) or (contain-intrinsic-size:1px){::placeholder{color:currentColor}@supports (color:color-mix(in lab, red, red)){::placeholder{color:color-mix(in oklab, currentcolor 50%, transparent)}}}textarea{resize:vertical}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-date-and-time-value{min-height:1lh;text-align:inherit}::-webkit-datetime-edit{display:inline-flex}::-webkit-datetime-edit-fields-wrapper{padding:0}::-webkit-datetime-edit{padding-block:0}::-webkit-datetime-edit-year-field{padding-block:0}::-webkit-datetime-edit-month-field{padding-block:0}::-webkit-datetime-edit-day-field{padding-block:0}::-webkit-datetime-edit-hour-field{padding-block:0}::-webkit-datetime-edit-minute-field{padding-block:0}::-webkit-datetime-edit-second-field{padding-block:0}::-webkit-datetime-edit-millisecond-field{padding-block:0}::-webkit-datetime-edit-meridiem-field{padding-block:0}::-webkit-calendar-picker-indicator{line-height:1}:-moz-ui-invalid{box-shadow:none}button,input:where([type=button],[type=reset],[type=submit]){appearance:button}::file-selector-button{appearance:button}::-webkit-inner-spin-button{height:auto}::-webkit-outer-spin-button{height:auto}[hidden]:where(:not([hidden=until-found])){display:none!important}*{border-color:var(--border);outline-color:var(--ring)}@supports (color:color-mix(in lab, red, red)){*{outline-color:color-mix(in oklab, var(--ring) 50%, transparent)}}body{background-color:var(--background);color:var(--foreground)}}@layer components;@layer utilities{.pointer-events-none{pointer-events:none}.fixed{position:fixed}.relative{position:relative}.inset-0{inset:0}.mx-auto{margin-inline:auto}.mt-1{margin-top:var(--spacing)}.mt-2{margin-top:calc(var(--spacing) * 2)}.mt-3{margin-top:calc(var(--spacing) * 3)}.mt-4{margin-top:calc(var(--spacing) * 4)}.mt-6{margin-top:calc(var(--spacing) * 6)}.mt-7{margin-top:calc(var(--spacing) * 7)}.mt-8{margin-top:calc(var(--spacing) * 8)}.mt-9{margin-top:calc(var(--spacing) * 9)}.mb-7{margin-bottom:calc(var(--spacing) * 7)}.ml-auto{margin-left:auto}.flex{display:flex}.grid{display:grid}.hidden{display:none}.inline-flex{display:inline-flex}.size-2{width:calc(var(--spacing) * 2);height:calc(var(--spacing) * 2)}.size-3{width:calc(var(--spacing) * 3);height:calc(var(--spacing) * 3)}.size-3\.5{width:calc(var(--spacing) * 3.5);height:calc(var(--spacing) * 3.5)}.size-4{width:calc(var(--spacing) * 4);height:calc(var(--spacing) * 4)}.size-5{width:calc(var(--spacing) * 5);height:calc(var(--spacing) * 5)}.size-6{width:calc(var(--spacing) * 6);height:calc(var(--spacing) * 6)}.size-7{width:calc(var(--spacing) * 7);height:calc(var(--spacing) * 7)}.size-8{width:calc(var(--spacing) * 8);height:calc(var(--spacing) * 8)}.size-9{width:calc(var(--spacing) * 9);height:calc(var(--spacing) * 9)}.size-12{width:calc(var(--spacing) * 12);height:calc(var(--spacing) * 12)}.size-14{width:calc(var(--spacing) * 14);height:calc(var(--spacing) * 14)}.h-6{height:calc(var(--spacing) * 6)}.h-7{height:calc(var(--spacing) * 7)}.h-8{height:calc(var(--spacing) * 8)}.h-9{height:calc(var(--spacing) * 9)}.h-10{height:calc(var(--spacing) * 10)}.h-12{height:calc(var(--spacing) * 12)}.h-14{height:calc(var(--spacing) * 14)}.min-h-\[205px\]{min-height:205px}.min-h-screen{min-height:100vh}.w-full{width:100%}.max-w-\[1240px\]{max-width:1240px}.min-w-\[620px\]{min-width:620px}.flex-1{flex:1}.shrink-0{flex-shrink:0}.scale-\[1\.02\]{scale:1.02}.transform{transform:var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,)}.cursor-pointer{cursor:pointer}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.flex-col{flex-direction:column}.items-center{align-items:center}.items-end{align-items:flex-end}.items-start{align-items:flex-start}.justify-between{justify-content:space-between}.justify-center{justify-content:center}.gap-1{gap:var(--spacing)}.gap-1\.5{gap:calc(var(--spacing) * 1.5)}.gap-2{gap:calc(var(--spacing) * 2)}.gap-3{gap:calc(var(--spacing) * 3)}.gap-4{gap:calc(var(--spacing) * 4)}.gap-5{gap:calc(var(--spacing) * 5)}.gap-6{gap:calc(var(--spacing) * 6)}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.rounded-\[15px\]{border-radius:15px}.rounded-\[18px\]{border-radius:18px}.rounded-\[20px\]{border-radius:20px}.rounded-\[22px\]{border-radius:22px}.rounded-\[24px\]{border-radius:24px}.rounded-\[min\(var\(--radius-md\)\,10px\)\]{border-radius:min(var(--radius-md), 10px)}.rounded-\[min\(var\(--radius-md\)\,12px\)\]{border-radius:min(var(--radius-md), 12px)}.rounded-full{border-radius:3.40282e38px}.rounded-lg{border-radius:var(--radius)}.rounded-xl{border-radius:calc(var(--radius) * 1.4)}.border{border-style:var(--tw-border-style);border-width:1px}.border-2{border-style:var(--tw-border-style);border-width:2px}.border-y{border-block-style:var(--tw-border-style);border-block-width:1px}.border-t{border-top-style:var(--tw-border-style);border-top-width:1px}.border-b{border-bottom-style:var(--tw-border-style);border-bottom-width:1px}.border-dashed{--tw-border-style:dashed;border-style:dashed}.border-\[\#92b8df\]{border-color:#92b8df}.border-\[\#176fda\]{border-color:#176fda}.border-blue-100\/60{border-color:#dbeafe99}@supports (color:color-mix(in lab, red, red)){.border-blue-100\/60{border-color:color-mix(in oklab, var(--color-blue-100) 60%, transparent)}}.border-blue-100\/70{border-color:#dbeafeb3}@supports (color:color-mix(in lab, red, red)){.border-blue-100\/70{border-color:color-mix(in oklab, var(--color-blue-100) 70%, transparent)}}.border-blue-200\/60{border-color:#bedbff99}@supports (color:color-mix(in lab, red, red)){.border-blue-200\/60{border-color:color-mix(in oklab, var(--color-blue-200) 60%, transparent)}}.border-border{border-color:var(--border)}.border-transparent{border-color:#0000}.border-white\/30{border-color:#ffffff4d}@supports (color:color-mix(in lab, red, red)){.border-white\/30{border-color:color-mix(in oklab, var(--color-white) 30%, transparent)}}.border-white\/45{border-color:#ffffff73}@supports (color:color-mix(in lab, red, red)){.border-white\/45{border-color:color-mix(in oklab, var(--color-white) 45%, transparent)}}.border-white\/50{border-color:#ffffff80}@supports (color:color-mix(in lab, red, red)){.border-white\/50{border-color:color-mix(in oklab, var(--color-white) 50%, transparent)}}.border-white\/70{border-color:#ffffffb3}@supports (color:color-mix(in lab, red, red)){.border-white\/70{border-color:color-mix(in oklab, var(--color-white) 70%, transparent)}}.bg-\[\#26b866\]{background-color:#26b866}.bg-background{background-color:var(--background)}.bg-blue-100\/80{background-color:#dbeafecc}@supports (color:color-mix(in lab, red, red)){.bg-blue-100\/80{background-color:color-mix(in oklab, var(--color-blue-100) 80%, transparent)}}.bg-destructive\/10{background-color:var(--destructive)}@supports (color:color-mix(in lab, red, red)){.bg-destructive\/10{background-color:color-mix(in oklab, var(--destructive) 10%, transparent)}}.bg-primary{background-color:var(--primary)}.bg-secondary{background-color:var(--secondary)}.bg-white\/25{background-color:#ffffff40}@supports (color:color-mix(in lab, red, red)){.bg-white\/25{background-color:color-mix(in oklab, var(--color-white) 25%, transparent)}}.bg-white\/35{background-color:#ffffff59}@supports (color:color-mix(in lab, red, red)){.bg-white\/35{background-color:color-mix(in oklab, var(--color-white) 35%, transparent)}}.bg-white\/45{background-color:#ffffff73}@supports (color:color-mix(in lab, red, red)){.bg-white\/45{background-color:color-mix(in oklab, var(--color-white) 45%, transparent)}}.bg-white\/70{background-color:#ffffffb3}@supports (color:color-mix(in lab, red, red)){.bg-white\/70{background-color:color-mix(in oklab, var(--color-white) 70%, transparent)}}.bg-white\/80{background-color:#fffc}@supports (color:color-mix(in lab, red, red)){.bg-white\/80{background-color:color-mix(in oklab, var(--color-white) 80%, transparent)}}.bg-white\/85{background-color:#ffffffd9}@supports (color:color-mix(in lab, red, red)){.bg-white\/85{background-color:color-mix(in oklab, var(--color-white) 85%, transparent)}}.bg-gradient-to-br{--tw-gradient-position:to bottom right in oklab;background-image:linear-gradient(var(--tw-gradient-stops))}.bg-gradient-to-t{--tw-gradient-position:to top in oklab;background-image:linear-gradient(var(--tw-gradient-stops))}.\[background-image\:linear-gradient\(45deg\,transparent_0_35\%\,rgba\(255\,255\,255\,\.45\)_35\%_42\%\,transparent_42\%_100\%\)\,linear-gradient\(125deg\,transparent_0_52\%\,rgba\(255\,255\,255\,\.28\)_52\%_60\%\,transparent_60\%_100\%\)\]{background-image:linear-gradient(45deg,#0000 0 35%,#ffffff73 35% 42%,#0000 42% 100%),linear-gradient(125deg,#0000 0 52%,#ffffff47 52% 60%,#0000 60% 100%)}.bg-\[radial-gradient\(circle_at_15\%_10\%\,\#8ddcff_0\%\,transparent_34\%\)\,radial-gradient\(circle_at_90\%_20\%\,\#2e7cf6_0\%\,transparent_42\%\)\,linear-gradient\(135deg\,\#72d8f4_0\%\,\#287df0_52\%\,\#2358d5_100\%\)\]{background-image:radial-gradient(circle at 15% 10%,#8ddcff 0%,#0000 34%),radial-gradient(circle at 90% 20%,#2e7cf6 0%,#0000 42%),linear-gradient(135deg,#72d8f4 0%,#287df0 52%,#2358d5 100%)}.from-\[\#3ca8ff\]{--tw-gradient-from:#3ca8ff;--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))}.from-\[\#176fda\]{--tw-gradient-from:#176fda;--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))}.from-amber-300{--tw-gradient-from:var(--color-amber-300);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))}.from-blue-400{--tw-gradient-from:var(--color-blue-400);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))}.from-cyan-400{--tw-gradient-from:var(--color-cyan-400);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))}.from-green-400{--tw-gradient-from:var(--color-green-400);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))}.from-orange-400{--tw-gradient-from:var(--color-orange-400);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))}.from-slate-400{--tw-gradient-from:var(--color-slate-400);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))}.from-violet-400{--tw-gradient-from:var(--color-violet-400);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))}.to-\[\#58c5ff\]{--tw-gradient-to:#58c5ff;--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))}.to-\[\#1764d1\]{--tw-gradient-to:#1764d1;--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))}.to-blue-500{--tw-gradient-to:var(--color-blue-500);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))}.to-blue-600{--tw-gradient-to:var(--color-blue-600);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))}.to-emerald-600{--tw-gradient-to:var(--color-emerald-600);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))}.to-indigo-600{--tw-gradient-to:var(--color-indigo-600);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))}.to-orange-600{--tw-gradient-to:var(--color-orange-600);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))}.to-red-500{--tw-gradient-to:var(--color-red-500);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))}.to-slate-600{--tw-gradient-to:var(--color-slate-600);--tw-gradient-stops:var(--tw-gradient-via-stops,var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))}.\[background-size\:900px_700px\,1100px_900px\]{background-size:900px 700px,1100px 900px}.bg-clip-padding{background-clip:padding-box}.fill-current{fill:currentColor}.p-5{padding:calc(var(--spacing) * 5)}.p-6{padding:calc(var(--spacing) * 6)}.px-2{padding-inline:calc(var(--spacing) * 2)}.px-2\.5{padding-inline:calc(var(--spacing) * 2.5)}.px-3{padding-inline:calc(var(--spacing) * 3)}.px-4{padding-inline:calc(var(--spacing) * 4)}.px-5{padding-inline:calc(var(--spacing) * 5)}.px-6{padding-inline:calc(var(--spacing) * 6)}.py-2{padding-block:calc(var(--spacing) * 2)}.py-3{padding-block:calc(var(--spacing) * 3)}.py-4{padding-block:calc(var(--spacing) * 4)}.py-6{padding-block:calc(var(--spacing) * 6)}.pt-5{padding-top:calc(var(--spacing) * 5)}.pt-10{padding-top:calc(var(--spacing) * 10)}.pb-16{padding-bottom:calc(var(--spacing) * 16)}.text-center{text-align:center}.text-left{text-align:left}.text-right{text-align:right}.text-2xl{font-size:var(--text-2xl);line-height:var(--tw-leading,var(--text-2xl--line-height))}.text-4xl{font-size:var(--text-4xl);line-height:var(--tw-leading,var(--text-4xl--line-height))}.text-sm{font-size:var(--text-sm);line-height:var(--tw-leading,var(--text-sm--line-height))}.text-xl{font-size:var(--text-xl);line-height:var(--tw-leading,var(--text-xl--line-height))}.text-xs{font-size:var(--text-xs);line-height:var(--tw-leading,var(--text-xs--line-height))}.text-\[0\.8rem\]{font-size:.8rem}.text-\[12px\]{font-size:12px}.text-\[13px\]{font-size:13px}.text-\[15px\]{font-size:15px}.font-medium{--tw-font-weight:var(--font-weight-medium);font-weight:var(--font-weight-medium)}.font-normal{--tw-font-weight:var(--font-weight-normal);font-weight:var(--font-weight-normal)}.font-semibold{--tw-font-weight:var(--font-weight-semibold);font-weight:var(--font-weight-semibold)}.tracking-\[-0\.04em\]{--tw-tracking:-.04em;letter-spacing:-.04em}.tracking-\[-0\.05em\]{--tw-tracking:-.05em;letter-spacing:-.05em}.tracking-\[-0\.035em\]{--tw-tracking:-.035em;letter-spacing:-.035em}.tracking-\[-0\.055em\]{--tw-tracking:-.055em;letter-spacing:-.055em}.whitespace-nowrap{white-space:nowrap}.text-\[\#6f8eac\]{color:#6f8eac}.text-\[\#176fda\]{color:#176fda}.text-\[\#1763c5\]{color:#1763c5}.text-\[\#2867bf\]{color:#2867bf}.text-\[\#2871c8\]{color:#2871c8}.text-\[\#31547b\]{color:#31547b}.text-\[\#152039\]{color:#152039}.text-\[\#527294\]{color:#527294}.text-destructive{color:var(--destructive)}.text-primary{color:var(--primary)}.text-primary-foreground{color:var(--primary-foreground)}.text-secondary-foreground{color:var(--secondary-foreground)}.text-white{color:var(--color-white)}.text-white\/75{color:#ffffffbf}@supports (color:color-mix(in lab, red, red)){.text-white\/75{color:color-mix(in oklab, var(--color-white) 75%, transparent)}}.underline-offset-4{text-underline-offset:4px}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.opacity-30{opacity:.3}.shadow{--tw-shadow:0 1px 3px 0 var(--tw-shadow-color,#0000001a), 0 1px 2px -1px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.shadow-2xl{--tw-shadow:0 25px 50px -12px var(--tw-shadow-color,#00000040);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.shadow-\[0_0_0_5px_rgba\(38\,184\,102\,\.15\)\]{--tw-shadow:0 0 0 5px var(--tw-shadow-color,#26b86626);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.shadow-\[0_16px_40px_rgba\(23\,111\,218\,\.2\)\]{--tw-shadow:0 16px 40px var(--tw-shadow-color,#176fda33);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px var(--tw-shadow-color,#0000001a), 0 4px 6px -4px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 3px 0 var(--tw-shadow-color,#0000001a), 0 1px 2px -1px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px var(--tw-shadow-color,#0000001a), 0 8px 10px -6px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.shadow-blue-900\/10{--tw-shadow-color:#1c398e1a}@supports (color:color-mix(in lab, red, red)){.shadow-blue-900\/10{--tw-shadow-color:color-mix(in oklab, color-mix(in oklab, var(--color-blue-900) 10%, transparent) var(--tw-shadow-alpha), transparent)}}.shadow-blue-900\/15{--tw-shadow-color:#1c398e26}@supports (color:color-mix(in lab, red, red)){.shadow-blue-900\/15{--tw-shadow-color:color-mix(in oklab, color-mix(in oklab, var(--color-blue-900) 15%, transparent) var(--tw-shadow-alpha), transparent)}}.outline{outline-style:var(--tw-outline-style);outline-width:1px}.backdrop-blur{--tw-backdrop-blur:blur(8px);-webkit-backdrop-filter:var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);backdrop-filter:var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,)}.backdrop-blur-2xl{--tw-backdrop-blur:blur(var(--blur-2xl));-webkit-backdrop-filter:var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);backdrop-filter:var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,)}.backdrop-blur-xl{--tw-backdrop-blur:blur(var(--blur-xl));-webkit-backdrop-filter:var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);backdrop-filter:var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,)}.transition-all{transition-property:all;transition-timing-function:var(--tw-ease,var(--default-transition-timing-function));transition-duration:var(--tw-duration,var(--default-transition-duration))}.transition-colors{transition-property:color,background-color,border-color,outline-color,text-decoration-color,fill,stroke,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to;transition-timing-function:var(--tw-ease,var(--default-transition-timing-function));transition-duration:var(--tw-duration,var(--default-transition-duration))}.duration-200{--tw-duration:.2s;transition-duration:.2s}.duration-300{--tw-duration:.3s;transition-duration:.3s}.ease-out{--tw-ease:var(--ease-out);transition-timing-function:var(--ease-out)}.outline-none{--tw-outline-style:none;outline-style:none}.select-none{-webkit-user-select:none;user-select:none}.running{animation-play-state:running}.last\:border-0:last-child{border-style:var(--tw-border-style);border-width:0}@media (hover:hover){.hover\:-translate-y-0\.5:hover{--tw-translate-y:calc(var(--spacing) * -.5);translate:var(--tw-translate-x) var(--tw-translate-y)}.hover\:-translate-y-1:hover{--tw-translate-y:calc(var(--spacing) * -1);translate:var(--tw-translate-x) var(--tw-translate-y)}.hover\:scale-\[1\.01\]:hover{scale:1.01}.hover\:scale-\[1\.03\]:hover{scale:1.03}.hover\:scale-\[1\.04\]:hover{scale:1.04}.hover\:scale-\[1\.015\]:hover{scale:1.015}.hover\:border-\[\#5da7ed\]:hover{border-color:#5da7ed}.hover\:border-white\/80:hover{border-color:#fffc}@supports (color:color-mix(in lab, red, red)){.hover\:border-white\/80:hover{border-color:color-mix(in oklab, var(--color-white) 80%, transparent)}}.hover\:bg-destructive\/20:hover{background-color:var(--destructive)}@supports (color:color-mix(in lab, red, red)){.hover\:bg-destructive\/20:hover{background-color:color-mix(in oklab, var(--destructive) 20%, transparent)}}.hover\:bg-muted:hover{background-color:var(--muted)}.hover\:bg-secondary\/80:hover{background-color:var(--secondary)}@supports (color:color-mix(in lab, red, red)){.hover\:bg-secondary\/80:hover{background-color:color-mix(in oklab, var(--secondary) 80%, transparent)}}.hover\:bg-white:hover{background-color:var(--color-white)}.hover\:bg-white\/45:hover{background-color:#ffffff73}@supports (color:color-mix(in lab, red, red)){.hover\:bg-white\/45:hover{background-color:color-mix(in oklab, var(--color-white) 45%, transparent)}}.hover\:bg-white\/65:hover{background-color:#ffffffa6}@supports (color:color-mix(in lab, red, red)){.hover\:bg-white\/65:hover{background-color:color-mix(in oklab, var(--color-white) 65%, transparent)}}.hover\:bg-white\/75:hover{background-color:#ffffffbf}@supports (color:color-mix(in lab, red, red)){.hover\:bg-white\/75:hover{background-color:color-mix(in oklab, var(--color-white) 75%, transparent)}}.hover\:bg-white\/80:hover{background-color:#fffc}@supports (color:color-mix(in lab, red, red)){.hover\:bg-white\/80:hover{background-color:color-mix(in oklab, var(--color-white) 80%, transparent)}}.hover\:text-foreground:hover{color:var(--foreground)}.hover\:underline:hover{text-decoration-line:underline}.hover\:shadow-2xl:hover{--tw-shadow:0 25px 50px -12px var(--tw-shadow-color,#00000040);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.hover\:shadow-\[0_24px_60px_rgba\(15\,68\,145\,\.22\)\]:hover{--tw-shadow:0 24px 60px var(--tw-shadow-color,#0f449138);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.hover\:shadow-lg:hover{--tw-shadow:0 10px 15px -3px var(--tw-shadow-color,#0000001a), 0 4px 6px -4px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.hover\:shadow-xl:hover{--tw-shadow:0 20px 25px -5px var(--tw-shadow-color,#0000001a), 0 8px 10px -6px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.hover\:shadow-blue-900\/20:hover{--tw-shadow-color:#1c398e33}@supports (color:color-mix(in lab, red, red)){.hover\:shadow-blue-900\/20:hover{--tw-shadow-color:color-mix(in oklab, color-mix(in oklab, var(--color-blue-900) 20%, transparent) var(--tw-shadow-alpha), transparent)}}}.focus-visible\:border-destructive\/40:focus-visible{border-color:var(--destructive)}@supports (color:color-mix(in lab, red, red)){.focus-visible\:border-destructive\/40:focus-visible{border-color:color-mix(in oklab, var(--destructive) 40%, transparent)}}.focus-visible\:border-ring:focus-visible{border-color:var(--ring)}.focus-visible\:ring-3:focus-visible{--tw-ring-shadow:var(--tw-ring-inset,) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color,currentcolor);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.focus-visible\:ring-destructive\/20:focus-visible{--tw-ring-color:var(--destructive)}@supports (color:color-mix(in lab, red, red)){.focus-visible\:ring-destructive\/20:focus-visible{--tw-ring-color:color-mix(in oklab, var(--destructive) 20%, transparent)}}.focus-visible\:ring-ring\/50:focus-visible{--tw-ring-color:var(--ring)}@supports (color:color-mix(in lab, red, red)){.focus-visible\:ring-ring\/50:focus-visible{--tw-ring-color:color-mix(in oklab, var(--ring) 50%, transparent)}}.active\:scale-95:active{--tw-scale-x:95%;--tw-scale-y:95%;--tw-scale-z:95%;scale:var(--tw-scale-x) var(--tw-scale-y)}.active\:scale-\[\.99\]:active{scale:.99}.active\:not-aria-\[haspopup\]\:translate-y-px:active:not([aria-haspopup]){--tw-translate-y:1px;translate:var(--tw-translate-x) var(--tw-translate-y)}.disabled\:pointer-events-none:disabled{pointer-events:none}.disabled\:opacity-50:disabled{opacity:.5}:where([data-slot=button-group]) .in-data-\[slot\=button-group\]\:rounded-lg{border-radius:var(--radius)}.has-data-\[icon\=inline-end\]\:pr-1\.5:has([data-icon=inline-end]){padding-right:calc(var(--spacing) * 1.5)}.has-data-\[icon\=inline-end\]\:pr-2:has([data-icon=inline-end]){padding-right:calc(var(--spacing) * 2)}.has-data-\[icon\=inline-start\]\:pl-1\.5:has([data-icon=inline-start]){padding-left:calc(var(--spacing) * 1.5)}.has-data-\[icon\=inline-start\]\:pl-2:has([data-icon=inline-start]){padding-left:calc(var(--spacing) * 2)}.aria-expanded\:bg-muted[aria-expanded=true]{background-color:var(--muted)}.aria-expanded\:bg-secondary[aria-expanded=true]{background-color:var(--secondary)}.aria-expanded\:text-foreground[aria-expanded=true]{color:var(--foreground)}.aria-expanded\:text-secondary-foreground[aria-expanded=true]{color:var(--secondary-foreground)}.aria-invalid\:border-destructive[aria-invalid=true]{border-color:var(--destructive)}.aria-invalid\:ring-3[aria-invalid=true]{--tw-ring-shadow:var(--tw-ring-inset,) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color,currentcolor);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.aria-invalid\:ring-destructive\/20[aria-invalid=true]{--tw-ring-color:var(--destructive)}@supports (color:color-mix(in lab, red, red)){.aria-invalid\:ring-destructive\/20[aria-invalid=true]{--tw-ring-color:color-mix(in oklab, var(--destructive) 20%, transparent)}}@media (min-width:40rem){.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\:grid-cols-6{grid-template-columns:repeat(6,minmax(0,1fr))}.sm\:flex-row{flex-direction:row}.sm\:items-end{align-items:flex-end}.sm\:p-8{padding:calc(var(--spacing) * 8)}.sm\:text-5xl{font-size:var(--text-5xl);line-height:var(--tw-leading,var(--text-5xl--line-height))}}@media (min-width:48rem){.md\:flex{display:flex}}@media (min-width:64rem){.lg\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.lg\:grid-cols-\[1\.3fr_\.7fr\]{grid-template-columns:1.3fr .7fr}}.dark\:border-input:is(.dark *){border-color:var(--input)}.dark\:bg-destructive\/20:is(.dark *){background-color:var(--destructive)}@supports (color:color-mix(in lab, red, red)){.dark\:bg-destructive\/20:is(.dark *){background-color:color-mix(in oklab, var(--destructive) 20%, transparent)}}.dark\:bg-input\/30:is(.dark *){background-color:var(--input)}@supports (color:color-mix(in lab, red, red)){.dark\:bg-input\/30:is(.dark *){background-color:color-mix(in oklab, var(--input) 30%, transparent)}}@media (hover:hover){.dark\:hover\:bg-destructive\/30:is(.dark *):hover{background-color:var(--destructive)}@supports (color:color-mix(in lab, red, red)){.dark\:hover\:bg-destructive\/30:is(.dark *):hover{background-color:color-mix(in oklab, var(--destructive) 30%, transparent)}}.dark\:hover\:bg-input\/50:is(.dark *):hover{background-color:var(--input)}@supports (color:color-mix(in lab, red, red)){.dark\:hover\:bg-input\/50:is(.dark *):hover{background-color:color-mix(in oklab, var(--input) 50%, transparent)}}.dark\:hover\:bg-muted\/50:is(.dark *):hover{background-color:var(--muted)}@supports (color:color-mix(in lab, red, red)){.dark\:hover\:bg-muted\/50:is(.dark *):hover{background-color:color-mix(in oklab, var(--muted) 50%, transparent)}}}.dark\:focus-visible\:ring-destructive\/40:is(.dark *):focus-visible{--tw-ring-color:var(--destructive)}@supports (color:color-mix(in lab, red, red)){.dark\:focus-visible\:ring-destructive\/40:is(.dark *):focus-visible{--tw-ring-color:color-mix(in oklab, var(--destructive) 40%, transparent)}}.dark\:aria-invalid\:border-destructive\/50:is(.dark *)[aria-invalid=true]{border-color:var(--destructive)}@supports (color:color-mix(in lab, red, red)){.dark\:aria-invalid\:border-destructive\/50:is(.dark *)[aria-invalid=true]{border-color:color-mix(in oklab, var(--destructive) 50%, transparent)}}.dark\:aria-invalid\:ring-destructive\/40:is(.dark *)[aria-invalid=true]{--tw-ring-color:var(--destructive)}@supports (color:color-mix(in lab, red, red)){.dark\:aria-invalid\:ring-destructive\/40:is(.dark *)[aria-invalid=true]{--tw-ring-color:color-mix(in oklab, var(--destructive) 40%, transparent)}}.\[\&_svg\]\:pointer-events-none svg{pointer-events:none}.\[\&_svg\]\:shrink-0 svg{flex-shrink:0}.\[\&_svg\:not\(\[class\*\=\'size-\'\]\)\]\:size-3 svg:not([class*=size-]){width:calc(var(--spacing) * 3);height:calc(var(--spacing) * 3)}.\[\&_svg\:not\(\[class\*\=\'size-\'\]\)\]\:size-3\.5 svg:not([class*=size-]){width:calc(var(--spacing) * 3.5);height:calc(var(--spacing) * 3.5)}.\[\&_svg\:not\(\[class\*\=\'size-\'\]\)\]\:size-4 svg:not([class*=size-]){width:calc(var(--spacing) * 4);height:calc(var(--spacing) * 4)}@media (hover:hover){.\[a\]\:hover\:bg-primary\/80:is(a):hover{background-color:var(--primary)}@supports (color:color-mix(in lab, red, red)){.\[a\]\:hover\:bg-primary\/80:is(a):hover{background-color:color-mix(in oklab, var(--primary) 80%, transparent)}}}}@property --tw-animation-delay{syntax:"*";inherits:false;initial-value:0s}@property --tw-animation-direction{syntax:"*";inherits:false;initial-value:normal}@property --tw-animation-duration{syntax:"*";inherits:false}@property --tw-animation-fill-mode{syntax:"*";inherits:false;initial-value:none}@property --tw-animation-iteration-count{syntax:"*";inherits:false;initial-value:1}@property --tw-enter-blur{syntax:"*";inherits:false;initial-value:0}@property --tw-enter-opacity{syntax:"*";inherits:false;initial-value:1}@property --tw-enter-rotate{syntax:"*";inherits:false;initial-value:0}@property --tw-enter-scale{syntax:"*";inherits:false;initial-value:1}@property --tw-enter-translate-x{syntax:"*";inherits:false;initial-value:0}@property --tw-enter-translate-y{syntax:"*";inherits:false;initial-value:0}@property --tw-exit-blur{syntax:"*";inherits:false;initial-value:0}@property --tw-exit-opacity{syntax:"*";inherits:false;initial-value:1}@property --tw-exit-rotate{syntax:"*";inherits:false;initial-value:0}@property --tw-exit-scale{syntax:"*";inherits:false;initial-value:1}@property --tw-exit-translate-x{syntax:"*";inherits:false;initial-value:0}@property --tw-exit-translate-y{syntax:"*";inherits:false;initial-value:0}@property --scroll-fade-t{syntax:"<length-percentage>";inherits:false;initial-value:0}@property --scroll-fade-b{syntax:"<length-percentage>";inherits:false;initial-value:0}@property --scroll-fade-s{syntax:"<length-percentage>";inherits:false;initial-value:0}@property --scroll-fade-e{syntax:"<length-percentage>";inherits:false;initial-value:0}@property --scroll-fade-mask{syntax:"*";inherits:false}@property --shimmer-angle{syntax:"<angle>";inherits:true;initial-value:20deg}@property --shimmer-image{syntax:"*";inherits:false}@property --shimmer-text-fill{syntax:"*";inherits:false}@media (prefers-reduced-motion:reduce){.shimmer{-webkit-text-fill-color:currentColor;background-image:none;animation:none}}:root{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light;--background:#fff;--foreground:#0a0a0a;--card:#fff;--card-foreground:#0a0a0a;--popover:#fff;--popover-foreground:#0a0a0a;--primary:#171717;--primary-foreground:#fafafa;--secondary:#f5f5f5;--secondary-foreground:#171717;--muted:#f5f5f5;--muted-foreground:#737373;--accent:#f5f5f5;--accent-foreground:#171717;--destructive:#e40014;--border:#e5e5e5;--input:#e5e5e5;--ring:#a1a1a1;--chart-1:#d4d4d4;--chart-2:#737373;--chart-3:#525252;--chart-4:#404040;--chart-5:#262626;--radius:.625rem;--sidebar:#fafafa;--sidebar-foreground:#0a0a0a;--sidebar-primary:#171717;--sidebar-primary-foreground:#fafafa;--sidebar-accent:#f5f5f5;--sidebar-accent-foreground:#171717;--sidebar-border:#e5e5e5;--sidebar-ring:#a1a1a1}@supports (color:lab(0% 0 0)){:root{--background:lab(100% 0 0);--foreground:lab(2.75381% 0 0);--card:lab(100% 0 0);--card-foreground:lab(2.75381% 0 0);--popover:lab(100% 0 0);--popover-foreground:lab(2.75381% 0 0);--primary:lab(7.78201% -.0000149012 0);--primary-foreground:lab(98.26% 0 0);--secondary:lab(96.52% -.0000298023 .0000119209);--secondary-foreground:lab(7.78201% -.0000149012 0);--muted:lab(96.52% -.0000298023 .0000119209);--muted-foreground:lab(48.496% 0 0);--accent:lab(96.52% -.0000298023 .0000119209);--accent-foreground:lab(7.78201% -.0000149012 0);--destructive:lab(48.4493% 77.4328 61.5452);--border:lab(90.952% 0 -.0000119209);--input:lab(90.952% 0 -.0000119209);--ring:lab(66.128% -.0000298023 .0000119209);--chart-1:lab(84.92% 0 -.0000119209);--chart-2:lab(48.496% 0 0);--chart-3:lab(34.924% 0 0);--chart-4:lab(27.036% 0 0);--chart-5:lab(15.204% 0 -.00000596046);--sidebar:lab(98.26% 0 0);--sidebar-foreground:lab(2.75381% 0 0);--sidebar-primary:lab(7.78201% -.0000149012 0);--sidebar-primary-foreground:lab(98.26% 0 0);--sidebar-accent:lab(96.52% -.0000298023 .0000119209);--sidebar-accent-foreground:lab(7.78201% -.0000149012 0);--sidebar-border:lab(90.952% 0 -.0000119209);--sidebar-ring:lab(66.128% -.0000298023 .0000119209)}}.dark{--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark;--background:#0a0a0a;--foreground:#fafafa;--card:#171717;--card-foreground:#fafafa;--popover:#171717;--popover-foreground:#fafafa;--primary:#e5e5e5;--primary-foreground:#171717;--secondary:#262626;--secondary-foreground:#fafafa;--muted:#262626;--muted-foreground:#a1a1a1;--accent:#262626;--accent-foreground:#fafafa;--destructive:#ff6568;--border:#ffffff1a;--input:#ffffff26;--ring:#737373;--chart-1:#d4d4d4;--chart-2:#737373;--chart-3:#525252;--chart-4:#404040;--chart-5:#262626;--sidebar:#171717;--sidebar-foreground:#fafafa;--sidebar-primary:#1447e6;--sidebar-primary-foreground:#fafafa;--sidebar-accent:#262626;--sidebar-accent-foreground:#fafafa;--sidebar-border:#ffffff1a;--sidebar-ring:#737373}@supports (color:lab(0% 0 0)){.dark{--background:lab(2.75381% 0 0);--foreground:lab(98.26% 0 0);--card:lab(7.78201% -.0000149012 0);--card-foreground:lab(98.26% 0 0);--popover:lab(7.78201% -.0000149012 0);--popover-foreground:lab(98.26% 0 0);--primary:lab(90.952% 0 -.0000119209);--primary-foreground:lab(7.78201% -.0000149012 0);--secondary:lab(15.204% 0 -.00000596046);--secondary-foreground:lab(98.26% 0 0);--muted:lab(15.204% 0 -.00000596046);--muted-foreground:lab(66.128% -.0000298023 .0000119209);--accent:lab(15.204% 0 -.00000596046);--accent-foreground:lab(98.26% 0 0);--destructive:lab(63.7053% 60.745 31.3109);--border:lab(100% 0 0/.1);--input:lab(100% 0 0/.15);--ring:lab(48.496% 0 0);--chart-1:lab(84.92% 0 -.0000119209);--chart-2:lab(48.496% 0 0);--chart-3:lab(34.924% 0 0);--chart-4:lab(27.036% 0 0);--chart-5:lab(15.204% 0 -.00000596046);--sidebar:lab(7.78201% -.0000149012 0);--sidebar-foreground:lab(98.26% 0 0);--sidebar-primary:lab(36.9089% 35.0961 -85.6872);--sidebar-primary-foreground:lab(98.26% 0 0);--sidebar-accent:lab(15.204% 0 -.00000596046);--sidebar-accent-foreground:lab(98.26% 0 0);--sidebar-border:lab(100% 0 0/.1);--sidebar-ring:lab(48.496% 0 0)}}@media (prefers-color-scheme:dark){:root:not(.light){--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark;--background:#0a0a0a;--foreground:#fafafa;--card:#171717;--card-foreground:#fafafa;--popover:#171717;--popover-foreground:#fafafa;--primary:#e5e5e5;--primary-foreground:#171717;--secondary:#262626;--secondary-foreground:#fafafa;--muted:#262626;--muted-foreground:#a1a1a1;--accent:#262626;--accent-foreground:#fafafa;--destructive:#ff6568;--border:#ffffff1a;--input:#ffffff26;--ring:#737373;--chart-1:#d4d4d4;--chart-2:#737373;--chart-3:#525252;--chart-4:#404040;--chart-5:#262626;--sidebar:#171717;--sidebar-foreground:#fafafa;--sidebar-primary:#1447e6;--sidebar-primary-foreground:#fafafa;--sidebar-accent:#262626;--sidebar-accent-foreground:#fafafa;--sidebar-border:#ffffff1a;--sidebar-ring:#737373}@supports (color:lab(0% 0 0)){:root:not(.light){--background:lab(2.75381% 0 0);--foreground:lab(98.26% 0 0);--card:lab(7.78201% -.0000149012 0);--card-foreground:lab(98.26% 0 0);--popover:lab(7.78201% -.0000149012 0);--popover-foreground:lab(98.26% 0 0);--primary:lab(90.952% 0 -.0000119209);--primary-foreground:lab(7.78201% -.0000149012 0);--secondary:lab(15.204% 0 -.00000596046);--secondary-foreground:lab(98.26% 0 0);--muted:lab(15.204% 0 -.00000596046);--muted-foreground:lab(66.128% -.0000298023 .0000119209);--accent:lab(15.204% 0 -.00000596046);--accent-foreground:lab(98.26% 0 0);--destructive:lab(63.7053% 60.745 31.3109);--border:lab(100% 0 0/.1);--input:lab(100% 0 0/.15);--ring:lab(48.496% 0 0);--chart-1:lab(84.92% 0 -.0000119209);--chart-2:lab(48.496% 0 0);--chart-3:lab(34.924% 0 0);--chart-4:lab(27.036% 0 0);--chart-5:lab(15.204% 0 -.00000596046);--sidebar:lab(7.78201% -.0000149012 0);--sidebar-foreground:lab(98.26% 0 0);--sidebar-primary:lab(36.9089% 35.0961 -85.6872);--sidebar-primary-foreground:lab(98.26% 0 0);--sidebar-accent:lab(15.204% 0 -.00000596046);--sidebar-accent-foreground:lab(98.26% 0 0);--sidebar-border:lab(100% 0 0/.1);--sidebar-ring:lab(48.496% 0 0)}}}@property --tw-rotate-x{syntax:"*";inherits:false}@property --tw-rotate-y{syntax:"*";inherits:false}@property --tw-rotate-z{syntax:"*";inherits:false}@property --tw-skew-x{syntax:"*";inherits:false}@property --tw-skew-y{syntax:"*";inherits:false}@property --tw-border-style{syntax:"*";inherits:false;initial-value:solid}@property --tw-gradient-position{syntax:"*";inherits:false}@property --tw-gradient-from{syntax:"<color>";inherits:false;initial-value:#0000}@property --tw-gradient-via{syntax:"<color>";inherits:false;initial-value:#0000}@property --tw-gradient-to{syntax:"<color>";inherits:false;initial-value:#0000}@property --tw-gradient-stops{syntax:"*";inherits:false}@property --tw-gradient-via-stops{syntax:"*";inherits:false}@property --tw-gradient-from-position{syntax:"<length-percentage>";inherits:false;initial-value:0%}@property --tw-gradient-via-position{syntax:"<length-percentage>";inherits:false;initial-value:50%}@property --tw-gradient-to-position{syntax:"<length-percentage>";inherits:false;initial-value:100%}@property --tw-font-weight{syntax:"*";inherits:false}@property --tw-tracking{syntax:"*";inherits:false}@property --tw-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-shadow-color{syntax:"*";inherits:false}@property --tw-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-inset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-shadow-color{syntax:"*";inherits:false}@property --tw-inset-shadow-alpha{syntax:"<percentage>";inherits:false;initial-value:100%}@property --tw-ring-color{syntax:"*";inherits:false}@property --tw-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-inset-ring-color{syntax:"*";inherits:false}@property --tw-inset-ring-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-ring-inset{syntax:"*";inherits:false}@property --tw-ring-offset-width{syntax:"<length>";inherits:false;initial-value:0}@property --tw-ring-offset-color{syntax:"*";inherits:false;initial-value:#fff}@property --tw-ring-offset-shadow{syntax:"*";inherits:false;initial-value:0 0 #0000}@property --tw-outline-style{syntax:"*";inherits:false;initial-value:solid}@property --tw-backdrop-blur{syntax:"*";inherits:false}@property --tw-backdrop-brightness{syntax:"*";inherits:false}@property --tw-backdrop-contrast{syntax:"*";inherits:false}@property --tw-backdrop-grayscale{syntax:"*";inherits:false}@property --tw-backdrop-hue-rotate{syntax:"*";inherits:false}@property --tw-backdrop-invert{syntax:"*";inherits:false}@property --tw-backdrop-opacity{syntax:"*";inherits:false}@property --tw-backdrop-saturate{syntax:"*";inherits:false}@property --tw-backdrop-sepia{syntax:"*";inherits:false}@property --tw-duration{syntax:"*";inherits:false}@property --tw-ease{syntax:"*";inherits:false}@property --tw-translate-x{syntax:"*";inherits:false;initial-value:0}@property --tw-translate-y{syntax:"*";inherits:false;initial-value:0}@property --tw-translate-z{syntax:"*";inherits:false;initial-value:0}@property --tw-scale-x{syntax:"*";inherits:false;initial-value:1}@property --tw-scale-y{syntax:"*";inherits:false;initial-value:1}@property --tw-scale-z{syntax:"*";inherits:false;initial-value:1}
+
+
+/* Precision Apple Liquid Typography and scrollbars */
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Inter, system-ui, sans-serif;
+}
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+/* Custom elegant scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* ==========================================================================
+   DARK MODE OVERRIDES (Apple VisionOS / macOS Midnight Liquid Glass)
+   ========================================================================== */
+html.dark main {
+  background: radial-gradient(circle at 15% 10%, rgba(30, 64, 175, 0.4) 0%, transparent 36%),
+              radial-gradient(circle at 90% 20%, rgba(37, 99, 235, 0.3) 0%, transparent 45%),
+              linear-gradient(135deg, #070d1a 0%, #0b172f 52%, #060b16 100%) !important;
+  color: #f1f5f9 !important;
+}
+
+html.dark header {
+  background-color: rgba(11, 23, 47, 0.65) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+html.dark .group.rounded-\[22px\],
+html.dark section {
+  background-color: rgba(15, 23, 42, 0.68) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.65) !important;
+}
+
+html.dark .group.rounded-\[22px\]:hover,
+html.dark section:hover {
+  background-color: rgba(26, 38, 64, 0.8) !important;
+  border-color: rgba(96, 165, 250, 0.45) !important;
+}
+
+html.dark #dropzone {
+  background-color: rgba(15, 23, 42, 0.5) !important;
+  border-color: rgba(96, 165, 250, 0.3) !important;
+}
+
+html.dark #dropzone:hover {
+  background-color: rgba(30, 58, 110, 0.35) !important;
+  border-color: #38bdf8 !important;
+}
+
+html.dark #search-filter {
+  background-color: rgba(30, 41, 59, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+html.dark #search-filter::placeholder {
+  color: #94a3b8 !important;
+}
+
+html.dark table thead {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #94a3b8 !important;
+}
+
+html.dark table tbody tr {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+html.dark table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+html.dark .text-\[\#152039\] {
+  color: #f1f5f9 !important;
+}
+
+html.dark .text-\[\#31547b\] {
+  color: #93c5fd !important;
+}
+
+html.dark .text-\[\#527294\] {
+  color: #94a3b8 !important;
+}
+
+html.dark .text-\[\#6f8eac\] {
+  color: #64748b !important;
+}
+
+html.dark .grid-cols-3 > button,
+html.dark .sm\:grid-cols-6 > button {
+  background-color: rgba(15, 23, 42, 0.65) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark .grid-cols-3 > button:hover,
+html.dark .sm\:grid-cols-6 > button:hover {
+  background-color: rgba(30, 41, 59, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.28) !important;
+  color: #ffffff !important;
+}
+
+html.dark #delete-modal > div,
+html.dark #dlna-modal > div {
+  background-color: rgba(15, 23, 42, 0.96) !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  color: #f1f5f9 !important;
+}
+
+html.dark #dlna-modal .bg-slate-100 {
+  background-color: rgba(30, 41, 59, 0.8) !important;
+  color: #cbd5e1 !important;
+}
+
+html.dark #theme-toggle-btn {
+  background-image: linear-gradient(135deg, #818cf8 0%, #3b82f6 50%, #1e40af 100%) !important;
+  border-color: rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.45) !important;
+}
+
+#card-temp {
+  font-size: 2.75rem !important;
+  line-height: 1 !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.05em !important;
+  color: #152039;
+}
+html.dark #card-temp {
+  color: #f8fafc !important;
+}
+@media (min-width: 640px) {
+  #card-temp {
+    font-size: 3.25rem !important;
+  }
+}
+
+/* Category Segmented Control (Películas / Series) - Apple VisionOS style */
+.segmented-control-wrapper {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(23, 111, 218, 0.08);
+  padding: 3px;
+  border-radius: 9999px;
+  border: 1px solid rgba(23, 111, 218, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  gap: 2px;
+}
+
+html.dark .segmented-control-wrapper {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.segmented-btn {
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 9999px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #334155;
+  line-height: 1.25;
+  user-select: none;
+}
+
+.segmented-btn:hover:not(.active) {
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+html.dark .segmented-btn {
+  color: #94a3b8;
+}
+
+html.dark .segmented-btn:hover:not(.active) {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.segmented-btn.active {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px rgba(29, 78, 216, 0.35) !important;
+}
+
+html.dark .segmented-btn.active {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.45) !important;
+}
+
+/* =====================================================================
+   APPLE VISIONOS MODALS & POPUPS SYSTEM (Lente Frosted Glass + Spring Anim)
+   ===================================================================== */
+
+/* Modals Root Overlay Backdrop.
+   OJO: nada de backdrop-filter aquí. Un blur a pantalla completa, animado
+   junto al fade de apertura, obliga a recomponer el blur en cada frame y es
+   lo que hacía que los modales se sintieran pesados en el Android Server. El velo
+   se consigue con opacidad, que sí es gratis para la GPU. */
+#library-modal,
+#video-modal,
+#delete-modal,
+#dlna-modal,
+#hardware-modal {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 1000 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: rgba(15, 23, 42, 0.72) !important;
+  /* Anula las clases backdrop-blur-* del marcado, que si no volverían a aplicar */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 1rem !important;
+  transition: opacity 0.2s ease-out !important;
+}
+
+html.dark #library-modal,
+html.dark #video-modal,
+html.dark #delete-modal,
+html.dark #dlna-modal,
+html.dark #hardware-modal {
+  background-color: rgba(2, 6, 23, 0.84) !important;
+}
+
+#library-modal.hidden,
+#video-modal.hidden,
+#delete-modal.hidden,
+#dlna-modal.hidden,
+#hardware-modal.hidden {
+  display: none !important;
+}
+
+#library-modal.flex,
+#video-modal.flex,
+#delete-modal.flex,
+#dlna-modal.flex,
+#hardware-modal.flex {
+  display: flex !important;
+  animation: overlayFadeIn 0.18s ease-out forwards !important;
+}
+
+/* Overlay fade — solo opacity, sin backdrop-filter animado (GPU no puede interpolarlo) */
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Pop de la tarjeta modal — sólo transform + opacity para 60fps garantizados en GPU */
+@keyframes visionPopIn {
+  0%   { opacity: 0; transform: scale(0.93) translateY(16px); }
+  100% { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+/* Modal Inner Card Container */
+#library-modal > div,
+#video-modal > div,
+#delete-modal > div,
+#dlna-modal > div,
+#hardware-modal > div {
+  position: relative !important;
+  transform-origin: center center;
+  border-radius: 28px !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  background: rgba(255, 255, 255, 0.97) !important;
+  /* Sin backdrop-blur en la tarjeta — el fondo es 97% opaco, así que el blur
+     no se ve pero cuesta una capa de composición extra en cada modal. */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: 0 24px 60px -12px rgba(15, 23, 42, 0.28),
+              0 0 0 1px rgba(255, 255, 255, 0.9),
+              inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+  color: #0f172a !important;
+}
+
+#library-modal.flex > div,
+#video-modal.flex > div,
+#delete-modal.flex > div,
+#dlna-modal.flex > div,
+#hardware-modal.flex > div {
+  animation: visionPopIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+}
+
+/* Dark Mode Inner Container */
+html.dark #library-modal > div,
+html.dark #delete-modal > div,
+html.dark #dlna-modal > div,
+html.dark #hardware-modal > div {
+  background: rgba(15, 23, 42, 0.94) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 36px 90px -18px rgba(0, 0, 0, 0.85),
+              0 0 0 1px rgba(255, 255, 255, 0.08),
+              inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+  color: #f8fafc !important;
+}
+
+/* Library Modal Geometry */
+#library-modal > div {
+  width: 100% !important;
+  max-width: 64rem !important; /* 1024px */
+  height: 88vh !important;
+  max-height: 880px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+@media (max-width: 640px) {
+  #library-modal {
+    padding: 0.5rem !important;
+  }
+  #library-modal > div {
+    height: 94vh !important;
+    max-width: calc(100vw - 16px) !important;
+    border-radius: 22px !important;
+  }
+}
+
+/* Video Player Modal */
+#video-modal > div {
+  width: 100% !important;
+  max-width: 56rem !important; /* 896px */
+  border-radius: 24px !important;
+  overflow: hidden !important;
+  background: #0a0f1d !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 35px 85px -15px rgba(0, 0, 0, 0.9) !important;
+}
+
+#video-modal video {
+  width: 100% !important;
+  height: 100% !important;
+  aspect-ratio: 16 / 9 !important;
+  background: #000000 !important;
+  outline: none !important;
+}
+
+/* Small Modals: Delete & DLNA */
+#delete-modal > div,
+#dlna-modal > div {
+  width: 100% !important;
+  max-width: 28rem !important; /* 448px */
+  border-radius: 24px !important;
+  /* Sin padding propio: lo aportan .mac-titlebar / .modal-body / .modal-foot */
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+/* ─── Anatomía común de los modales ──────────────────────────────────────────
+   Cabecera (icono + título + cerrar), cuerpo y pie de acciones con la misma
+   paleta, radios y transparencias que ya tenía el dashboard. El CSS de Tailwind
+   va precompilado dentro del HTML, así que la estructura se define aquí.
+   ─────────────────────────────────────────────────────────────────────────── */
+.modal-body {
+  padding: 1.25rem 1.5rem !important;
+}
+.modal-foot {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 0.75rem !important;
+  padding: 1rem 1.5rem !important;
+  border-top: 1px solid rgba(148, 163, 184, 0.28) !important;
+}
+/* Bloque de metadatos: agrupa las etiquetas de un archivo en vez de dejarlas sueltas */
+.modal-chip {
+  border-radius: 1rem !important;
+  border: 1px solid rgba(148, 163, 184, 0.28) !important;
+  background: rgba(241, 245, 249, 0.85) !important;
+  padding: 0.625rem 0.875rem !important;
+}
+.modal-chip-label {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  color: #94a3b8 !important;
+}
+.modal-chip-value {
+  margin-top: 2px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+html.dark html.dark .modal-foot { border-top-color: rgba(255, 255, 255, 0.12) !important; }
+html.dark .modal-chip {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+/* ─── Utilidades que faltan en el Tailwind precompilado ──────────────────────
+   El CSS de Tailwind incluido en este archivo se compiló antes de que
+   existieran los modales: las clases que sólo usan ellos (y las que el JS
+   aplica cambiando className) no están. Se definen aquí. Sin estas reglas la
+   pestaña activa de filtros y los botones azules del pie se quedaban con el
+   fondo transparente y el texto forzado a blanco (ilegibles), la barra de
+   subida no cambiaba de color al terminar o al fallar, y el punto de batería
+   no se veía. */
+.bg-\[\#176fda\] { background-color: #176fda !important; }
+.bg-emerald-400 { background-color: #34d399 !important; }
+.bg-emerald-500 { background-color: #10b981 !important; }
+.bg-amber-400 { background-color: #fbbf24 !important; }
+.bg-red-400 { background-color: #f87171 !important; }
+.bg-red-500 { background-color: #ef4444 !important; }
+@keyframes pulse { 50% { opacity: 0.5; } }
+.animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important; }
+
+/* ─── Control segmentado y buscador de macOS (biblioteca) ──────────────────
+   El control segmentado de macOS no es una pastilla azul: es una pista gris
+   redondeada con el segmento activo en blanco y una sombra fina. El buscador
+   es un campo gris con la lupa dentro, no un input diminuto con borde azul. */
+#library-modal .lib-tablist {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  padding: 2px !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--hw-hair) !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+html.dark #library-modal .lib-tablist { background: rgba(255, 255, 255, 0.06) !important; }
+
+#library-modal .lib-tab {
+  border: none !important;
+  border-radius: 4px !important;
+  padding: 0.22rem 0.8rem !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.5 !important;
+  cursor: pointer !important;
+  background: transparent !important;
+  color: var(--hw-label) !important;
+  transition: background-color 0.12s ease-out, box-shadow 0.12s ease-out !important;
+}
+#library-modal .lib-tab:hover:not(.is-active) { background: rgba(0, 0, 0, 0.05) !important; }
+html.dark #library-modal .lib-tab:hover:not(.is-active) { background: rgba(255, 255, 255, 0.08) !important; }
+#library-modal .lib-tab.is-active {
+  background: #ffffff !important;
+  color: var(--hw-label) !important;
+  font-weight: 600 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16), inset 0 0 0 0.5px rgba(0, 0, 0, 0.05) !important;
+}
+html.dark #library-modal .lib-tab.is-active {
+  background: #636366 !important;
+  color: #ffffff !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+}
+
+#library-modal .lib-search {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+  border-radius: 6px !important;
+  border: 1px solid var(--hw-hair) !important;
+  background: rgba(0, 0, 0, 0.04) !important;
+  padding: 0 0.5rem !important;
+}
+html.dark #library-modal .lib-search { background: rgba(255, 255, 255, 0.07) !important; }
+#library-modal .lib-search svg {
+  width: 13px !important;
+  height: 13px !important;
+  flex: 0 0 auto !important;
+  color: var(--hw-mute) !important;
+}
+#library-modal .lib-search input {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  width: 9rem !important;
+  border: none !important;
+  background: transparent !important;
+  padding: 0.32rem 0 !important;
+  font-size: 13px !important;
+  color: var(--hw-label) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+#library-modal .lib-search input::placeholder { color: var(--hw-mute) !important; }
+
+/* ─── Sistema visual macOS moderno (Sonoma / Tahoe) ─────────────────────────
+   Estas superficies usaban clases que el Tailwind precompilado NO incluye
+   (max-w-lg, max-h-[75vh], text-3xl, size-11 y 44 de 57 clases de color), así
+   que se veían como cajas blancas sin estilo. Se definen aquí con el lenguaje
+   de macOS moderno: ventana con material translúcido, barra de título unificada
+   con el contenido, cajas de grupo con esquinas generosas y el encabezado
+   ENCIMA en minúscula, filas con el valor a la derecha en gris, y controles
+   con un degradado muy sutil.
+
+   Nota de rendimiento: NO se usa backdrop-filter. Sobre el velo oscuro del
+   modal (un color plano) el desenfoque no se apreciaría, y en el Android Server sí
+   cuesta: es lo que hacía que los modales fueran a tirones. El efecto cristal
+   se consigue con transparencia, un borde luminoso y sombras suaves. */
+:root {
+  --hw-blue: #0a84ff;
+  --hw-green: #30d158;
+  --hw-orange: #ff9f0a;
+  --hw-purple: #bf5af2;
+  --hw-red: #ff453a;
+  --hw-teal: #40c8e0;
+  --hw-indigo: #5e5ce6;
+  --hw-label: #1d1d1f;
+  --hw-mute: #6e6e73;
+  --hw-window: rgba(246, 246, 249, 0.93);   /* material translúcido */
+  --hw-group: rgba(255, 255, 255, 0.86);
+  --hw-hair: rgba(0, 0, 0, 0.09);
+  --hw-track: rgba(0, 0, 0, 0.10);
+  --hw-edge: rgba(255, 255, 255, 0.65);     /* borde/realce luminoso del cristal */
+  --hw-shadow: 0 32px 70px -22px rgba(0, 0, 0, 0.55), 0 10px 26px -10px rgba(0, 0, 0, 0.35);
+}
+html.dark {
+  --hw-label: #f5f5f7;
+  --hw-mute: #98989d;
+  --hw-window: rgba(38, 38, 42, 0.94);
+  --hw-group: rgba(255, 255, 255, 0.08);
+  --hw-hair: rgba(255, 255, 255, 0.10);
+  --hw-track: rgba(255, 255, 255, 0.15);
+  --hw-edge: rgba(255, 255, 255, 0.16);
+  --hw-shadow: 0 32px 70px -22px rgba(0, 0, 0, 0.80), 0 10px 26px -10px rgba(0, 0, 0, 0.55);
+}
+
+/* Ventana: anula el radio 28px y el blanco de la regla genérica de modales */
+#hardware-modal > div {
+  border-radius: 14px !important;
+  background: var(--hw-window) !important;
+  border: 1px solid var(--hw-edge) !important;
+  box-shadow: var(--hw-shadow), inset 0 1px 0 var(--hw-edge) !important;
+  color: var(--hw-label) !important;
+}
+html.dark #hardware-modal > div {
+  background: var(--hw-window) !important;
+  border-color: var(--hw-edge) !important;
+  box-shadow: var(--hw-shadow), inset 0 1px 0 var(--hw-edge) !important;
+}
+
+/* Barra de título unificada con el contenido (sin fondo propio) */
+.mac-titlebar {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  padding: 0.7rem 0.9rem 0.55rem !important;
+  background: transparent !important;
+  border-bottom: 1px solid var(--hw-hair) !important;
+}
+.mac-lights { display: flex !important; gap: 8px !important; flex: 0 0 auto !important; }
+.mac-light {
+  width: 12px !important; height: 12px !important;
+  border-radius: 50% !important; border: none !important;
+  padding: 0 !important; cursor: default !important;
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.12) !important;
+}
+.mac-light--close { background: #ff5f57 !important; cursor: pointer !important; }
+.mac-light--min { background: #febc2e !important; }
+.mac-light--max { background: #28c840 !important; }
+.mac-title {
+  flex: 1 1 auto !important; min-width: 0 !important;
+  text-align: center !important;
+  font-size: 13px !important; font-weight: 600 !important;
+  color: var(--hw-label) !important;
+  letter-spacing: -0.01em !important;
+  white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;
+}
+
+/* Cuerpo de la ventana */
+.hw-body {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1.05rem !important;
+  padding: 0.35rem 1rem 1rem !important;
+  max-height: 64vh !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+}
+
+/* Encabezado de grupo: minúscula y gris, ENCIMA de la caja (Ajustes de macOS) */
+.mac-group-title {
+  font-size: 11.5px !important;
+  font-weight: 600 !important;
+  color: var(--hw-mute) !important;
+  padding: 0 0 0.4rem 0.3rem !important;
+}
+
+/* Caja de grupo: una sola superficie con filas separadas por líneas finas */
+.hw-card {
+  border-radius: 11px !important;
+  border: 1px solid var(--hw-hair) !important;
+  background: var(--hw-group) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+}
+
+.hw-grid2 { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 0.7rem !important; }
+.hw-grid3 { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; }
+
+/* Fila macOS: icono + etiqueta a la izquierda, valor a la derecha */
+.hw-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.6rem !important;
+  min-width: 0 !important;
+}
+.hw-card > .hw-row,
+.hw-rows > .hw-row { padding: 0.5rem 0.75rem !important; }
+.hw-card > .hw-row + .hw-row { border-top: 1px solid var(--hw-hair) !important; }
+
+/* Azulejo de icono, como los símbolos de Ajustes */
+.hw-tile {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 1.5rem !important; height: 1.5rem !important;
+  flex: 0 0 auto !important;
+  border-radius: 6px !important;
+  color: #ffffff !important;
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.10) !important;
+}
+.hw-tile svg { width: 0.9rem !important; height: 0.9rem !important; }
+.hw-tile--blue { background: var(--hw-blue) !important; }
+.hw-tile--green { background: var(--hw-green) !important; }
+.hw-tile--purple { background: var(--hw-purple) !important; }
+.hw-tile--teal { background: var(--hw-teal) !important; }
+.hw-tile--indigo { background: var(--hw-indigo) !important; }
+.hw-tile--orange { background: var(--hw-orange) !important; }
+
+.hw-txt { flex: 1 1 auto !important; min-width: 0 !important; }
+.hw-title {
+  font-size: 15px !important; font-weight: 700 !important;
+  letter-spacing: -0.01em !important; line-height: 1.25 !important;
+  color: var(--hw-label) !important;
+}
+.hw-sub { font-size: 11px !important; line-height: 1.35 !important; color: var(--hw-mute) !important; }
+.hw-label {
+  font-size: 13px !important; font-weight: 400 !important;
+  color: var(--hw-label) !important;
+}
+/* Valores: a la derecha, como en Ajustes */
+.hw-value {
+  font-size: 13px !important; font-weight: 600 !important;
+  color: var(--hw-label) !important;
+  text-align: right !important;
+  white-space: nowrap !important;
+}
+.hw-strong {
+  font-size: 13px !important; font-weight: 400 !important;
+  color: var(--hw-mute) !important;
+  text-align: right !important;
+  white-space: nowrap !important;
+}
+
+/* Barra fina de uso */
+.hw-track {
+  height: 5px !important;
+  border-radius: 9999px !important;
+  background: var(--hw-track) !important;
+  overflow: hidden !important;
+  margin-top: 0.35rem !important;
+}
+.hw-fill {
+  height: 100% !important;
+  border-radius: 9999px !important;
+  background: var(--hw-fill, var(--hw-green)) !important;
+  transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease !important;
+}
+.hw-dot {
+  width: 8px !important; height: 8px !important;
+  border-radius: 50% !important;
+  background: var(--hw-dot, var(--hw-mute)) !important;
+  flex: 0 0 auto !important;
+}
+
+/* Filas sueltas sobre una superficie que ya tiene fondo */
+.hw-rows { display: flex !important; flex-direction: column !important; }
+.hw-rows > * { padding: 0.7rem 0 !important; }
+.hw-rows > * + * { border-top: 1px solid var(--hw-hair) !important; }
+.hw-rows > *:first-child { padding-top: 0 !important; }
+.hw-rows > *:last-child { padding-bottom: 0 !important; }
+
+/* Controles macOS modernos: rectángulo redondeado con degradado muy sutil */
+.mac-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+  border-radius: 6px !important;
+  padding: 0.32rem 0.9rem !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  color: var(--hw-label) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.66)) !important;
+  border: 1px solid var(--hw-hair) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10) !important;
+  cursor: pointer !important;
+}
+html.dark .mac-btn {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.07)) !important;
+}
+.mac-btn--primary {
+  background: linear-gradient(180deg, #3d9bff, #0a7cff) !important;
+  border-color: rgba(0, 0, 0, 0.10) !important;
+  color: #ffffff !important;
+}
+html.dark .mac-btn--primary {
+  background: linear-gradient(180deg, #3395ff, #0a84ff) !important;
+  color: #ffffff !important;
+}
+.mac-btn--danger {
+  background: linear-gradient(180deg, #ff6961, #ff453a) !important;
+  border-color: transparent !important;
+  color: #ffffff !important;
+}
+
+/* La ventana de vídeo es siempre oscura: su barra de título también */
+#video-modal .mac-titlebar { border-bottom-color: rgba(255, 255, 255, 0.12) !important; }
+#video-modal .mac-title { color: #f5f5f7 !important; }
+.mac-foot {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.75rem !important;
+  padding: 0.7rem 1rem !important;
+  border-top: 1px solid var(--hw-hair) !important;
+  background: transparent !important;
+}
+
+/* Indicador "en vivo" de la cabecera */
+.hw-live {
+  width: 8px !important; height: 8px !important;
+  flex: 0 0 auto !important;
+  border-radius: 50% !important;
+  background: var(--hw-green) !important;
+  box-shadow: 0 0 0 5px rgba(48, 209, 88, 0.16) !important;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
+}
+
+/* ─── Toque macOS moderno al conjunto del panel y al resto de modales ───────
+   Mismo lenguaje que la ventana de hardware: gris neutro para las etiquetas,
+   esquinas de macOS en vez de las muy redondeadas, azulejos planos con los
+   colores de sistema (no degradados) y ventanas translúcidas con borde
+   luminoso para los modales. Se conservan el fondo degradado azul, las
+   transparencias y los hovers del panel. */
+
+/* Etiquetas y textos secundarios en gris neutro de macOS (no azulado) */
+main .text-\[\#31547b\],
+main .text-\[\#527294\],
+main .text-\[\#6f8eac\] { color: var(--hw-mute) !important; }
+
+/* Iconos al azul de acento de macOS */
+main .text-\[\#2867bf\],
+main .text-\[\#176fda\] { color: var(--hw-blue) !important; }
+
+/* Esquinas de macOS: menos burbuja, más rectángulo redondeado */
+main .rounded-\[28px\] { border-radius: 14px !important; }
+main .rounded-\[24px\],
+main .rounded-\[22px\],
+main .rounded-\[20px\] { border-radius: 12px !important; }
+main .rounded-\[18px\] { border-radius: 10px !important; }
+main .rounded-\[15px\],
+main .rounded-\[13px\] { border-radius: 8px !important; }
+main button.rounded-full,
+main a.rounded-full { border-radius: 8px !important; }
+
+/* Azulejos del dock: color plano de sistema en vez de degradado */
+main .from-orange-400 { background: var(--hw-orange) !important; }
+main .from-blue-400 { background: var(--hw-blue) !important; }
+main .from-violet-400 { background: var(--hw-purple) !important; }
+main .from-cyan-400 { background: var(--hw-teal) !important; }
+main .from-green-400 { background: var(--hw-green) !important; }
+main .from-slate-400 { background: #8e8e93 !important; }
+
+/* Botones del panel con el degradado sutil de macOS */
+main button.bg-white\/85,
+main button.bg-white\/80 {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.72)) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10) !important;
+}
+html.dark main button.bg-white\/85,
+html.dark main button.bg-white\/80 {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.08)) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+/* ── El resto de modales como ventanas macOS ────────────────────────────── */
+#library-modal > div,
+#delete-modal > div,
+#dlna-modal > div,
+#incompatible-modal > div,
+#video-modal > div {
+  border-radius: 14px !important;
+  border: 1px solid var(--hw-edge) !important;
+  box-shadow: var(--hw-shadow), inset 0 1px 0 var(--hw-edge) !important;
+}
+#library-modal > div,
+#delete-modal > div,
+#dlna-modal > div,
+#incompatible-modal > div { background: var(--hw-window) !important; }
+html.dark #library-modal > div,
+html.dark #delete-modal > div,
+html.dark #dlna-modal > div,
+html.dark #incompatible-modal > div { background: var(--hw-window) !important; border-color: var(--hw-edge) !important; }
+
+/* La barra de herramientas de la biblioteca (filtros + busca), como en macOS */
+#library-modal .lib-toolbar {
+  border-bottom: 1px solid var(--hw-hair) !important;
+  background: transparent !important;
+}
+
+/* Filas de la biblioteca: lista agrupada con líneas finas y realce suave al
+   pasar el ratón, en vez de tarjetas que se levantan */
+#lib-media-container .group {
+  border-radius: 10px !important;
+  border: 1px solid var(--hw-hair) !important;
+  background: rgba(255, 255, 255, 0.74) !important;
+  box-shadow: none !important;
+  transition: background-color 0.15s ease-out, border-color 0.15s ease-out !important;
+}
+#lib-media-container .group:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-color: rgba(0, 0, 0, 0.14) !important;
+}
+html.dark #lib-media-container .group { background: rgba(255, 255, 255, 0.06) !important; }
+html.dark #lib-media-container .group:hover { background: rgba(255, 255, 255, 0.12) !important; }
+
+/* Botones dentro de los modales: rectángulo de 6px, no pastilla */
+#library-modal button.rounded-full,
+#library-modal a.rounded-full,
+#delete-modal button.rounded-full,
+#dlna-modal button.rounded-full,
+#hardware-modal button.rounded-full { border-radius: 6px !important; }
+
+/* ─── Filas de la biblioteca: altura uniforme ───────────────────────────────
+   Antes cada fila la componía un bloque de texto que se partía en varias
+   líneas según lo largo que fuese el título o la ruta, así que unas filas
+   quedaban más altas que otras y la lista se veía irregular. Ahora cada dato
+   va en UNA línea con elipsis, y la fila tiene una altura mínima fija. */
+#lib-media-container .lib-row {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.75rem !important;
+  min-height: 64px !important;
+  padding: 0.55rem 0.75rem !important;
+}
+#lib-media-container .lib-main {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+#lib-media-container .lib-text { flex: 1 1 auto !important; min-width: 0 !important; }
+#lib-media-container .lib-title-line {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+  min-width: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+}
+#lib-media-container .lib-title {
+  flex: 0 1 auto !important;
+  min-width: 0 !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--hw-label) !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+#lib-media-container .lib-tag {
+  flex: 0 0 auto !important;
+  border-radius: 5px !important;
+  padding: 1px 6px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+}
+#lib-media-container .lib-tag--mono {
+  background: var(--hw-track) !important;
+  color: var(--hw-mute) !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important;
+}
+#lib-media-container .lib-filename {
+  margin-top: 1px !important;
+  font-size: 11.5px !important;
+  color: var(--hw-mute) !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+#lib-media-container .lib-meta {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.4rem !important;
+  margin-top: 2px !important;
+  font-size: 11px !important;
+  color: var(--hw-mute) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+}
+#lib-media-container .lib-meta > span { flex: 0 0 auto !important; }
+#lib-media-container .lib-meta-sep { opacity: 0.5 !important; }
+#lib-media-container .lib-meta-path {
+  flex: 0 1 auto !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important;
+  font-size: 10.5px !important;
+}
+#lib-media-container .lib-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+  flex: 0 0 auto !important;
+  flex-wrap: nowrap !important;
+}
+/* En pantallas estrechas no caben las acciones al lado: la fila se apila */
+@media (max-width: 640px) {
+  #lib-media-container .lib-row { flex-direction: column !important; align-items: stretch !important; }
+  #lib-media-container .lib-actions { flex-wrap: wrap !important; justify-content: flex-end !important; }
+}
+
+/* ─── Tooltip propio, al estilo de macOS ───────────────────────────────────
+   Los botones llevan data-tip con la descripción. Se usa UN solo elemento
+   compartido que se recoloca (no uno por botón: con 50 archivos serían
+   cientos de nodos). Se sustituye el tooltip nativo del navegador, que tarda
+   y no se puede dar estilo. */
+.mac-tip {
+  position: fixed !important;
+  z-index: 3000 !important;
+  pointer-events: none !important;
+  padding: 3px 8px !important;
+  border-radius: 6px !important;
+  background: rgba(30, 30, 32, 0.92) !important;
+  color: #f5f5f7 !important;
+  font-size: 11.5px !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0 !important;
+  white-space: nowrap !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.30), inset 0 0 0 0.5px rgba(255, 255, 255, 0.14) !important;
+  opacity: 0 !important;
+  transform: translateY(3px) scale(0.97) !important;
+  transition: opacity 0.12s ease-out, transform 0.12s ease-out !important;
+}
+.mac-tip.is-visible { opacity: 1 !important; transform: translateY(0) scale(1) !important; }
+html.dark .mac-tip { background: rgba(58, 58, 60, 0.97) !important; }
+
+/* Required utility classes for modal contents and library explorer */
+.z-50 { z-index: 50 !important; }
+.max-w-5xl { max-width: 64rem !important; }
+.max-w-4xl { max-width: 56rem !important; }
+.max-w-md { max-width: 28rem !important; }
+.max-w-sm { max-width: 24rem !important; }
+.h-\[88vh\] { height: 88vh !important; }
+.max-h-48 { max-height: 12rem !important; }
+.overflow-y-auto { overflow-y: auto !important; }
+.truncate { overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; }
+.font-bold { font-weight: 700 !important; }
+.font-semibold { font-weight: 600 !important; }
+.aspect-video { aspect-ratio: 16 / 9 !important; }
+.size-full { width: 100% !important; height: 100% !important; }
+.size-14 { width: 3.5rem !important; height: 3.5rem !important; }
+.size-16 { width: 4rem !important; height: 4rem !important; }
+.rounded-2xl { border-radius: 1rem !important; }
+.rounded-xl { border-radius: 0.75rem !important; }
+.rounded-3xl { border-radius: 1.5rem !important; }
+.rounded-md { border-radius: 0.375rem !important; }
+.text-\[10px\] { font-size: 10px !important; line-height: 14px !important; }
+.text-\[11px\] { font-size: 11px !important; line-height: 16px !important; }
+
+/* Spacing helpers */
+.space-y-1 > :not([hidden]) ~ :not([hidden]) { margin-top: 0.25rem !important; }
+.space-y-2 > :not([hidden]) ~ :not([hidden]) { margin-top: 0.5rem !important; }
+.space-y-3 > :not([hidden]) ~ :not([hidden]) { margin-top: 0.75rem !important; }
+
+/* Badges & Button styles inside modals */
+.bg-blue-100 { background-color: #dbeafe !important; }
+.text-blue-700 { color: #1d4ed8 !important; }
+html.dark .dark\:bg-blue-900\/50,
+html.dark .dark\:bg-blue-900\/60 { background-color: rgba(30, 58, 138, 0.6) !important; }
+html.dark .dark\:text-blue-300 { color: #93c5fd !important; }
+
+.bg-violet-100 { background-color: #ede9fe !important; }
+.text-violet-700 { color: #6d28d9 !important; }
+html.dark .dark\:bg-violet-900\/60 { background-color: rgba(91, 33, 182, 0.6) !important; }
+html.dark .dark\:text-violet-300 { color: #c4b5fd !important; }
+
+.bg-slate-200\/60 { background-color: rgba(226, 232, 240, 0.6) !important; }
+.bg-slate-200\/70 { background-color: rgba(226, 232, 240, 0.7) !important; }
+.text-slate-600 { color: #475569 !important; }
+
+.bg-amber-50 { background-color: #fffbeb !important; }
+.text-amber-600 { color: #d97706 !important; }
+html.dark .dark\:bg-amber-950\/40 { background-color: rgba(69, 26, 3, 0.45) !important; }
+html.dark .dark\:text-amber-400 { color: #fbbf24 !important; }
+
+.bg-red-50 { background-color: #fef2f2 !important; }
+.bg-red-100 { background-color: #fee2e2 !important; }
+.bg-red-600 { background-color: #dc2626 !important; }
+.text-red-500 { color: #ef4444 !important; }
+.text-red-600 { color: #dc2626 !important; }
+html.dark .dark\:bg-red-950\/50 { background-color: rgba(69, 10, 10, 0.5) !important; }
+html.dark .dark\:text-red-400 { color: #f87171 !important; }
+
+.bg-emerald-100 { background-color: #d1fae5 !important; }
+.text-emerald-600 { color: #059669 !important; }
+
+.bg-slate-100 { background-color: #f1f5f9 !important; }
+.text-slate-700 { color: #334155 !important; }
+
+html.dark .dark\:bg-slate-800\/80 { background-color: rgba(30, 41, 59, 0.8) !important; }
+html.dark .dark\:bg-white\/5 { background-color: rgba(255, 255, 255, 0.05) !important; }
+html.dark .dark\:bg-white\/10 { background-color: rgba(255, 255, 255, 0.1) !important; }
+html.dark .dark\:hover\:bg-white\/20:hover { background-color: rgba(255, 255, 255, 0.2) !important; }
+html.dark .dark\:border-white\/10 { border-color: rgba(255, 255, 255, 0.1) !important; }
+html.dark .dark\:border-white\/15 { border-color: rgba(255, 255, 255, 0.15) !important; }
+html.dark .dark\:border-white\/20 { border-color: rgba(255, 255, 255, 0.2) !important; }
+html.dark .dark\:text-slate-100 { color: #f1f5f9 !important; }
+html.dark .dark\:text-slate-200 { color: #e2e8f0 !important; }
+html.dark .dark\:text-slate-300 { color: #cbd5e1 !important; }
+html.dark .dark\:text-slate-400 { color: #94a3b8 !important; }
+
+/* Media cards inside Library Explorer.
+   Sin backdrop-filter: las tarjetas van sobre la superficie ya opaca del modal,
+   así que el blur no se veía pero costaba una capa de composición por archivo
+   (con 50 vídeos, 50 blurs) y era lo que hacía tirones al hacer scroll. */
+#lib-media-container .group {
+  border: 1px solid rgba(23, 111, 218, 0.12) !important;
+  background: rgba(255, 255, 255, 0.82) !important;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.18s ease-out,
+              border-color 0.18s ease-out,
+              background-color 0.18s ease-out !important;
+}
+
+#lib-media-container .group:hover {
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 10px 24px -4px rgba(23, 111, 218, 0.16) !important;
+  border-color: rgba(23, 111, 218, 0.28) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
+}
+
+html.dark #lib-media-container .group {
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(30, 41, 59, 0.6) !important;
+}
+
+html.dark #lib-media-container .group:hover {
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  background: rgba(30, 41, 59, 0.85) !important;
+  box-shadow: 0 10px 26px -4px rgba(0, 0, 0, 0.6) !important;
+}
+
+
+/* ─── Botones dentro de modales ────────────────────────────────────────────
+   REGLA DE ORO: hover/active SOLO toca transform. Nunca override color ni
+   background — eso es lo que hacía que el texto se volviese blanco/ilegible.
+   ──────────────────────────────────────────────────────────────────────── */
+#lib-media-container button,
+#lib-media-container a,
+#library-modal button,
+#video-modal button,
+#delete-modal button,
+#dlna-modal button,
+#hardware-modal button {
+  transition: transform 0.14s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.14s ease !important;
+  /* Heredar color explícitamente para que :active no lo pierda */
+  color: inherit !important;
+}
+
+/* Hover: pequeño lift sin tocar colores */
+#lib-media-container button:hover,
+#lib-media-container a:hover,
+#library-modal button:hover,
+#video-modal button:hover,
+#delete-modal button:hover,
+#dlna-modal button:hover,
+#hardware-modal button:hover {
+  transform: translateY(-1px) scale(1.02) !important;
+}
+
+/* Active: press físico — sólo escala, sin override de color */
+#lib-media-container button:active,
+#lib-media-container a:active,
+#library-modal button:active,
+#video-modal button:active,
+#delete-modal button:active,
+#dlna-modal button:active,
+#hardware-modal button:active {
+  transform: scale(0.95) translateY(0) !important;
+}
+
+/* Forzar colores en botones de acción comunes para que nunca hereden blanco */
+#library-modal button[class*="text-white"],
+#delete-modal button[class*="text-white"],
+#dlna-modal button[class*="text-white"],
+#hardware-modal button[class*="text-white"] {
+  color: #fff !important;
+}
+#library-modal button[class*="text-slate"],
+#delete-modal button[class*="text-slate"],
+#dlna-modal button[class*="text-slate"] {
+  color: #334155 !important;
+}
+html.dark #library-modal button[class*="dark:text-slate"],
+html.dark #delete-modal button[class*="dark:text-slate"],
+html.dark #dlna-modal button[class*="dark:text-slate"] {
+  color: #94a3b8 !important;
+}
+#lib-media-container button[class*="text-red"] { color: #dc2626 !important; }
+#lib-media-container button[class*="text-slate-7"] { color: #334155 !important; }
+
+/* Custom Scrollbar for Library Explorer and Upload Queue */
+#lib-media-container::-webkit-scrollbar,
+#upload-queue-container::-webkit-scrollbar {
+  width: 6px;
+}
+#lib-media-container::-webkit-scrollbar-track,
+#upload-queue-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+#lib-media-container::-webkit-scrollbar-thumb,
+#upload-queue-container::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.3);
+  border-radius: 9999px;
+}
+html.dark #lib-media-container::-webkit-scrollbar-thumb,
+html.dark #upload-queue-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+}
+  </style>
+</head>
+<body class="antialiased selection:bg-[#176fda] selection:text-white">
+
+  <!-- Background overlay mesh -->
+  <main class="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_15%_10%,#8ddcff_0%,transparent_34%),radial-gradient(circle_at_90%_20%,#2e7cf6_0%,transparent_42%),linear-gradient(135deg,#72d8f4_0%,#287df0_52%,#2358d5_100%)] text-[#152039] transition-colors duration-300">
+    <div class="pointer-events-none fixed inset-0 opacity-30 [background-image:linear-gradient(45deg,transparent_0_35%,rgba(255,255,255,.45)_35%_42%,transparent_42%_100%),linear-gradient(125deg,transparent_0_52%,rgba(255,255,255,.28)_52%_60%,transparent_60%_100%)] [background-size:900px_700px,1100px_900px]"></div>
+
+    <!-- Header identical to Vercel app with Sun/Moon theme toggle -->
+    <header class="relative border-b border-white/30 bg-white/25 backdrop-blur-2xl transition-all duration-300">
+      <div class="mx-auto flex h-12 max-w-[1240px] items-center justify-between px-5 text-white">
+        
+        <!-- Left: Brand Logo & Navigation -->
+        <div class="flex items-center gap-6">
+          <div class="flex size-7 items-center justify-center rounded-full bg-white/80 text-[#1763c5] shadow-sm cursor-pointer transition hover:scale-105" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Media Server">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play size-3 fill-current"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"></path></svg>
+          </div>
+          <nav class="hidden gap-6 text-[13px] md:flex" aria-label="Navegación principal">
+            <span class="font-semibold cursor-pointer" onclick="filterType('all')">Media Server</span>
+            <span class="text-white/75 hover:text-white cursor-pointer transition" onclick="filterType('peliculas')">Películas</span>
+            <span class="text-white/75 hover:text-white cursor-pointer transition" onclick="filterType('series')">Series</span>
+          </nav>
+        </div>
+
+        <!-- Right: Add, Grid, Sun/Moon Dark Mode Toggle -->
+        <div class="flex items-center gap-5 sm:gap-6">
+          <!-- Add media button: bare icon -->
+          <button aria-label="Add media" onclick="triggerFileInput()" class="flex items-center justify-center p-1 text-white/80 hover:text-white transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer" title="Subir vídeos">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus size-4"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+          </button>
+          
+          <!-- Grid view button: bare icon -->
+          <button aria-label="Ver cuadrícula" onclick="openLibraryModal('all')" class="flex items-center justify-center p-1 text-white/80 hover:text-white transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer" title="Abrir gestor de biblioteca">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-grid3x3 size-4"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M3 9h18"></path><path d="M3 15h18"></path><path d="M9 3v18"></path><path d="M15 3v18"></path></svg>
+          </button>
+
+          <!-- SOL / LUNA THEME TOGGLE -->
+          <button id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Cambiar tema claro / oscuro" title="Cambiar modo claro / oscuro"
+                  class="relative flex size-8 items-center justify-center rounded-full border-2 border-white/85 shadow-md transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer bg-gradient-to-br from-amber-300 via-amber-400 to-orange-500 shadow-orange-500/30">
+            <!-- Icono Sol visible en modo claro -->
+            <svg id="icon-sun" class="size-4 text-white drop-shadow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="4" fill="currentColor"></circle>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+            </svg>
+            <!-- Icono Luna: relleno blanco + borde para máxima visibilidad en fondo oscuro -->
+            <svg id="icon-moon" class="size-[18px] hidden drop-shadow" viewBox="0 0 24 24" fill="white" stroke="rgba(255,255,255,0.6)" stroke-width="1">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="relative mx-auto max-w-[1240px] px-5 pb-16 pt-10">
+      
+      <!-- Greeting and Add Media Hero -->
+      <div class="mb-7 flex flex-col justify-between gap-5 text-white sm:flex-row sm:items-end">
+        <div>
+          <p id="hero-date" class="text-[13px] text-white/75">Cargando fecha...</p>
+          <h1 id="hero-greeting" class="mt-1 text-4xl font-semibold tracking-[-0.055em] sm:text-5xl">Buenos días, Moisés.</h1>
+          <p class="mt-2 text-[15px] text-white/75">Tu servidor multimedia Android Server, de un vistazo.</p>
+        </div>
+        <button onclick="triggerFileInput()" class="flex h-10 items-center justify-center gap-2 rounded-full bg-white/85 px-5 text-sm font-medium text-[#1763c5] shadow-lg shadow-blue-900/15 backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03] hover:bg-white hover:shadow-xl active:scale-95 cursor-pointer">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus size-4"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+          Subir archivos
+        </button>
+      </div>
+
+      <!-- 4 Top Cards (Exact styles, dimensions, hover lift, shadow and border) -->
+      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        
+        <!-- Card 1: Media -->
+        <div onclick="openLibraryModal('all')" class="group rounded-[22px] border border-white/45 bg-white/45 p-5 shadow-xl shadow-blue-900/10 backdrop-blur-2xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.015] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl hover:shadow-blue-900/20 active:scale-[.99] cursor-pointer" title="Ver biblioteca completa">
+          <div class="flex items-center justify-between">
+            <span class="text-[13px] text-[#31547b]">Media</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-video size-4 text-[#2867bf]"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"></path><rect x="2" y="6" width="14" height="12" rx="2"></rect></svg>
+          </div>
+          <p id="stat-media-count" class="mt-3 text-2xl font-semibold tracking-[-0.04em]">--</p>
+          <p id="stat-media-sub" class="mt-1 text-xs text-[#527294]">Películas y Series</p>
+        </div>
+
+        <!-- Card 2: Storage -->
+        <div onclick="scrollToElement('server-health-section')" class="group rounded-[22px] border border-white/45 bg-white/45 p-5 shadow-xl shadow-blue-900/10 backdrop-blur-2xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.015] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl hover:shadow-blue-900/20 active:scale-[.99] cursor-pointer">
+          <div class="flex items-center justify-between">
+            <span class="text-[13px] text-[#31547b]">Almacenamiento</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hard-drive size-4 text-[#2867bf]"><path d="M10 16h.01"></path><path d="M2.212 11.577a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path><path d="M21.946 12.013H2.054"></path><path d="M6 16h.01"></path></svg>
+          </div>
+          <p id="stat-storage-used" class="mt-3 text-2xl font-semibold tracking-[-0.04em]">-- GB</p>
+          <p id="stat-storage-total" class="mt-1 text-xs text-[#527294]">de -- GB disponibles</p>
+        </div>
+
+        <!-- Card 3: Real Android Server Battery -->
+        <div id="card-battery" class="group rounded-[22px] border border-white/45 bg-white/45 p-5 shadow-xl shadow-blue-900/10 backdrop-blur-2xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.015] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl hover:shadow-blue-900/20 active:scale-[.99]">
+          <div class="flex items-center justify-between">
+            <span class="text-[13px] text-[#31547b]">Batería Android Server</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap size-4 text-[#2867bf]"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          </div>
+          <p id="stat-battery-pct" class="mt-3 text-2xl font-semibold tracking-[-0.04em]">--%</p>
+          <p id="stat-battery-status" class="mt-1 text-xs text-[#527294]">Cargando · Estado óptimo</p>
+        </div>
+
+        <!-- Card 4: DLNA / Uptime -->
+        <div onclick="openDlnaInfoModal()" class="group rounded-[22px] border border-white/45 bg-white/45 p-5 shadow-xl shadow-blue-900/10 backdrop-blur-2xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.015] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl hover:shadow-blue-900/20 active:scale-[.99] cursor-pointer">
+          <div class="flex items-center justify-between">
+            <span class="text-[13px] text-[#31547b]">DLNA Samsung TV</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud size-4 text-[#2867bf]"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path></svg>
+          </div>
+          <p id="stat-dlna-status" class="mt-3 text-2xl font-semibold tracking-[-0.04em]">Puerto 8200</p>
+          <p id="stat-uptime" class="mt-1 text-xs text-[#527294]">Activo en red local</p>
+        </div>
+      </div>
+
+      <!-- 2-Column Section (Dropzone + Server Health) -->
+      <div class="mt-3 grid gap-3 lg:grid-cols-[1.3fr_.7fr]">
+        
+        <!-- Left: Add to your library (Dropzone & Queue) -->
+        <section class="rounded-[24px] border border-white/50 bg-white/70 p-6 shadow-2xl shadow-blue-900/15 backdrop-blur-2xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-white/80 hover:bg-white/80 hover:shadow-[0_24px_60px_rgba(15,68,145,.22)] sm:p-8">
+          <div class="flex items-start justify-between">
+            <div>
+              <h2 class="text-xl font-semibold tracking-[-0.035em]">Añadir a tu biblioteca</h2>
+              <p class="mt-1 text-sm text-[#527294]">Sube vídeos para verlos al instante en tu Smart TV.</p>
+            </div>
+            
+            <!-- Category Segmented Control -->
+            <div class="flex items-center gap-3">
+              <div class="segmented-control-wrapper" role="group" aria-label="Destino de subida">
+                <button id="btn-cat-pelis" type="button" aria-pressed="true" onclick="setUploadCategory('peliculas')" class="segmented-btn active">Películas</button>
+                <button id="btn-cat-series" type="button" aria-pressed="false" onclick="setUploadCategory('series')" class="segmented-btn">Series</button>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-upload size-5 text-[#176fda]"><path d="M12 13v8"></path><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><path d="m8 17 4-4 4 4"></path></svg>
+            </div>
+          </div>
+
+          <!-- Dropzone box matching exact classes -->
+          <div id="dropzone" role="button" tabindex="0" aria-label="Zona de arrastre de archivos"
+               class="mt-6 flex min-h-[205px] cursor-pointer flex-col items-center justify-center rounded-[20px] border border-dashed border-[#92b8df] bg-white/45 text-center transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.01] hover:border-[#5da7ed] hover:bg-white/75 hover:shadow-lg">
+            <div class="flex size-14 items-center justify-center rounded-[18px] bg-gradient-to-br from-[#3ca8ff] to-[#1764d1] text-white shadow-lg">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-upload size-7"><path d="M12 13v8"></path><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><path d="m8 17 4-4 4 4"></path></svg>
+            </div>
+            <p class="mt-4 text-[15px] font-semibold">Arrastra archivos aquí</p>
+            <p class="mt-1 text-sm text-[#527294]">o <span class="text-[#176fda] font-medium">selecciona desde tu ordenador</span></p>
+            <p class="mt-4 text-xs text-[#6f8eac]">MP4, MKV, MOV, AVI · Soporta cola masiva (50+ archivos simultáneos)</p>
+          </div>
+          <input id="file-input" type="file" multiple accept="video/*" class="hidden">
+
+          <!-- Upload Queue Container -->
+          <div id="upload-queue-container" class="mt-4 hidden space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+        </section>
+
+        <!-- Derecha: Estado del servidor (hardware del Android Server) -->
+        <section id="server-health-section" class="rounded-[24px] border border-white/50 bg-white/70 p-6 shadow-2xl shadow-blue-900/15 backdrop-blur-2xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-white/80 hover:bg-white/80 hover:shadow-[0_24px_60px_rgba(15,68,145,.22)] sm:p-8">
+          <div class="hw-row">
+            <div class="hw-tile hw-tile--indigo">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <div class="hw-txt">
+              <h2 class="hw-title" style="font-size:17px">Estado del servidor</h2>
+              <p class="hw-sub">Android Server · ARM64</p>
+            </div>
+            <span class="hw-live" aria-hidden="true"></span>
+          </div>
+
+          <!-- Filas: una sola superficie, separadas por líneas finas -->
+          <div class="hw-rows" style="margin-top:1rem">
+
+            <!-- Temperatura del dispositivo -->
+            <div class="hw-row" style="align-items: center !important; gap: 0.75rem !important;">
+              <div class="hw-tile hw-tile--orange" style="width: 2.25rem !important; height: 2.25rem !important; border-radius: 8px !important;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 1.25rem !important; height: 1.25rem !important;"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+              </div>
+              <p id="card-temp">--°C</p>
+            </div>
+
+            <!-- Ecualizador decorativo -->
+            <div>
+              <div id="equalizer-bars" class="flex h-10 items-end gap-1.5">
+                <div class="flex-1 rounded-full bg-gradient-to-t from-[#176fda] to-[#58c5ff] transition-all duration-500" style="height:20px"></div>
+                <div class="flex-1 rounded-full bg-gradient-to-t from-[#176fda] to-[#58c5ff] transition-all duration-500" style="height:32px"></div>
+                <div class="flex-1 rounded-full bg-gradient-to-t from-[#176fda] to-[#58c5ff] transition-all duration-500" style="height:26px"></div>
+                <div class="flex-1 rounded-full bg-gradient-to-t from-[#176fda] to-[#58c5ff] transition-all duration-500" style="height:44px"></div>
+                <div class="flex-1 rounded-full bg-gradient-to-t from-[#176fda] to-[#58c5ff] transition-all duration-500" style="height:38px"></div>
+                <div class="flex-1 rounded-full bg-gradient-to-t from-[#176fda] to-[#58c5ff] transition-all duration-500" style="height:52px"></div>
+                <div class="flex-1 rounded-full bg-gradient-to-t from-[#176fda] to-[#58c5ff] transition-all duration-500" style="height:42px"></div>
+                <div class="flex-1 rounded-full bg-gradient-to-t from-[#176fda] to-[#58c5ff] transition-all duration-500" style="height:34px"></div>
+                <div class="flex-1 rounded-full bg-gradient-to-t from-[#176fda] to-[#58c5ff] transition-all duration-500" style="height:48px"></div>
+                <div class="flex-1 rounded-full bg-gradient-to-t from-[#176fda] to-[#58c5ff] transition-all duration-500" style="height:30px"></div>
+                <div class="flex-1 rounded-full bg-gradient-to-t from-[#176fda] to-[#58c5ff] transition-all duration-500" style="height:40px"></div>
+              </div>
+            </div>
+
+            <!-- Batería / Estado -->
+            <div class="hw-row">
+              <div class="hw-tile hw-tile--green">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="17" height="10" rx="3"/><path d="M22 11v2"/></svg>
+              </div>
+              <p class="hw-label hw-txt">Batería / Estado</p>
+              <p id="card-battery-sub" class="hw-strong">--% · --</p>
+            </div>
+
+            <!-- Memoria RAM -->
+            <div class="hw-row" id="card-ram">
+              <div class="hw-tile hw-tile--blue">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="18" height="8" rx="2"/><path d="M7 10V7M12 10V7M17 10V7M7 21v-3M17 21v-3"/></svg>
+              </div>
+              <p class="hw-label hw-txt">Memoria RAM</p>
+              <p id="card-ram-val" class="hw-strong">-- / -- GB</p>
+            </div>
+
+          </div>
+        </section>
+      </div>
+
+      <!-- Bottom Dock: 6 100% USEFUL AND FUNCTIONAL BUTTONS -->
+      <div class="mt-3 grid grid-cols-3 gap-3 sm:grid-cols-6">
+        
+        <!-- Button 1: Biblioteca (Abre el Gestor de Archivos) -->
+        <button onclick="openLibraryModal('all')" class="group flex flex-col items-center gap-2 rounded-[20px] border border-white/45 bg-white/35 py-4 text-[12px] shadow-lg shadow-blue-900/10 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.04] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl active:scale-95 cursor-pointer" title="Explorador y gestor de archivos multimedia del Android Server">
+          <span class="flex size-12 items-center justify-center rounded-[15px] bg-gradient-to-br from-orange-400 to-red-500 text-white shadow-lg transition-transform group-hover:scale-105">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-film size-6"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M7 3v18"></path><path d="M3 7.5h4"></path><path d="M3 12h18"></path><path d="M3 16.5h4"></path><path d="M17 3v18"></path><path d="M17 7.5h4"></path><path d="M17 16.5h4"></path></svg>
+          </span>
+          Biblioteca
+        </button>
+
+        <!-- Button 2: Películas -->
+        <button onclick="openLibraryModal('peliculas')" class="group flex flex-col items-center gap-2 rounded-[20px] border border-white/45 bg-white/35 py-4 text-[12px] shadow-lg shadow-blue-900/10 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.04] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl active:scale-95 cursor-pointer" title="Ver y gestionar películas">
+          <span class="flex size-12 items-center justify-center rounded-[15px] bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-lg transition-transform group-hover:scale-105">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-video size-6"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"></path><rect x="2" y="6" width="14" height="12" rx="2"></rect></svg>
+          </span>
+          Películas
+        </button>
+
+        <!-- Button 3: Series -->
+        <button onclick="openLibraryModal('series')" class="group flex flex-col items-center gap-2 rounded-[20px] border border-white/45 bg-white/35 py-4 text-[12px] shadow-lg shadow-blue-900/10 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.04] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl active:scale-95 cursor-pointer" title="Ver y gestionar series">
+          <span class="flex size-12 items-center justify-center rounded-[15px] bg-gradient-to-br from-violet-400 to-indigo-600 text-white shadow-lg transition-transform group-hover:scale-105">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tv size-6"><rect width="20" height="15" x="2" y="7" rx="2" ry="2"></rect><polyline points="17 2 12 7 7 2"></polyline></svg>
+          </span>
+          Series
+        </button>
+
+        <!-- Button 4: Subir vídeos -->
+        <button onclick="triggerFileInput()" class="group flex flex-col items-center gap-2 rounded-[20px] border border-white/45 bg-white/35 py-4 text-[12px] shadow-lg shadow-blue-900/10 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.04] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl active:scale-95 cursor-pointer" title="Abrir selector de archivos para subir vídeos">
+          <span class="flex size-12 items-center justify-center rounded-[15px] bg-gradient-to-br from-cyan-400 to-blue-500 text-white shadow-lg transition-transform group-hover:scale-105">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-upload size-6"><path d="M12 13v8"></path><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><path d="m8 17 4-4 4 4"></path></svg>
+          </span>
+          Subir vídeos
+        </button>
+
+        <!-- Button 5: Smart TV DLNA -->
+        <button onclick="openDlnaInfoModal()" class="group flex flex-col items-center gap-2 rounded-[20px] border border-white/45 bg-white/35 py-4 text-[12px] shadow-lg shadow-blue-900/10 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.04] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl active:scale-95 cursor-pointer" title="Instrucciones para ver en tu Samsung Smart TV">
+          <span class="flex size-12 items-center justify-center rounded-[15px] bg-gradient-to-br from-green-400 to-emerald-600 text-white shadow-lg transition-transform group-hover:scale-105">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cast size-6"><path d="M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path><path d="M2 12a9 9 0 0 1 8 8"></path><path d="M2 16a5 5 0 0 1 4 4"></path><line x1="2" x2="2.01" y1="20" y2="20"></line></svg>
+          </span>
+          Smart TV
+        </button>
+
+        <!-- Button 6: Hardware servidor -->
+        <button onclick="openHardwareModal()" class="group flex flex-col items-center gap-2 rounded-[20px] border border-white/45 bg-white/35 py-4 text-[12px] shadow-lg shadow-blue-900/10 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.04] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl active:scale-95 cursor-pointer" title="Ver estado detallado del hardware: CPU, RAM, Batería, Red">
+          <span class="flex size-12 items-center justify-center rounded-[15px] bg-gradient-to-br from-slate-400 to-slate-600 text-white shadow-lg transition-transform group-hover:scale-105">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap size-6"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          </span>
+          Hardware
+        </button>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- VISIONOS MULTIMEDIA LIBRARY & FILE MANAGER MODAL -->
+  <div id="library-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 p-3 sm:p-6 transition-all" role="dialog" aria-modal="true" aria-label="Explorador y Gestor de Biblioteca">
+    <div class="relative flex flex-col w-full max-w-5xl h-[88vh] overflow-hidden rounded-[28px] border border-white/40 bg-white/90 dark:bg-slate-900/90 shadow-2xl shadow-blue-900/30 text-[#152039] dark:text-slate-100">
+      
+      <!-- Barra de título macOS -->
+      <div class="mac-titlebar">
+        <div class="mac-lights">
+          <button class="mac-light mac-light--close" onclick="closeLibraryModal()" aria-label="Cerrar biblioteca" title="Cerrar"></button>
+          <span class="mac-light mac-light--min" aria-hidden="true"></span>
+          <span class="mac-light mac-light--max" aria-hidden="true"></span>
+        </div>
+        <h2 class="mac-title">Biblioteca Multimedia Android Server</h2>
+        <span id="lib-count-badge" class="hw-strong" style="flex:0 0 auto">0 vídeos</span>
+      </div>
+
+      <!-- Barra de herramientas (filtros y búsqueda) -->
+      <div class="lib-toolbar flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 px-6 py-3.5">
+        
+        <!-- Filter tabs -->
+        <div class="lib-tablist" role="tablist" aria-label="Filtrar la biblioteca">
+          <button id="tab-filter-all" class="lib-tab is-active" aria-selected="true" role="tab" data-tip="Mostrar todo" onclick="setLibraryFilter('all')">Todos</button>
+          <button id="tab-filter-peliculas" class="lib-tab" aria-selected="false" role="tab" data-tip="Mostrar solo películas" onclick="setLibraryFilter('peliculas')">Películas</button>
+          <button id="tab-filter-series" class="lib-tab" aria-selected="false" role="tab" data-tip="Mostrar solo series" onclick="setLibraryFilter('series')">Series</button>
+        </div>
+
+        <!-- Buscador y actualizar (estilo macOS) -->
+        <div class="flex items-center gap-2">
+          <div class="lib-search">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
+            <input id="lib-search-input" type="text" placeholder="Buscar" oninput="handleLibrarySearch(this.value)" aria-label="Buscar en la biblioteca">
+          </div>
+          <button onclick="fetchAllMedia()" class="mac-btn" aria-label="Actualizar lista" data-tip="Actualizar lista">
+            <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            <span>Actualizar</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Media Grid / Explorer Container -->
+      <div id="lib-media-container" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3">
+        <!-- Dynamically generated cards -->
+      </div>
+
+      <!-- Pie de ventana -->
+      <div class="modal-foot modal-foot--between">
+        <span id="lib-footer-info" class="hw-sub">Cargando biblioteca...</span>
+        <button onclick="closeLibraryModal()" class="mac-btn mac-btn--primary">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compatibility span for automated tests -->
+  <span id="sidebar-battery-pct" style="display:none"></span>
+
+  <!-- VIDEO PLAYER MODAL -->
+  <div id="video-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 p-4 transition-all"
+       role="dialog" aria-modal="true" aria-labelledby="modal-video-title">
+    <div class="relative w-full max-w-4xl overflow-hidden bg-[#0d1627]">
+      <!-- Barra de título macOS (ventana de vídeo, siempre oscura) -->
+      <div class="mac-titlebar">
+        <div class="mac-lights">
+          <button class="mac-light mac-light--close" onclick="closeVideoModal()" aria-label="Cerrar reproductor" title="Cerrar"></button>
+          <span class="mac-light mac-light--min" aria-hidden="true"></span>
+          <span class="mac-light mac-light--max" aria-hidden="true"></span>
+        </div>
+        <h3 id="modal-video-title" class="mac-title">Reproductor</h3>
+        <span class="mac-lights" aria-hidden="true"></span>
+      </div>
+      <div class="aspect-video w-full bg-black">
+        <video id="html-video-player" controls preload="metadata" class="size-full">
+          Tu navegador no soporta streaming HTML5.
+        </video>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELETE CONFIRMATION MODAL -->
+  <div id="delete-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 transition-all"
+       role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
+    <div class="relative w-full max-w-md rounded-[24px] border border-white/40 bg-white/90 text-[#152039] shadow-2xl">
+
+      <!-- Barra de título macOS -->
+      <div class="mac-titlebar">
+        <div class="mac-lights">
+          <button class="mac-light mac-light--close" onclick="closeDeleteModal()" aria-label="Cerrar ventana" title="Cerrar"></button>
+          <span class="mac-light mac-light--min" aria-hidden="true"></span>
+          <span class="mac-light mac-light--max" aria-hidden="true"></span>
+        </div>
+        <h3 id="delete-modal-title" class="mac-title">¿Eliminar este archivo?</h3>
+        <span class="mac-lights" aria-hidden="true"></span>
+      </div>
+
+      <!-- Cuerpo -->
+      <div class="modal-body">
+        <div class="modal-chip">
+          <p class="modal-chip-label">Archivo</p>
+          <p id="delete-modal-filename" class="modal-chip-value">filename.mp4</p>
+        </div>
+        <p class="mt-3 text-xs" style="color: var(--hw-red)">Esta acción no se puede deshacer y liberará espacio en el Android Server.</p>
+      </div>
+
+      <!-- Pie -->
+      <div class="modal-foot">
+        <button onclick="closeDeleteModal()" class="mac-btn">Cancelar</button>
+        <button id="btn-confirm-delete" class="mac-btn mac-btn--danger">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DLNA INFO MODAL -->
+  <div id="dlna-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 transition-all"
+       role="dialog" aria-modal="true" aria-labelledby="dlna-modal-title">
+    <div class="relative w-full max-w-md rounded-[24px] border border-white/40 bg-white/95 text-[#152039] shadow-2xl">
+
+      <!-- Barra de título macOS -->
+      <div class="mac-titlebar">
+        <div class="mac-lights">
+          <button class="mac-light mac-light--close" onclick="closeDlnaInfoModal()" aria-label="Cerrar ventana" title="Cerrar"></button>
+          <span class="mac-light mac-light--min" aria-hidden="true"></span>
+          <span class="mac-light mac-light--max" aria-hidden="true"></span>
+        </div>
+        <h3 id="dlna-modal-title" class="mac-title">Servidor DLNA</h3>
+        <span class="mac-lights" aria-hidden="true"></span>
+      </div>
+
+      <!-- Cuerpo -->
+      <div class="modal-body">
+        <p class="hw-sub">Tu Samsung Smart TV o cualquier reproductor en tu red WiFi detecta automáticamente el servidor multimedia.</p>
+        <div class="modal-chip mt-3">
+          <p class="modal-chip-label">Nombre en la red</p>
+          <p class="modal-chip-value">Android Media Server</p>
+        </div>
+        <div class="modal-chip mt-2">
+          <p class="modal-chip-label">Puerto</p>
+          <p class="modal-chip-value">8200</p>
+        </div>
+        <p class="hw-sub mt-3">En el mando de la Smart TV pulsa <em>Source / Fuentes</em> y selecciona <em>Android Media Server</em>.</p>
+      </div>
+
+      <div class="modal-foot">
+        <button onclick="closeDlnaInfoModal()" class="mac-btn mac-btn--primary">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HARDWARE MODAL — Ventana macOS con el estado del Android Server -->
+  <div id="hardware-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/65 p-4 transition-all" role="dialog" aria-modal="true" aria-labelledby="hardware-modal-title">
+    <div class="relative w-full max-w-md overflow-hidden text-[#152039] dark:text-slate-100 shadow-2xl" style="animation: visionPopIn .25s ease-out both">
+
+      <!-- Barra de título: semáforos macOS (el rojo cierra) -->
+      <div class="mac-titlebar">
+        <div class="mac-lights">
+          <button class="mac-light mac-light--close" onclick="closeHardwareModal()" aria-label="Cerrar" title="Cerrar"></button>
+          <span class="mac-light mac-light--min" aria-hidden="true"></span>
+          <span class="mac-light mac-light--max" aria-hidden="true"></span>
+        </div>
+        <h2 id="hardware-modal-title" class="mac-title">Android Smartphone</h2>
+        <span class="mac-lights" aria-hidden="true"></span>
+      </div>
+
+      <div class="hw-body">
+
+        <!-- Grupo: Estado general -->
+        <div>
+          <p class="mac-group-title">Estado general</p>
+          <div class="hw-card">
+            <div class="hw-row">
+              <div class="hw-tile hw-tile--green">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="17" height="10" rx="3"/><path d="M22 11v2"/></svg>
+              </div>
+              <p class="hw-label hw-txt">Batería</p>
+              <p id="hw-battery-pct" class="hw-value">--%</p>
+            </div>
+            <div class="hw-track"><div id="hw-battery-bar" class="hw-fill" style="width:0%"></div></div>
+            <div class="hw-row" style="padding-top:0.35rem">
+              <div class="hw-tile hw-tile--orange">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+              </div>
+              <p class="hw-label hw-txt">Temperatura</p>
+              <p id="hw-temp" class="hw-value">--°C</p>
+            </div>
+            <div class="hw-row">
+              <div class="hw-tile hw-tile--teal">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4.5 13H11l-1 9 8.5-11H12l1-9z"/></svg>
+              </div>
+              <p class="hw-label hw-txt">Estado de carga</p>
+              <p id="hw-battery-status" class="hw-strong">--</p>
+            </div>
+            <div class="hw-row">
+              <div class="hw-tile hw-tile--indigo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+              </div>
+              <p class="hw-label hw-txt">Voltaje</p>
+              <p id="hw-voltage" class="hw-strong">--</p>
+            </div>
+            <div class="hw-row">
+              <div class="hw-tile hw-tile--purple">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg>
+              </div>
+              <p class="hw-label hw-txt">Salud de la batería</p>
+              <p id="hw-health" class="hw-strong">--</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grupo: Recursos -->
+        <div>
+          <p class="mac-group-title">Recursos</p>
+          <div class="hw-grid2">
+            <div class="hw-card">
+              <div class="hw-row">
+                <div class="hw-tile hw-tile--blue">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="18" height="8" rx="2"/><path d="M7 10V7M12 10V7M17 10V7M7 21v-3M17 21v-3"/></svg>
+                </div>
+                <p class="hw-label hw-txt">Memoria RAM</p>
+                <p id="hw-ram-pct" class="hw-value">--%</p>
+              </div>
+              <div class="hw-track"><div id="hw-ram-bar" class="hw-fill" style="width:0%"></div></div>
+              <div class="hw-row" style="padding-top:0.35rem">
+                <p id="hw-ram-val" class="hw-strong">-- / -- GB</p>
+              </div>
+            </div>
+
+            <div class="hw-card">
+              <div class="hw-row">
+                <div class="hw-tile hw-tile--purple">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16h.01"/><path d="M2.212 11.577a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><path d="M21.946 12.013H2.054"/><path d="M6 16h.01"/></svg>
+                </div>
+                <p class="hw-label hw-txt">Disco</p>
+                <p id="hw-storage-pct" class="hw-value">--%</p>
+              </div>
+              <div class="hw-track"><div id="hw-storage-bar" class="hw-fill" style="width:0%"></div></div>
+              <div class="hw-row" style="padding-top:0.35rem">
+                <p id="hw-storage-val" class="hw-strong">-- / -- GB</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grupo: Servicios -->
+        <div>
+          <p class="mac-group-title">Servicios</p>
+          <div class="hw-card">
+            <div class="hw-row">
+              <div class="hw-tile hw-tile--green">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg>
+              </div>
+              <p class="hw-label hw-txt">Servidor DLNA</p>
+              <span id="hw-dlna-dot" class="hw-dot"></span>
+              <p id="hw-dlna-label" class="hw-value">--</p>
+            </div>
+            <div class="hw-row">
+              <div class="hw-tile hw-tile--blue">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              </div>
+              <p class="hw-label hw-txt">Tiempo activo</p>
+              <p id="hw-uptime" class="hw-strong">--</p>
+            </div>
+            <div class="hw-row">
+              <div class="hw-tile hw-tile--indigo">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+              </div>
+              <p class="hw-label hw-txt">Puerto DLNA</p>
+              <p class="hw-strong">8200</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Pie de ventana -->
+      <div class="mac-foot">
+        <p class="hw-sub">Datos en tiempo real · cada 10 s</p>
+        <button onclick="closeHardwareModal()" class="mac-btn mac-btn--primary">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INCOMPATIBLE FORMAT MODAL — Aviso de formato incompatible y botón mágico -->
+  <div id="incompatible-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 transition-all"
+       role="dialog" aria-modal="true" aria-labelledby="incompatible-modal-title">
+    <div class="relative w-full max-w-md rounded-[24px] border border-white/40 bg-white/95 text-[#152039] shadow-2xl">
+
+      <!-- Barra de título macOS -->
+      <div class="mac-titlebar">
+        <div class="mac-lights">
+          <button class="mac-light mac-light--close" onclick="closeIncompatibleModal()" aria-label="Cerrar ventana" title="Cerrar"></button>
+          <span class="mac-light mac-light--min" aria-hidden="true"></span>
+          <span class="mac-light mac-light--max" aria-hidden="true"></span>
+        </div>
+        <h3 id="incompatible-modal-title" class="mac-title">Vídeo Incompatible</h3>
+        <span class="mac-lights" aria-hidden="true"></span>
+      </div>
+
+      <!-- Cuerpo -->
+      <div class="modal-body">
+        <p class="hw-sub">Tu Smart TV Samsung no reproduce archivos <strong>.avi</strong> (DivX/Xvid). Conviértelo en tu Mac con un clic para verlo sin problemas.</p>
+
+        <div class="modal-chip mt-3">
+          <p class="modal-chip-label">Archivo</p>
+          <p id="incompatible-modal-filename" class="modal-chip-value">video.avi</p>
+        </div>
+
+        <div class="modal-chip mt-2">
+          <p class="modal-chip-label">Destino</p>
+          <p class="modal-chip-value">Formato compatible .mp4 (H.264 / AAC)</p>
+        </div>
+
+        <div id="helper-status-badge" class="mt-3 flex items-center gap-2 text-xs text-slate-500">
+          <span class="size-2 rounded-full bg-slate-400 inline-block"></span>
+          <span>Comprobando asistente en tu Mac...</span>
+        </div>
+
+        <!-- Opción manual con detalle discreto -->
+        <details class="mt-3 text-xs text-slate-500 group">
+          <summary class="cursor-pointer text-[11px] font-medium text-[#176fda] hover:underline flex items-center justify-between">
+            <span>Ver comando manual para terminal</span>
+            <button id="btn-copy-ffmpeg" onclick="copyIncompatibleCmd()" type="button" class="ml-2 text-[10px] px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300">Copiar</button>
+          </summary>
+          <pre id="incompatible-modal-cmd" class="mt-2 p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-[10px] font-mono leading-relaxed overflow-x-auto whitespace-pre-wrap break-all select-all"></pre>
+          <pre id="incompatible-modal-script-cmd" class="hidden"></pre>
+        </details>
+      </div>
+
+      <!-- Pie -->
+      <div class="modal-foot">
+        <button onclick="closeIncompatibleModal()" class="mac-btn">Cancelar</button>
+        <button id="btn-magic-convert" onclick="startMagicConvert()" class="mac-btn mac-btn--primary">🪄 Convertir y Subir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <script>
+    // State management
+    let allMediaItems = [];
+    let activeFilter = 'all';
+    let activeUploadCategory = 'peliculas';
+    let fileToDelete = null;
+
+    // Formato de tamaños, igual que format_bytes() del servidor.
+    // Sin esto renderLibraryExplorer lanzaba ReferenceError y el explorador de
+    // biblioteca se quedaba en blanco, y el progreso de subida nunca pasaba de
+    // "Iniciando..." porque el handler de progreso también la usa.
+    function formatBytes(bytes) {
+      const value = Number(bytes);
+      if (!Number.isFinite(value) || value <= 0) return '0 B';
+      const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+      let size = value;
+      let unit = 0;
+      while (size >= 1024 && unit < units.length - 1) {
+        size /= 1024;
+        unit++;
+      }
+      const decimals = unit >= 2 ? 1 : 0;
+      return `${size.toFixed(decimals)} ${units[unit]}`;
+    }
+
+    // El comando `uptime` de Linux devuelve el tiempo en inglés ("16 days");
+    // se traduce para que la interfaz quede entera en español.
+    function localizarUptime(texto) {
+      return String(texto || '--')
+        .replace(/\bdays\b/g, 'días')
+        .replace(/\bday\b/g, 'día')
+        .replace(/\bhours\b/g, 'horas')
+        .replace(/\bhour\b/g, 'hora')
+        .replace(/\bmins?\b/g, 'min');
+    }
+
+    // Colores de sistema de Apple. Para RAM y disco mucho es malo; para la
+    // batería es al revés, y iOS la pinta en rojo por debajo del 20%.
+    function colorDeNivel(pct) {
+      if (pct >= 85) return '#ff3b30';   // systemRed
+      if (pct >= 60) return '#ff9500';   // systemOrange
+      return '#34c759';                  // systemGreen
+    }
+
+    function colorBateria(pct) {
+      if (pct <= 20) return '#ff3b30';   // systemRed
+      if (pct <= 40) return '#ff9500';   // systemOrange
+      return '#34c759';                  // systemGreen
+    }
+
+    // THEME TOGGLE LOGIC (Light / Dark visionOS)
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      updateThemeIcons(isDark);
+    }
+
+    function updateThemeIcons(isDark) {
+      const sun = document.getElementById('icon-sun');
+      const moon = document.getElementById('icon-moon');
+      if (sun && moon) {
+        if (isDark) {
+          sun.classList.add('hidden');
+          moon.classList.remove('hidden');
+        } else {
+          sun.classList.remove('hidden');
+          moon.classList.add('hidden');
+        }
+      }
+    }
+
+    // Date & Greeting formatting
+    function updateDateAndGreeting() {
+      const now = new Date();
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const dateStr = now.toLocaleDateString('es-ES', options);
+      const dateEl = document.getElementById('hero-date');
+      if (dateEl) {
+        dateEl.textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+      }
+
+      const hour = now.getHours();
+      const greetingEl = document.getElementById('hero-greeting');
+      if (greetingEl) {
+        if (hour < 12) greetingEl.textContent = 'Buenos días, Moisés.';
+        else if (hour < 20) greetingEl.textContent = 'Buenas tardes, Moisés.';
+        else greetingEl.textContent = 'Buenas noches, Moisés.';
+      }
+    }
+
+    // Navigation and Scrolling helpers
+    function scrollToElement(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function triggerFileInput() {
+      const fi = document.getElementById('file-input');
+      if (fi) fi.click();
+    }
+
+    function openDlnaInfoModal() {
+      document.getElementById('dlna-modal')?.classList.remove('hidden');
+      document.getElementById('dlna-modal')?.classList.add('flex');
+    }
+
+    function closeDlnaInfoModal() {
+      document.getElementById('dlna-modal')?.classList.add('hidden');
+      document.getElementById('dlna-modal')?.classList.remove('flex');
+    }
+
+    // INCOMPATIBLE FORMAT MODAL & MAC HELPER
+    let currentIncompatibleFile = null;
+
+    function checkHelperStatus() {
+      const badge = document.getElementById('helper-status-badge');
+      const btn = document.getElementById('btn-magic-convert');
+      if (!badge) return;
+
+      fetch('http://127.0.0.1:8095/api/status', { method: 'GET', mode: 'cors' })
+        .then(r => r.json())
+        .then(data => {
+          if (data && data.status === 'ok') {
+            badge.innerHTML = '<span class="size-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span><span class="text-emerald-700 dark:text-emerald-400 font-medium">Mac Helper conectado</span>';
+            if (btn) {
+              btn.disabled = false;
+              btn.title = "Convertir automáticamente en tu Mac y subir al servidor";
+            }
+          }
+        })
+        .catch(() => {
+          badge.innerHTML = '<span class="size-2 rounded-full bg-amber-500 inline-block"></span><span>Mac Helper inactivo (ejecuta ./media_server/iniciar_mac_helper.sh)</span>';
+        });
+    }
+
+    function openIncompatibleModal(fileOrName) {
+      const modal = document.getElementById('incompatible-modal');
+      const nameEl = document.getElementById('incompatible-modal-filename');
+      const cmdEl = document.getElementById('incompatible-modal-cmd');
+      const scriptCmdEl = document.getElementById('incompatible-modal-script-cmd');
+      const btn = document.getElementById('btn-magic-convert');
+      if (!modal) return;
+
+      if (fileOrName instanceof File) {
+        currentIncompatibleFile = fileOrName;
+      } else {
+        currentIncompatibleFile = null;
+      }
+
+      const safeName = (fileOrName && fileOrName.name) ? fileOrName.name : (typeof fileOrName === 'string' ? fileOrName : 'video.avi');
+      const lastDot = safeName.lastIndexOf('.');
+      const baseName = lastDot > 0 ? safeName.substring(0, lastDot) : safeName;
+      const outName = `${baseName}.mp4`;
+
+      if (nameEl) nameEl.textContent = safeName;
+      if (cmdEl) {
+        cmdEl.textContent = `ffmpeg -i "${safeName}" -c:v libx264 -profile:v main -level 4.0 -crf 20 -preset medium -pix_fmt yuv420p -c:a aac -b:a 192k -ac 2 -ar 48000 -map_metadata -1 -movflags +faststart "${outName}"`;
+      }
+      if (scriptCmdEl) {
+        scriptCmdEl.textContent = `./media_server/enviar_al_servidor.sh "${safeName}"`;
+      }
+
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<span>🪄 Convertir y Subir</span>';
+      }
+
+      checkHelperStatus();
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeIncompatibleModal() {
+      const modal = document.getElementById('incompatible-modal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      currentIncompatibleFile = null;
+    }
+
+    function startMagicConvert() {
+      const btn = document.getElementById('btn-magic-convert');
+      const badge = document.getElementById('helper-status-badge');
+
+      if (!currentIncompatibleFile) {
+        alert("Selecciona o arrastra el archivo directamente para poder convertirlo con el botón mágico.");
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<svg class="size-3.5 animate-spin inline-block" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg><span>Procesando en tu Mac...</span>';
+      }
+      if (badge) {
+        badge.innerHTML = '<span class="size-2 rounded-full bg-blue-500 inline-block animate-pulse"></span><span class="text-blue-600 font-medium">Convirtiendo con ffmpeg en el Mac y subiendo al servidor...</span>';
+      }
+
+      const servidorUploadUrl = `${window.location.origin}/api/upload`;
+      const url = `http://127.0.0.1:8095/api/convert?name=${encodeURIComponent(currentIncompatibleFile.name)}&category=${encodeURIComponent(activeUploadCategory)}&servidor_url=${encodeURIComponent(servidorUploadUrl)}`;
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/octet-stream',
+          'Content-Length': String(currentIncompatibleFile.size)
+        },
+        body: currentIncompatibleFile
+      })
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        if (btn) {
+          btn.innerHTML = '<span>✓ ¡Completado!</span>';
+          btn.classList.add('bg-emerald-600');
+        }
+        if (badge) {
+          badge.innerHTML = '<span class="size-2 rounded-full bg-emerald-500 inline-block"></span><span class="text-emerald-700 dark:text-emerald-400 font-semibold">✓ ¡Vídeo convertido y subido al servidor con éxito!</span>';
+        }
+        setTimeout(() => {
+          closeIncompatibleModal();
+          if (typeof fetchMediaList === 'function') fetchMediaList();
+          if (typeof fetchSystemMetrics === 'function') fetchSystemMetrics();
+        }, 1500);
+      })
+      .catch(err => {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = '<span>🪄 Reintentar Convertir</span>';
+        }
+        if (badge) {
+          badge.innerHTML = '<span class="size-2 rounded-full bg-red-500 inline-block"></span><span class="text-red-600">Error conectando con el Mac Helper. Inícialo con: python3 media_server/mac_helper.py</span>';
+        }
+      });
+    }
+
+    function copyIncompatibleCmd() {
+      const cmdEl = document.getElementById('incompatible-modal-cmd');
+      const btn = document.getElementById('btn-copy-ffmpeg');
+      if (!cmdEl) return;
+      const text = cmdEl.textContent || '';
+      const showSuccess = () => {
+        if (!btn) return;
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span>¡Copiado!</span>';
+        btn.classList.add('bg-emerald-600');
+        btn.classList.remove('bg-[#176fda]');
+        setTimeout(() => {
+          btn.innerHTML = originalHTML;
+          btn.classList.remove('bg-emerald-600');
+          btn.classList.add('bg-[#176fda]');
+        }, 2000);
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(showSuccess).catch(() => {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          showSuccess();
+        });
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showSuccess();
+      }
+    }
+
+    // HARDWARE MODAL
+    function openHardwareModal() {
+      const modal = document.getElementById('hardware-modal');
+      if (!modal) return;
+      // Poblar con los últimos datos ya cargados en el dashboard (sin request adicional)
+      populateHardwareModal(window._lastSystemMetrics || null);
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeHardwareModal() {
+      const modal = document.getElementById('hardware-modal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function populateHardwareModal(metrics) {
+      if (!metrics) {
+        // Si no hay datos aún, pedir al API
+        fetch('/api/system').then(r => r.json()).then(d => populateHardwareModal(d)).catch(() => {});
+        return;
+      }
+      const { battery = {}, ram = {}, storage = {}, dlna_online = false, uptime = '--' } = metrics;
+
+      // Temperatura
+      const tempEl = document.getElementById('hw-temp');
+      if (tempEl) tempEl.textContent = battery.temperature != null ? `${battery.temperature.toFixed(1)}°C` : '--°C';
+
+      // Batería % (valor y barra, con color por nivel)
+      const battPct = document.getElementById('hw-battery-pct');
+      if (battPct) battPct.textContent = battery.percentage != null ? `${battery.percentage}%` : '--%';
+      const battBar = document.getElementById('hw-battery-bar');
+      if (battBar && battery.percentage != null) {
+        battBar.style.width = `${battery.percentage}%`;
+        battBar.style.setProperty('--hw-fill', colorBateria(battery.percentage));
+      }
+
+      // Estado batería
+      const battStatus = document.getElementById('hw-battery-status');
+      if (battStatus) {
+        const plugMap = { 'AC': '⚡ Cargando (AC)', 'USB': '⚡ Cargando (USB)', 'UNPLUGGED': '🔋 Sin carga', 'WIRELESS': '⚡ Carga inalámbrica' };
+        const status = plugMap[battery.plugged] || battery.status || '--';
+        battStatus.textContent = status;
+      }
+
+      // RAM
+      const ramPct = document.getElementById('hw-ram-pct');
+      const ramBar = document.getElementById('hw-ram-bar');
+      const ramVal = document.getElementById('hw-ram-val');
+      if (ram.available) {
+        if (ramPct) ramPct.textContent = `${ram.percent}%`;
+        if (ramBar) {
+          ramBar.style.width = `${ram.percent}%`;
+          ramBar.style.setProperty('--hw-fill', colorDeNivel(ram.percent));
+        }
+        if (ramVal) ramVal.textContent = `${ram.used_gb} / ${ram.total_gb} GB`;
+      }
+
+      // Almacenamiento
+      const stPct = document.getElementById('hw-storage-pct');
+      const stBar = document.getElementById('hw-storage-bar');
+      const stVal = document.getElementById('hw-storage-val');
+      if (storage.total_gb > 0) {
+        const usados = Math.round(storage.percent_used);
+        if (stPct) stPct.textContent = `${usados}%`;
+        if (stBar) {
+          stBar.style.width = `${storage.percent_used}%`;
+          stBar.style.setProperty('--hw-fill', colorDeNivel(storage.percent_used));
+        }
+        if (stVal) stVal.textContent = `${storage.used_gb} / ${storage.total_gb} GB usados`;
+      }
+
+      // DLNA
+      const dlnaDot = document.getElementById('hw-dlna-dot');
+      const dlnaLabel = document.getElementById('hw-dlna-label');
+      if (dlnaDot) dlnaDot.style.setProperty('--hw-dot', dlna_online ? '#34c759' : '#ff3b30');
+      if (dlnaLabel) dlnaLabel.textContent = dlna_online ? 'Online' : 'Offline';
+
+      // Uptime
+      const uptimeEl = document.getElementById('hw-uptime');
+      if (uptimeEl) uptimeEl.textContent = localizarUptime(uptime);
+
+      // Voltaje y salud de la batería
+      // (el estado de carga lo muestra ya #hw-battery-status, que traduce `plugged`)
+      const voltEl = document.getElementById('hw-voltage');
+      const healthEl = document.getElementById('hw-health');
+      if (voltEl) voltEl.textContent = battery.voltage ? `${battery.voltage} mV` : '--';
+      if (healthEl) healthEl.textContent = battery.health || '--';
+    }
+
+    // Segmented upload category picker
+    function setUploadCategory(cat) {
+      activeUploadCategory = cat;
+      const btnPelis = document.getElementById('btn-cat-pelis');
+      const btnSeries = document.getElementById('btn-cat-series');
+      if (cat === 'peliculas') {
+        btnPelis?.classList.add('active');
+        btnPelis?.setAttribute('aria-pressed', 'true');
+        btnSeries?.classList.remove('active');
+        btnSeries?.setAttribute('aria-pressed', 'false');
+      } else {
+        btnSeries?.classList.add('active');
+        btnSeries?.setAttribute('aria-pressed', 'true');
+        btnPelis?.classList.remove('active');
+        btnPelis?.setAttribute('aria-pressed', 'false');
+      }
+    }
+
+    // Fetch and render Media Items
+    async function fetchAllMedia() {
+      try {
+        const res = await fetch('/api/media');
+        if (!res.ok) throw new Error('Error de conexión');
+        allMediaItems = await res.json();
+        renderLibraryExplorer(document.getElementById('lib-search-input')?.value || '');
+        updateTopCounts();
+      } catch (err) {
+        console.error('Error cargando medios:', err);
+      }
+    }
+
+    // Modal Library Explorer Functions
+    function openLibraryModal(filter = 'all') {
+      activeFilter = filter;
+      updateFilterTabs();
+      const modal = document.getElementById('library-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+      renderLibraryExplorer(document.getElementById('lib-search-input')?.value || '');
+    }
+
+    function closeLibraryModal() {
+      const modal = document.getElementById('library-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    function setLibraryFilter(filter) {
+      activeFilter = filter;
+      updateFilterTabs();
+      const q = document.getElementById('lib-search-input')?.value || '';
+      renderLibraryExplorer(q.toLowerCase().trim());
+    }
+
+    function updateFilterTabs() {
+      // Sólo se conmuta la clase de estado; el aspecto vive en CSS (.lib-tab).
+      // Antes se reemplazaba className entero con clases arbitrarias de Tailwind
+      // que no existen en el CSS compilado, así que la pestaña activa se quedaba
+      // sin fondo con el texto en blanco y no se leía.
+      ['all', 'peliculas', 'series'].forEach(cat => {
+        const btn = document.getElementById(`tab-filter-${cat}`);
+        if (!btn) return;
+        const isActive = activeFilter === cat;
+        btn.classList.toggle('is-active', isActive);
+        btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+    }
+
+    function handleLibrarySearch(q) {
+      renderLibraryExplorer(q.toLowerCase().trim());
+    }
+
+    // Compatibilidad para tests y accesos rápidos
+    function filterType(type) {
+      openLibraryModal(type);
+    }
+
+    function handleSearch(q) {
+      handleLibrarySearch(q);
+    }
+
+    function renderMediaTable() {
+      renderLibraryExplorer();
+    }
+
+    function renderLibraryExplorer(query = '') {
+      const container = document.getElementById('lib-media-container');
+      if (!container) return;
+
+      let filtered = allMediaItems.filter(item => {
+        if (activeFilter === 'peliculas' && item.category !== 'peliculas') return false;
+        if (activeFilter === 'series' && item.category !== 'series') return false;
+        if (query && !item.clean_title.toLowerCase().includes(query) && !item.filename.toLowerCase().includes(query)) return false;
+        return true;
+      });
+
+      const badgeEl = document.getElementById('lib-count-badge');
+      if (badgeEl) badgeEl.textContent = `${filtered.length} vídeo${filtered.length === 1 ? '' : 's'}`;
+
+      const footerInfo = document.getElementById('lib-footer-info');
+      const totalBytes = filtered.reduce((acc, it) => acc + (it.size_bytes || 0), 0);
+      if (footerInfo) footerInfo.textContent = `${filtered.length} elementos · ${formatBytes(totalBytes)} en smartphone Android Server`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="flex flex-col items-center justify-center py-16 text-center">
+            <div class="flex size-16 items-center justify-center rounded-3xl bg-blue-100/60 dark:bg-white/10 text-[#176fda] mb-4">
+              <svg class="size-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/></svg>
+            </div>
+            <h3 class="text-base font-bold text-[#152039] dark:text-slate-100">No hay archivos multimedia</h3>
+            <p class="mt-1 text-xs text-[#527294] dark:text-slate-400 max-w-sm">No se han encontrado vídeos en esta categoría. Puedes subir nuevos archivos desde el panel principal.</p>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => {
+        const isMovie = item.category === 'peliculas';
+        const otherCat = isMovie ? 'series' : 'peliculas';
+        const otherCatLabel = isMovie ? 'Series' : 'Películas';
+        const typeLabel = isMovie ? 'Película' : 'Serie';
+        const typeBadgeClass = isMovie ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/60 dark:text-blue-300' : 'bg-violet-100 text-violet-700 dark:bg-violet-900/60 dark:text-violet-300';
+        const dateStr = new Date(item.mtime * 1000).toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric' });
+        const ext = item.filename.split('.').pop().toUpperCase();
+
+        let coverHtml = `
+          <div class="flex size-14 sm:size-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-white/10 dark:to-white/5 text-[#176fda] shadow-sm border border-white/50">
+            <svg class="size-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>`;
+
+        if (item.has_cover && item.cover_path) {
+          coverHtml = `
+            <img src="/api/cover?path=${encodeURIComponent(item.cover_path)}" 
+                 alt="${item.clean_title}" 
+                 loading="lazy" 
+                 class="size-14 sm:size-16 shrink-0 rounded-2xl object-cover shadow-sm border border-white/60 dark:border-white/20">`;
+        }
+
+        return `
+          <div class="group lib-row">
+            <div class="lib-main">
+              ${coverHtml}
+              <div class="lib-text">
+                <div class="lib-title-line">
+                  <h4 class="lib-title" title="${item.clean_title}">${item.clean_title}</h4>
+                  <span class="lib-tag ${typeBadgeClass}">${typeLabel}</span>
+                  <span class="lib-tag lib-tag--mono">${ext}</span>
+                </div>
+                <p class="lib-filename" title="${item.filename}">${item.filename}</p>
+                <div class="lib-meta" title="${item.rel_path}">
+                  <span>${item.size_formatted}</span>
+                  <span class="lib-meta-sep">·</span>
+                  <span>${dateStr}</span>
+                  <span class="lib-meta-sep">·</span>
+                  <span class="lib-meta-path">~/media/${item.rel_path}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action buttons toolbar -->
+            <div class="lib-actions">
+              <button onclick="playMedia('${item.rel_path}', '${item.clean_title.replace(/'/g, "\\'")}')" 
+                      class="flex items-center gap-1 rounded-xl bg-blue-100 dark:bg-blue-900/50 px-3 py-1.5 text-xs font-semibold text-[#176fda] dark:text-blue-300 hover:bg-blue-200 transition cursor-pointer" aria-label="Reproducir vídeo" data-tip="Reproducir vídeo">
+                <svg class="size-3.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <span>Ver</span>
+              </button>
+
+              <button onclick="promptRenameMedia('${item.rel_path}', '${item.filename.replace(/'/g, "\\'")}')" 
+                      class="flex items-center gap-1 rounded-xl bg-slate-100 dark:bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-200/80 transition cursor-pointer" aria-label="Renombrar archivo" data-tip="Renombrar archivo">
+                <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                <span class="hidden sm:inline">Renombrar</span>
+              </button>
+
+              <button onclick="moveMedia('${item.rel_path}', '${otherCat}')" 
+                      class="flex items-center gap-1 rounded-xl bg-slate-100 dark:bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-200/80 transition cursor-pointer" aria-label="Mover a ${otherCatLabel}" data-tip="Mover a ${otherCatLabel}">
+                <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                <span class="hidden sm:inline">Mover a ${otherCatLabel}</span>
+              </button>
+
+              <button onclick="copyMedia('${item.rel_path}', '${otherCat}')" 
+                      class="flex items-center gap-1 rounded-xl bg-slate-100 dark:bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-200/80 transition cursor-pointer" aria-label="Copiar a ${otherCatLabel}" data-tip="Copiar a ${otherCatLabel}">
+                <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                <span class="hidden sm:inline">Copiar</span>
+              </button>
+
+              <button onclick="refreshCover('${item.rel_path}')" 
+                      class="flex items-center gap-1 rounded-xl bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400 hover:bg-amber-100 transition cursor-pointer" aria-label="Refrescar carátula oficial" data-tip="Refrescar carátula oficial">
+                <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                <span class="hidden sm:inline">Carátula</span>
+              </button>
+
+              <a href="/api/stream?path=${encodeURIComponent(item.rel_path)}" download="${item.filename}" 
+                 class="flex items-center justify-center size-8 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-200 hover:bg-slate-200/80 transition cursor-pointer" aria-label="Descargar al dispositivo" data-tip="Descargar al dispositivo">
+                <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              </a>
+
+              <button onclick="promptDelete('${item.rel_path}', '${item.filename.replace(/'/g, "\\'")}')" 
+                      class="flex items-center justify-center size-8 rounded-xl bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 hover:bg-red-100 transition cursor-pointer" aria-label="Eliminar definitivamente" data-tip="Eliminar definitivamente">
+                <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Métodos de gestión de archivos
+    async function promptRenameMedia(rel_path, old_name) {
+      const new_name = prompt('Introduce el nuevo nombre para el archivo:', old_name);
+      if (!new_name || new_name.trim() === '' || new_name.trim() === old_name) return;
+      try {
+        const res = await fetch('/api/media/rename', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path: rel_path, new_name: new_name.trim() })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          fetchAllMedia();
+        } else {
+          alert('Error renombrando: ' + (data.error || 'Desconocido'));
+        }
+      } catch (e) {
+        alert('Error de red al renombrar archivo.');
+      }
+    }
+
+    async function moveMedia(rel_path, destination) {
+      const label = destination === 'series' ? 'Series' : 'Películas';
+      if (!confirm(`¿Mover este vídeo a la categoría de ${label}?`)) return;
+      try {
+        const res = await fetch('/api/media/move', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path: rel_path, destination: destination })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          fetchAllMedia();
+        } else {
+          alert('Error moviendo archivo: ' + (data.error || 'Desconocido'));
+        }
+      } catch (e) {
+        alert('Error de red al mover archivo.');
+      }
+    }
+
+    async function copyMedia(rel_path, destination) {
+      const label = destination === 'series' ? 'Series' : 'Películas';
+      if (!confirm(`¿Copiar este vídeo a la categoría de ${label}?`)) return;
+      try {
+        const res = await fetch('/api/media/copy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path: rel_path, destination: destination })
+        });
+        const data = await res.json();
+        if (res.ok) {
+          fetchAllMedia();
+        } else {
+          alert('Error copiando archivo: ' + (data.error || 'Desconocido'));
+        }
+      } catch (e) {
+        alert('Error de red al copiar archivo.');
+      }
+    }
+
+    async function refreshCover(rel_path) {
+      try {
+        const res = await fetch('/api/media/cover', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ path: rel_path })
+        });
+        if (res.ok) {
+          alert('Buscando carátula oficial en segundo plano (TVMaze / IMDb)... Se actualizará en breve.');
+          setTimeout(() => fetchAllMedia(), 3000);
+        } else {
+          const data = await res.json();
+          alert('Error: ' + (data.error || 'Desconocido'));
+        }
+      } catch (e) {
+        alert('Error de red al solicitar carátula.');
+      }
+    }
+
+    function updateTopCounts() {
+      const countEl = document.getElementById('stat-media-count');
+      if (countEl) countEl.textContent = allMediaItems.length.toLocaleString('es-ES');
+    }
+
+    // Real Hardware System Metrics Polling
+    async function fetchSystemMetrics() {
+      try {
+        const res = await fetch('/api/system');
+        if (!res.ok) return;
+        const data = await res.json();
+
+        // 1. Battery
+        if (data.battery) {
+          const b = data.battery;
+          const pct = `${b.percentage}%`;
+          
+          const headerPct = document.getElementById('header-battery-pct');
+          const sidebarPct = document.getElementById('sidebar-battery-pct');
+          const statPct = document.getElementById('stat-battery-pct');
+          const statStatus = document.getElementById('stat-battery-status');
+          const cardBatterySub = document.getElementById('card-battery-sub');
+
+          if (headerPct) headerPct.textContent = pct;
+          if (sidebarPct) sidebarPct.textContent = pct;
+          if (statPct) statPct.textContent = pct;
+
+          const isPlugged = b.plugged && b.plugged !== 'UNPLUGGED';
+          const statusText = isPlugged ? 'Conectado a corriente · Batería óptima' : 'En uso batería · Android Server';
+          if (statStatus) statStatus.textContent = statusText;
+
+          // Etiqueta compacta en español para no desbordar el diseño
+          let statusLabel = 'En uso';
+          if (isPlugged || b.status === 'CHARGING') statusLabel = 'Cargando';
+          else if (b.status === 'FULL') statusLabel = 'Cargada';
+          else if (b.status === 'DISCHARGING') statusLabel = 'En uso';
+          else if (b.status) statusLabel = b.status.charAt(0).toUpperCase() + b.status.slice(1).toLowerCase();
+
+          if (cardBatterySub) {
+            cardBatterySub.innerHTML = `<span class="text-sm font-semibold">${pct}</span> <span class="text-xs font-normal text-[#527294] dark:text-slate-400">· ${statusLabel}</span>`;
+          }
+
+          // Battery dot color
+          const dot = document.getElementById('header-battery-dot');
+          if (dot) {
+            if (b.percentage <= 20) dot.className = 'size-2 rounded-full bg-red-400 animate-pulse';
+            else if (b.percentage <= 50) dot.className = 'size-2 rounded-full bg-amber-400';
+            else dot.className = 'size-2 rounded-full bg-emerald-400 animate-pulse';
+          }
+        }
+
+        // 2. Temperature
+        const tempEl = document.getElementById('card-temp');
+        if (tempEl && data.battery && data.battery.temperature) {
+          tempEl.textContent = `${Math.round(data.battery.temperature)}°C`;
+        }
+
+        // 3. Storage
+        if (data.storage) {
+          const s = data.storage;
+          const usedEl = document.getElementById('stat-storage-used');
+          const totalEl = document.getElementById('stat-storage-total');
+          if (usedEl) usedEl.textContent = `${s.used_gb} GB`;
+          if (totalEl) totalEl.textContent = `de ${s.total_gb} GB (${s.free_gb} GB libres)`;
+        }
+
+        // 4. RAM
+        if (data.ram) {
+          const ramVal = document.getElementById('card-ram-val');
+          if (ramVal) {
+            if (data.ram.available) {
+              ramVal.innerHTML = `<span class="text-sm font-semibold">${data.ram.used_gb} / ${data.ram.total_gb} GB</span> <span class="text-xs font-normal text-[#527294] dark:text-slate-400">(${Math.round(data.ram.percent)}%)</span>`;
+            } else {
+              ramVal.innerHTML = `<span class="text-sm font-semibold">3.8 / 6.0 GB</span> <span class="text-xs font-normal text-[#527294] dark:text-slate-400">(Activo)</span>`;
+            }
+          }
+        }
+
+        // 5. DLNA & Uptime
+        const dlnaEl = document.getElementById('stat-dlna-status');
+        const uptimeEl = document.getElementById('stat-uptime');
+        if (dlnaEl) {
+          dlnaEl.textContent = data.dlna_online ? 'Puerto 8200' : 'Iniciando...';
+        }
+        if (uptimeEl) {
+          uptimeEl.textContent = data.uptime ? `${localizarUptime(data.uptime)} en red local` : 'Activo en red local';
+        }
+
+        // Animate Equalizer Bars based on dynamic activity
+        animateEqualizer();
+
+        // Cachear datos para el modal de hardware (sin request extra al abrirlo)
+        window._lastSystemMetrics = data;
+
+        // Si el modal de hardware está abierto, actualizar sus datos en vivo
+        const hwModal = document.getElementById('hardware-modal');
+        if (hwModal && hwModal.classList.contains('flex')) {
+          populateHardwareModal(data);
+        }
+
+      } catch (err) {
+        console.warn('Error obteniendo métricas de hardware:', err);
+      }
+    }
+
+    function animateEqualizer() {
+      const bars = document.querySelectorAll('#equalizer-bars > div');
+      const heights = [20, 32, 26, 44, 38, 52, 42, 34, 48, 30, 40];
+      bars.forEach((bar, idx) => {
+        const jitter = Math.floor(Math.random() * 12) - 6;
+        const finalH = Math.max(14, Math.min(54, heights[idx % heights.length] + jitter));
+        bar.style.height = `${finalH}px`;
+      });
+    }
+
+    // Video Player Modal
+    function playMedia(relPath, title) {
+      const modal = document.getElementById('video-modal');
+      const player = document.getElementById('html-video-player');
+      const titleEl = document.getElementById('modal-video-title');
+      if (!modal || !player) return;
+
+      titleEl.textContent = title;
+      player.src = `/api/stream?path=${encodeURIComponent(relPath)}`;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      player.play().catch(() => {});
+    }
+
+    function closeVideoModal() {
+      const modal = document.getElementById('video-modal');
+      const player = document.getElementById('html-video-player');
+      if (player) {
+        player.pause();
+        player.src = '';
+      }
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    // Delete Modal
+    function promptDelete(relPath, filename) {
+      fileToDelete = relPath;
+      const fnEl = document.getElementById('delete-modal-filename');
+      if (fnEl) fnEl.textContent = filename;
+      const modal = document.getElementById('delete-modal');
+      modal?.classList.remove('hidden');
+      modal?.classList.add('flex');
+    }
+
+    function closeDeleteModal() {
+      fileToDelete = null;
+      const modal = document.getElementById('delete-modal');
+      modal?.classList.add('hidden');
+      modal?.classList.remove('flex');
+    }
+
+    document.getElementById('btn-confirm-delete')?.addEventListener('click', async () => {
+      if (!fileToDelete) return;
+      try {
+        const res = await fetch(`/api/media?path=${encodeURIComponent(fileToDelete)}`, { method: 'DELETE' });
+        if (res.ok) {
+          closeDeleteModal();
+          fetchAllMedia();
+          fetchSystemMetrics();
+        } else {
+          alert('Error al eliminar el archivo.');
+        }
+      } catch (err) {
+        alert('Error de red al intentar eliminar.');
+      }
+    });
+
+    // Concurrent Multi-file Upload Queue (Handles 50+ files with Restart and Cancel)
+    class UploadQueueManager {
+      constructor(concurrency = 3) {
+        this.concurrency = concurrency;
+        this.queue = [];
+        this.items = {};
+        this.activeCount = 0;
+        this.container = document.getElementById('upload-queue-container');
+      }
+
+      // Oculta la cola cuando ya no queda ninguna fila
+      collapseQueueIfIdle() {
+        if (this.container.children.length > 0) return;
+        this.container.classList.add('hidden');
+      }
+
+      addFiles(files, category) {
+        if (!files || files.length === 0) return;
+        const validExts = ['.mp4', '.mkv', '.avi', '.mov', '.webm', '.m4v', '.ts'];
+        let hasValid = false;
+
+        Array.from(files).forEach(file => {
+          const dotIdx = file.name.lastIndexOf('.');
+          const ext = dotIdx !== -1 ? file.name.substring(dotIdx).toLowerCase() : '';
+          if (!validExts.includes(ext)) {
+            alert(`El archivo "${file.name}" no es un formato de vídeo admitido.\nFormatos compatibles: MP4, MKV, AVI, MOV, WEBM, M4V, TS.`);
+            return;
+          }
+          hasValid = true;
+          const item = {
+            id: 'up_' + Math.random().toString(36).substring(2, 9),
+            file: file,
+            category: category || activeUploadCategory || 'peliculas',
+            status: 'pending',
+            xhr: null,
+            stallTimer: null
+          };
+          this.items[item.id] = item;
+          this.queue.push(item);
+          this.renderItem(item);
+        });
+
+        if (hasValid) {
+          this.container.classList.remove('hidden');
+          this.processNext();
+        }
+      }
+
+      renderItem(item) {
+        const div = document.createElement('div');
+        div.id = item.id;
+        div.className = 'flex flex-col gap-1.5 rounded-2xl bg-white/75 dark:bg-slate-800/80 p-3 text-xs text-[#152039] dark:text-slate-100 border border-blue-200/50 dark:border-white/10 shadow-sm transition-all duration-200';
+        div.innerHTML = `
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2 min-w-0">
+              <span class="truncate font-semibold max-w-[160px] sm:max-w-xs" title="${item.file.name}">${item.file.name}</span>
+              <span class="rounded bg-blue-100 dark:bg-blue-900/60 text-[#176fda] dark:text-blue-300 px-1.5 py-0.5 text-[10px] font-bold uppercase">${item.category}</span>
+            </div>
+            
+            <!-- Controls and status badge -->
+            <div class="flex items-center gap-2 shrink-0">
+              <span id="${item.id}_status" class="text-[11px] font-medium text-[#527294] dark:text-slate-400">En cola</span>
+
+              <!-- Restart button -->
+              <button onclick="uploadManager.restartUpload('${item.id}')" aria-label="Reiniciar subida" 
+                      class="flex size-6 items-center justify-center rounded-full bg-slate-200/70 dark:bg-white/10 hover:bg-slate-300 dark:hover:bg-white/20 text-slate-700 dark:text-slate-200 transition cursor-pointer" title="Reiniciar desde 0%">
+                <svg class="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              </button>
+
+              <!-- Cancel button -->
+              <button onclick="uploadManager.cancelUpload('${item.id}')" aria-label="Cancelar subida" 
+                      class="flex size-6 items-center justify-center rounded-full bg-red-100 dark:bg-red-950/60 hover:bg-red-200 dark:hover:bg-red-900/80 text-red-600 transition cursor-pointer" title="Cancelar subida">
+                <svg class="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="h-2 w-full rounded-full bg-slate-200/70 dark:bg-white/15 overflow-hidden">
+            <div id="${item.id}_bar" class="h-full bg-gradient-to-r from-[#176fda] to-[#58c5ff] transition-all duration-150" style="width: 0%"></div>
+          </div>
+        `;
+        this.container.appendChild(div);
+      }
+
+      restartUpload(id) {
+        const item = this.items[id];
+        if (!item) return;
+        this.clearStallTimer(item);
+        const enVuelo = item.status === 'uploading' && item.xhr;
+        // El estado se marca ANTES de abortar. abort() dispara onabort de forma
+        // síncrona, y ese handler descuenta activeCount si el item sigue en
+        // 'uploading'; marcándolo antes, cada subida descuenta exactamente una vez.
+        item.status = 'pending';
+        if (enVuelo) {
+          item.xhr.abort();
+          this.activeCount = Math.max(0, this.activeCount - 1);
+        }
+        const barEl = document.getElementById(`${id}_bar`);
+        const statusEl = document.getElementById(`${id}_status`);
+        if (barEl) barEl.style.width = '0%';
+        if (statusEl) statusEl.textContent = '🔄 Reiniciando...';
+        this.queue.unshift(item);
+        this.processNext();
+      }
+
+      cancelUpload(id) {
+        const item = this.items[id];
+        if (!item) return;
+        this.clearStallTimer(item);
+        const enVuelo = item.status === 'uploading' && item.xhr;
+        // Mismo motivo que en restartUpload: marcar antes de abortar.
+        item.status = 'cancelled';
+        if (enVuelo) {
+          item.xhr.abort();
+          this.activeCount = Math.max(0, this.activeCount - 1);
+        }
+        this.queue = this.queue.filter(q => q.id !== id);
+        const containerEl = document.getElementById(id);
+        if (containerEl) {
+          containerEl.style.opacity = '0';
+          containerEl.style.transform = 'scale(0.95)';
+          containerEl.style.transition = 'all 0.2s';
+          setTimeout(() => {
+            containerEl.remove();
+            this.collapseQueueIfIdle();
+          }, 200);
+        }
+        this.processNext();
+      }
+
+      processNext() {
+        while (this.activeCount < this.concurrency && this.queue.length > 0) {
+          const item = this.queue.shift();
+          this.startUpload(item);
+        }
+      }
+
+      clearStallTimer(item) {
+        if (item.stallTimer) {
+          clearTimeout(item.stallTimer);
+          item.stallTimer = null;
+        }
+      }
+
+      // Si en STALL_MS no llega ni un byte de progreso ni respuesta, se aborta
+      // y se avisa. Sin esto una subida bloqueada se quedaba en "Iniciando..."
+      // indefinidamente sin decir nada al usuario.
+      armStallTimer(item) {
+        this.clearStallTimer(item);
+        item.stallTimer = setTimeout(() => {
+          if (item.status !== 'uploading') return;
+          item.status = 'error';
+          if (item.xhr) item.xhr.abort();
+          this.activeCount = Math.max(0, this.activeCount - 1);
+          const statusEl = document.getElementById(`${item.id}_status`);
+          const barEl = document.getElementById(`${item.id}_bar`);
+          if (statusEl) statusEl.textContent = '❌ Sin respuesta del servidor';
+          if (barEl) barEl.className = 'h-full bg-red-500';
+          this.processNext();
+        }, UploadQueueManager.STALL_MS);
+      }
+
+      startUpload(item) {
+        this.activeCount++;
+        item.status = 'uploading';
+        const statusEl = document.getElementById(`${item.id}_status`);
+        const barEl = document.getElementById(`${item.id}_bar`);
+        const containerEl = document.getElementById(item.id);
+
+        // Feedback inmediato al usuario
+        if (statusEl) statusEl.textContent = '📤 Iniciando...';
+
+        const uploadUrl = `/api/upload?name=${encodeURIComponent(item.file.name)}&filename=${encodeURIComponent(item.file.name)}&category=${encodeURIComponent(item.category || 'peliculas')}`;
+
+        const xhr = new XMLHttpRequest();
+        item.xhr = xhr;
+        xhr.open('POST', uploadUrl, true);
+        xhr.setRequestHeader('Content-Type', 'application/octet-stream');
+
+        xhr.upload.onprogress = (e) => {
+          if (item.status !== 'uploading') return;
+          this.armStallTimer(item);
+          const totalSize = item.file.size;
+          const pct = totalSize > 0 ? Math.min(100, Math.round((e.loaded / totalSize) * 100)) : 0;
+          if (barEl) barEl.style.width = `${pct}%`;
+          if (statusEl) statusEl.textContent = `${pct}% (${formatBytes(e.loaded)} / ${formatBytes(totalSize)})`;
+          containerEl?.querySelector('[role="progressbar"]')?.setAttribute('aria-valuenow', pct);
+        };
+
+        xhr.onload = () => {
+          this.clearStallTimer(item);
+          if (item.status !== 'uploading') return;
+          this.activeCount = Math.max(0, this.activeCount - 1);
+          if (xhr.status >= 200 && xhr.status < 300) {
+            item.status = 'completed';
+            if (statusEl) statusEl.textContent = '✅ Completado';
+            if (barEl) barEl.className = 'h-full bg-emerald-500';
+            setTimeout(() => {
+              containerEl?.remove();
+              this.collapseQueueIfIdle();
+            }, 3000);
+            fetchAllMedia();
+            fetchSystemMetrics();
+          } else {
+            item.status = 'error';
+            let errorMsg = `Error ${xhr.status}`;
+            try {
+              const err = JSON.parse(xhr.responseText);
+              if (err.error) errorMsg = err.error;
+            } catch(e) {}
+            if (statusEl) statusEl.textContent = `❌ ${errorMsg}`;
+            if (barEl) barEl.className = 'h-full bg-red-500';
+          }
+          this.processNext();
+        };
+
+        // cancelUpload/restartUpload ya cambian item.status y decrementan
+        // activeCount ANTES de llamar xhr.abort(). Cuando onabort se dispara (async),
+        // item.status ya NO es 'uploading', así que este handler no vuelve a decrementar.
+        xhr.onabort = () => {
+          this.clearStallTimer(item);
+          if (item.status === 'uploading') {
+            // Abort no iniciado por nosotros — gestionar aquí
+            this.activeCount = Math.max(0, this.activeCount - 1);
+            item.status = 'aborted';
+          }
+          this.processNext();
+        };
+
+        xhr.onerror = () => {
+          this.clearStallTimer(item);
+          if (item.status !== 'uploading') return;
+          this.activeCount = Math.max(0, this.activeCount - 1);
+          item.status = 'error';
+          if (statusEl) statusEl.textContent = '❌ Fallo de red';
+          if (barEl) barEl.className = 'h-full bg-red-500';
+          this.processNext();
+        };
+
+        xhr.send(item.file);
+        this.armStallTimer(item);
+      }
+    }
+
+    UploadQueueManager.STALL_MS = 60000;
+
+    const uploadManager = new UploadQueueManager(3);
+
+    // Dropzone setup
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('file-input');
+
+    if (dropzone && fileInput) {
+      dropzone.addEventListener('click', () => fileInput.click());
+      
+      dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.classList.add('scale-[1.02]', 'border-[#176fda]', 'bg-blue-100/80', 'shadow-[0_16px_40px_rgba(23,111,218,.2)]');
+      });
+
+      dropzone.addEventListener('dragleave', () => {
+        dropzone.classList.remove('scale-[1.02]', 'border-[#176fda]', 'bg-blue-100/80', 'shadow-[0_16px_40px_rgba(23,111,218,.2)]');
+      });
+
+      dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('scale-[1.02]', 'border-[#176fda]', 'bg-blue-100/80', 'shadow-[0_16px_40px_rgba(23,111,218,.2)]');
+        if (e.dataTransfer.files.length > 0) {
+          const rawFiles = Array.from(e.dataTransfer.files);
+          const incompatible = rawFiles.filter(f => f.name.toLowerCase().endsWith('.avi'));
+          const compatible = rawFiles.filter(f => !f.name.toLowerCase().endsWith('.avi'));
+          if (incompatible.length > 0) {
+            openIncompatibleModal(incompatible[0]);
+          }
+          if (compatible.length > 0) {
+            uploadManager.addFiles(compatible, activeUploadCategory);
+          }
+        }
+      });
+
+      fileInput.addEventListener('change', () => {
+        if (fileInput.files.length === 0) return;
+        // Copiamos los File a un array propio y vaciamos el input acto seguido.
+        // Vaciarlo es necesario para poder volver a elegir el mismo archivo:
+        // mientras la cola tenga filas (por ejemplo tras un error) el input no
+        // se toca por otra vía, y sin vaciarlo el evento change no se repetiría.
+        const selected = Array.from(fileInput.files);
+        fileInput.value = '';
+        const incompatible = selected.filter(f => f.name.toLowerCase().endsWith('.avi'));
+        const compatible = selected.filter(f => !f.name.toLowerCase().endsWith('.avi'));
+        if (incompatible.length > 0) {
+          openIncompatibleModal(incompatible[0]);
+        }
+        if (compatible.length > 0) {
+          uploadManager.addFiles(compatible, activeUploadCategory);
+        }
+      });
+    }
+
+    // Setup Backdrop click & Escape key listeners for all modals
+    function setupModalInteractions() {
+      const modalConfigs = [
+        { id: 'library-modal', close: closeLibraryModal },
+        { id: 'video-modal', close: closeVideoModal },
+        { id: 'delete-modal', close: closeDeleteModal },
+        { id: 'dlna-modal', close: closeDlnaInfoModal },
+        { id: 'hardware-modal', close: closeHardwareModal },
+        { id: 'incompatible-modal', close: closeIncompatibleModal },
+      ];
+
+      modalConfigs.forEach(({ id, close }) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('click', (e) => {
+          // Si el clic ocurrió directamente sobre el fondo del modal (backdrop)
+          if (e.target === el) {
+            close();
+          }
+        });
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeLibraryModal();
+          closeVideoModal();
+          closeDeleteModal();
+          closeDlnaInfoModal();
+          closeHardwareModal();
+          closeIncompatibleModal();
+        }
+      });
+    }
+
+    // Tooltip propio para los elementos con data-tip (botones de la biblioteca).
+    // Un solo nodo compartido, colocado junto al elemento y volteado si no cabe.
+    function setupMacTooltips() {
+      let tip = null;
+      let actual = null;
+
+      const ocultar = () => {
+        actual = null;
+        if (tip) tip.classList.remove('is-visible');
+      };
+
+      const mostrar = (el) => {
+        const texto = el.dataset.tip || el.getAttribute('aria-label');
+        if (!texto) return;
+        if (!tip) {
+          tip = document.createElement('div');
+          tip.className = 'mac-tip';
+          tip.setAttribute('role', 'tooltip');
+          document.body.appendChild(tip);
+        }
+        actual = el;
+        tip.textContent = texto;
+        tip.classList.add('is-visible');
+
+        const r = el.getBoundingClientRect();
+        const t = tip.getBoundingClientRect();
+        let x = r.left + r.width / 2 - t.width / 2;
+        let y = r.top - t.height - 6;
+        if (y < 6) y = r.bottom + 6;                     // si no cabe arriba, debajo
+        x = Math.max(6, Math.min(x, window.innerWidth - t.width - 6));
+        tip.style.left = `${Math.round(x)}px`;
+        tip.style.top = `${Math.round(y)}px`;
+      };
+
+      document.addEventListener('pointerover', (e) => {
+        const el = e.target.closest ? e.target.closest('[data-tip]') : null;
+        if (el) {
+          if (el !== actual) mostrar(el);
+        } else if (actual) {
+          ocultar();
+        }
+      });
+      document.addEventListener('pointerout', (e) => {
+        const el = e.target.closest ? e.target.closest('[data-tip]') : null;
+        if (el && el === actual) ocultar();
+      });
+      document.addEventListener('pointerdown', ocultar);
+      window.addEventListener('scroll', ocultar, true);
+      window.addEventListener('resize', ocultar);
+    }
+
+    // Initial setup on load
+    window.addEventListener('DOMContentLoaded', () => {
+      const isDark = document.documentElement.classList.contains('dark');
+      updateThemeIcons(isDark);
+      updateDateAndGreeting();
+      setupModalInteractions();
+      setupMacTooltips();
+      fetchAllMedia();
+      fetchSystemMetrics();
+      // Poll real hardware metrics every 10s
+      setInterval(fetchSystemMetrics, 10000);
+      setInterval(updateDateAndGreeting, 60000);
+    });
+  </script>
+</body>
+</html>

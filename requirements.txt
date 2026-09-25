@@ -1,0 +1,11 @@
+# ==============================================================================
+# DEPENDENCIAS - ANDROID HOME SERVER (Termux / Android aarch64)
+# ==============================================================================
+# Directas (scripts de automatización y búsqueda):
+requests>=2.31.0
+httpx>=0.27.0
+ddgs>=9.16.0
+croniter>=6.0.0
+atproto>=0.0.71
+psutil>=5.9.0
+beautifulsoup4>=4.12.0

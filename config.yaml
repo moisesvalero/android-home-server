@@ -1,0 +1,18 @@
+_config_version: 33
+agent:
+  disabled_toolsets: '["browser", "computer-use", "mcp", "autonomous-ai-agents", "creative",
+    "media", "note-taking", "hermes-desktop-plugins", "smart-home"]'
+  max_turns: 3
+fallback_providers: []
+max_live_sessions: 1
+model:
+  default: deepseek-flash
+  provider: deepseek
+onboarding:
+  seen:
+    busy_input_prompt: true
+plugins:
+  enabled:
+    - megaphone
+providers: {}
+toolsets: '["web","terminal","hermes-cli"]'
