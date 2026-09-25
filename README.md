@@ -1,190 +1,208 @@
-# 📱 Android Home Server — Hermes AI Agent, DLNA Streaming & Cron Automation
+<div align="center">
 
-Infraestructura completa de servidor doméstico 24/7 de bajo consumo montada sobre cualquier smartphone **Android en desuso** (arquitectura ARM64 `aarch64` o ARMv7), combinando un agente de inteligencia artificial autónomo (**Hermes Agent**), automatización programada (**Crons de empleo, chollos y telemetría**), sistema de megafonía física por altavoz y un **servidor multimedia DLNA con panel web visual**.
+# 📱 Android Home Server
+### Convierte cualquier smartphone viejo en un servidor doméstico 24/7 con IA autónoma, streaming multimedia a tu Smart TV y automatización con crons
 
-Sustituye por completo una VPS en la nube multiplicando los recursos de memoria RAM y potencia de procesamiento, con **cero euros de coste mensual** y un consumo eléctrico casi imperceptible de 1 a 3 vatios.
+[![Stars](https://img.shields.io/github/stars/moisesvalero/android-home-server?style=for-the-badge&logo=github&color=eab308)](https://github.com/moisesvalero/android-home-server/stargazers)
+[![Forks](https://img.shields.io/github/forks/moisesvalero/android-home-server?style=for-the-badge&logo=github&color=64748b)](https://github.com/moisesvalero/android-home-server/network/members)
+[![License: MIT](https://img.shields.io/badge/License-MIT-10b981.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Android%208.0%2B%20%7C%20Termux-3b82f6.svg?style=for-the-badge&logo=android&logoColor=white)](https://f-droid.org)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-3776ab.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-LTS-5fa04e.svg?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Telegram](https://img.shields.io/badge/Telegram-Bot%20API-229ed9.svg?style=for-the-badge&logo=telegram&logoColor=white)](https://core.telegram.org/bots)
+[![Cost](https://img.shields.io/badge/Cost-0%E2%82%AC%20%2F%20Forever-059669.svg?style=for-the-badge&logo=cashapp&logoColor=white)]()
+[![Consumption](https://img.shields.io/badge/Power-1--3W%20Ultra--Eco-f59e0b.svg?style=for-the-badge&logo=sparkfun&logoColor=white)]()
+
+<br />
+
+<p align="center">
+  <b>¿Tienes un móvil viejo olvidado en un cajón?</b><br />
+  No lo tires ni lo dejes acumulando polvo: tienes entre manos una máquina con procesador multinúcleo ARM64, 4 a 8 GB de RAM LPDDR4X, almacenamiento flash ultrarrápido y un <b>SAI / UPS integrado contra cortes de luz</b>.
+</p>
+
+[English Overview](#-english-quick-overview) • [Arquitectura](#️-arquitectura-del-sistema) • [Instalación Rápida](#-instalación-rápida-en-3-pasos) • [Batería y Seguridad](#-cuidado-y-seguridad-de-la-batería-la-estrategia-del-50) • [Servidor Multimedia](#-servidor-multimedia-dlna--web-dashboard-8090) • [Crons y LLMs](#-hermes-ai-agent-y-soporte-multi-llm)
+
+</div>
 
 ---
 
-## 🏛️ 1. Arquitectura del Sistema
+## 🏛️ Arquitectura del Sistema
 
-```text
-                         ┌────────────────────────────────────────────────────────┐
-                         │                    ANDROID SMARTPHONE                  │
-                         │               (Android 8.0+ / Termux aarch64)          │
-                         │                                                        │
-                         │   ┌────────────────────────────────────────────────┐   │
-                         │   │                      PM2                       │   │
-                         │   │              (Process Daemon 24/7)             │   │
-                         │   └───┬────────────────────┬───────────────────┬───┘   │
-                         │       │                    │                   │       │
-                         │       ▼                    ▼                   ▼       │
-                         │ ┌───────────┐      ┌─────────────┐     ┌─────────────┐ │
-                         │ │  Hermes   │      │ DLNA Server │     │    Media    │ │
-                         │ │   Agent   │      │  (MiniDLNA) │     │  Dashboard  │ │
-                         │ │ (Outbound)│      │ (Port 8200) │     │ (Port 8090) │ │
-                         │ └─────┬─────┘      └──────┬──────┘     └──────▲──────┘ │
-                         │       │                   │                   │        │
-                         └───────┼───────────────────┼───────────────────┼────────┘
-                                 │                   │                   │
-             ┌───────────────────┴─────────┐         │                   │ HTTP / API
-             ▼                             ▼         ▼                   │ (Red Local)
-    ┌─────────────────┐           ┌──────────────┐ ┌───────────────┐     │
-    │ Telegram Bot    │           │ LLM APIs     │ │ Smart TV      │     │
-    │ (Alertas & DMs) │           │ (DeepSeek,   │ │ (Samsung, LG, │     │
-    └─────────────────┘           │  OpenAI, etc)│ │  Android TV)  │     │
-                                  └──────────────┘ └───────────────┘     │
-                                                                         │
-                         ┌───────────────────────────────────────────────┴────────┐
-                         │              PC / Mac Mini / Portátil (Cliente)        │
-                         │                                                        │
-                         │   ┌────────────────────────────────────────────────┐   │
-                         │   │     Navegador Web: http://<IP-DEL-MOVIL>:8090   │   │
-                         │   └──────────────────────┬─────────────────────────┘   │
-                         │                          │ (Localhost API / CORS)      │
-                         │                          ▼                             │
-                         │   ┌────────────────────────────────────────────────┐   │
-                         │   │       Conversion Helper (Opcional en PC/Mac)   │   │
-                         │   │    (Port 8095 · ffmpeg nativo · 0% CPU en reposo)  │
-                         │   └────────────────────────────────────────────────┘   │
-                         └────────────────────────────────────────────────────────┘
+El siguiente diagrama muestra el flujo desacoplado y modular de todos los servicios corriendo sobre **Termux (sin root)** en el smartphone:
+
+```mermaid
+graph TD
+    subgraph Phone ["📱 SMARTPHONE ANDROID (Termux aarch64 · 24/7)"]
+        PM2["⚙️ PM2 (Process Daemon Manager)"]
+        
+        Hermes["🤖 Hermes Agent<br/>(Outbound Long-Polling)"]
+        DLNA["📺 DLNA Server<br/>(MiniDLNA :8200)"]
+        Dashboard["🖥️ Media Dashboard<br/>(:8090)"]
+        Crons["⏰ Cron Suite<br/>• Battery Guard (:30)<br/>• Job Radar (08:00)<br/>• Deals Radar (12:00)<br/>• Tech News (14:00)"]
+        
+        PM2 --> Hermes
+        PM2 --> DLNA
+        PM2 --> Dashboard
+        PM2 --> Crons
+    end
+
+    Hermes -.-> Telegram["💬 Telegram Bot<br/>(Alertas & DMs)"]
+    Hermes -.-> LLMs["🧠 Multi-LLM APIs<br/>(DeepSeek, OpenAI, Groq, Ollama)"]
+    
+    DLNA ==> SmartTV["📺 Smart TV<br/>(Samsung, LG, Android TV)"]
+    
+    Dashboard <==> Client["💻 PC / Mac Client<br/>• Navegador Web (:8090)<br/>• Conversion Helper (:8095)"]
+
+    classDef phoneBox fill:#090d16,stroke:#38bdf8,stroke-width:2px,color:#f8fafc;
+    classDef daemonBox fill:#1e293b,stroke:#818cf8,stroke-width:2px,color:#f8fafc;
+    classDef nodeBox fill:#0f172a,stroke:#06b6d4,stroke-width:1.5px,color:#f8fafc;
+    classDef extBox fill:#1e293b,stroke:#10b981,stroke-width:1.5px,color:#f8fafc;
+    
+    class Phone phoneBox;
+    class PM2 daemonBox;
+    class Hermes,DLNA,Dashboard,Crons nodeBox;
+    class Telegram,LLMs,SmartTV,Client extBox;
 ```
 
 ---
 
-## ⚡ 2. Comparativa: Móvil Viejo vs VPS Gratuita en la Nube
+## 🌟 Características Principales
 
-| Métrica | Instancia Cloud Gratuita / Barata | Smartphone Android (ej. 6 GB RAM) | Ventaja del Móvil |
+* 🤖 **Agente de IA Autónomo 24/7 (Hermes Agent):** Asistente inteligente siempre activo y conectado a Telegram mediante *outbound long-polling*. Compatible de forma nativa con **DeepSeek, OpenAI, Groq, OpenRouter o modelos locales vía Ollama** sin necesidad de IP fija ni de abrir puertos en tu router.
+* 📺 **Servidor Multimedia DLNA + Web Dashboard:** Streaming directo de películas y series a tu Smart TV con **cero transcodificación en el móvil (~17 MB de RAM y 0% de CPU)**, acompañado de un panel web interactivo en el puerto `8090` con diseño estilo macOS/VisionOS, telemetría del hardware y subidas Drag & Drop.
+* 🪄 **El "Botón Mágico" (Conversión sin saturar el móvil):** Si tu televisor (ej. Samsung Tizen) rechaza vídeos `.avi` antiguos de DivX/Xvid por hardware, un micro-asistente silencioso en tu ordenador convierte el archivo con `ffmpeg` nativo por hardware en 1 clic y lo transfiere al servidor ya optimizado.
+* ⏰ **Batería de Crons Automatizados:**
+  * 💼 **Radar de Empleo:** Rastreo en portales clave (InfoJobs, Indeed, Tecnoempleo, remotos) con memoria histórica persistente (`seen_jobs.json`) para evitar duplicados y curación mediante LLM.
+  * 🛒 **Radar de Chollos:** Búsqueda diaria de ofertas reales en tecnología, consolas, hardware y errores de precio.
+  * 📰 **Noticias Tech & IA:** Digest matutino con las noticias tecnológicas más destacadas del día.
+* 🔋 **Cuidado de Batería (Estrategia del 50%):** Mantiene la química del litio en su punto de reposo más seguro (~3.8V) usando un enchufe temporizador mecánico y un watchdog en Python (`cron_battery_guard.py`) que alerta ante batería baja (<25%) o sobrecalentamiento (≥45°C).
+* 📢 **Megafonía Física TTS Doméstica:** Utiliza los altavoces físicos del teléfono como intercomunicador remoto por Telegram (`/di <mensaje>`) a volumen 15/15 con latencia casi nula y 0 tokens consumidos.
+
+---
+
+## ⚡ Comparativa: Móvil Viejo vs Raspberry Pi 4 vs VPS en la Nube
+
+| Característica | VPS Básica (AWS / GCP / Hetzner) | Raspberry Pi 4 (4 GB) | Smartphone Android (6 GB RAM) |
 | :--- | :--- | :--- | :--- |
-| **Memoria RAM** | 1 GB *(Cuelgues por falta de memoria OOM)* | **4 GB – 8 GB LPDDR4X** (~2.5+ GB libres) | **+400% a +700% de memoria** |
-| **CPU** | 0.25 vCPU compartida (con throttling) | **8 núcleos físicos ARM64** | Procesamiento paralelo real |
-| **Almacenamiento** | Disco virtual en red / HDD lento | **Memoria flash UFS** ultrarrápida | Lecturas y escrituras SQLite instantáneas |
-| **SAI / UPS** | Ninguno (se apaga ante cortes de luz) | **Batería integrada** | Sigue funcionando horas sin apagarse |
-| **Coste** | Facturación por tráfico o cuota mensual | **0 € para siempre** | Sin sorpresas |
-| **Consumo Eléctrico**| N/A | **~1 a 3 vatios** | Despreciable en la factura de la luz |
+| **Memoria RAM** | 1 GB *(Cuelgues por falta de memoria OOM)* | 4 GB LPDDR4 | **6 GB – 8 GB LPDDR4X** (~3+ GB libres) |
+| **Procesador** | 0.25 – 1 vCPU compartida con throttling | 4 núcleos Cortex-A72 | **8 núcleos físicos ARM64** |
+| **Almacenamiento**| Disco virtual en red / HDD lento | MicroSD lenta (fácil corrupción) | **Memoria Flash UFS** ultrarrápida |
+| **Protección Eléctrica** | N/A ante desastres | Se apaga en seco (corrupción de DB) | **Batería integrada = SAI / UPS nativo** |
+| **Coste** | 5 € - 10 € al mes (60-120 €/año) | 80 € - 110 € con accesorios | **0 € (Hardware amortizado en casa)** |
+| **Consumo Eléctrico**| Facturado externamente | ~5W a 8W | **~1W a 3W (prácticamente cero)** |
 
 ---
 
-## 🔋 3. Cuidado y Seguridad de la Batería (Estrategia 50%)
+## 🔋 Cuidado y Seguridad de la Batería: La Estrategia del 50%
 
-Tener una batería de iones de litio conectada a corriente continua al 100% las 24 horas del día degrada la celda e incrementa el riesgo de hinchazón. Para garantizar **cero degradación y máxima seguridad**:
+> [!IMPORTANT]
+> **Nunca dejes una batería de iones de litio conectada al cargador al 100% las 24 horas del día.** La tensión continua sobre la celda degrada el electrolito y provoca hinchazón física con el tiempo.
 
-1. **Voltaje de Reposo Químico (45% - 70%):**  
-   El litio se mantiene en su estado más estable en torno a ~3.8V por celda (entre el 40% y el 60%).
-2. **Temporizador Físico de Enchufe:**  
-   Utiliza un enchufe con temporizador analógico/mecánico programado para activarse **30 a 45 minutos dos veces al día** (por ejemplo: 08:00–08:45 y 20:00–20:45).
-   * El resto del día el cargador permanece sin corriente.
-   * La batería actúa como un **SAI / UPS integrado**: si se corta la luz en tu casa, el servidor no se apaga ni corrompe datos.
-3. **Watchdog de Batería y Temperatura (`cron_battery_guard.py`):**  
-   Un proceso programado cada 30 minutos vigila el estado de la batería mediante `termux-battery-status`:
-   * **Batería Baja (< 25%):** Si el nivel cae del 25% (ej. falló el temporizador o se desconectó el cable), envía una **alerta urgente por Telegram**.
-   * **Temperatura Crítica (≥ 45°C / ≥ 48°C):** Si la batería supera los 45°C, emite un aviso inmediato para prevenir sobrecalentamiento.
+Para garantizar máxima longevidad y seguridad contra sobrecalentamiento:
 
----
+```text
+ ┌──────────────────────┐        ┌──────────────────────┐        ┌──────────────────────┐
+ │  Enchufe Temporizador│        │  Carga Intermitente  │        │   Batería Saludable  │
+ │  (Mecánico / Smart)  │ ────►  │  30 min dos veces    │ ────►  │  Oscila entre 45%    │
+ │   Menos de 5 euros   │        │     al día           │        │   y 70% (~3.8V)      │
+ └──────────────────────┘        └──────────────────────┘        └──────────────────────┘
+```
 
-## 🌐 4. Conectividad: Por qué NO necesitas IP estática ni abrir puertos
-
-* **Comunicación por Polling Saliente (*Outbound Long-Polling*):**  
-  El bot de Telegram y las llamadas a los modelos de lenguaje (LLM) se ejecutan mediante conexiones salientes hacia internet.
-* **Independencia de Red:**  
-  No necesitas abrir ni redirigir ningún puerto en el router. Si tu proveedor de internet cambia tu IP pública o trasladas el teléfono a otra red Wi-Fi, **el servidor sigue funcionando sin interrupción**.
-* **Acceso local SSH:**  
-  Para administración interna desde tu ordenador dentro de la misma red Wi-Fi:  
-  `ssh -p 8022 u0_a256@<IP-DE-TU-MOVIL>`
-* **Acceso al Dashboard Multimedia:**  
-  Abriendo `http://<IP-DE-TU-MOVIL>:8090` desde cualquier navegador de tu red local.
+1. **Voltaje de Reposo Electroquímico:** A ~3.8V por celda (entre el 45% y el 65% de carga), el litio no sufre tensión química destructiva.
+2. **Temporizador de Enchufe:** Un programador mecánico de 4 € activa el cargador únicamente **30 a 45 minutos dos veces al día** (ej. 08:00–08:45 y 20:00–20:45). El resto de la jornada el móvil opera con su batería interna.
+3. **Watchdog Térmico en Python (`cron_battery_guard.py`):** Consulta `termux-battery-status` cada 30 minutos:
+   * **Batería < 25%:** Emite alerta urgente por Telegram si falló el enchufe o se desconectó el cable.
+   * **Temperatura ≥ 45°C:** Alerta crítica inmediata para retirar el cargador o mejorar la ventilación.
 
 ---
 
-## 🤖 5. Soporte Multi-LLM y Hermes Agent
+## 🚀 Instalación Rápida en 3 Pasos
 
-El servidor está preparado para trabajar con **cualquier modelo de lenguaje compatible con la API de OpenAI**. Puedes elegir tu proveedor favorito en el archivo `.env`:
+### 1. Prepara Termux en el móvil Android
+1. Instala **Termux** y **Termux:API** desde [F-Droid](https://f-droid.org) (evita Google Play, ya que está desactualizado).
+2. En los ajustes de Android, exime a Termux del ahorro de batería (*Ajustes → Aplicaciones → Termux → Batería → "Sin restricciones"*).
 
-* **DeepSeek:** `deepseek-flash`, `deepseek-chat`, `deepseek-reasoner` (económico, ultrarrápido y excelente en español).
-* **OpenAI:** `gpt-4o-mini`, `gpt-4o`.
-* **Groq:** `llama-3.3-70b-versatile` (inferencia en milisegundos).
-* **OpenRouter:** Acceso unificado a modelos comerciales y open-source.
-* **Ollama / Local:** Modelos ejecutándose en otra máquina de tu red local.
-
-### Motor de Búsqueda Resiliente con Triple Redundancia (`scripts/web_search_helper.py`)
-1. **Rotación Multi-Clave de Tavily:** Soporta múltiples claves en `.env` (`TAVILY_KEYS="key1,key2"`). Si una alcanza el límite de cuota mensual, conmuta automáticamente a la siguiente sin interrumpir las tareas.
-2. **Extracción Estructurada con Firecrawl:** Convierte páginas web complejas a Markdown limpio.
-3. **Fallback Nativo DuckDuckGo (`ddgs`):** Si las APIs externas no están disponibles, utiliza búsquedas gratuitas directas sin coste de saldo.
-
----
-
-## ⏰ 6. Batería de Crons Automatizados
-
-El sistema incluye una serie de tareas programadas independientes y configurables:
-
-| Tarea | Script | Frecuencia | Destino | Funcionalidad |
-| :--- | :--- | :--- | :--- | :--- |
-| **Monitor de Batería** | `cron_battery_guard.py` | Cada 30 min | Telegram | Vigilancia térmica (≥45°C) y nivel de batería (<25%). |
-| **Radar de Empleo** | `cron_job_radar.py` | Lunes-Viernes 08:00 | Telegram | Rastreo en portales clave (InfoJobs, Indeed, Tecnoempleo, remotos) con memoria contra duplicados (`seen_jobs.json`) y curación por IA. |
-| **Radar de Chollos** | `cron_deals_radar.py` | Diario 12:00 | Telegram | Detección de ofertas reales en tecnología, hardware, consolas y errores de precio. |
-| **Noticias Tech** | `cron_news_digest.py` | Diario 14:00 | Telegram | Resumen matutino de las noticias de tecnología e IA más relevantes del día. |
-
----
-
-## 📢 7. Megáfono TTS Físico (`/di` y `/habla`)
-
-Aprovecha los altavoces físicos del teléfono como un sistema de megafonía remota controlable desde Telegram en cualquier momento:
-
-* **Comandos directos:** `/di <mensaje>` o `/habla <mensaje>`
-* **Cero coste y latencia ultra baja:** Implementado como plugin nativo de Hermes (`plugins/megaphone`). Intercepta el comando antes del bucle del LLM, respondiendo en menos de 300 ms con **0 tokens consumidos**.
-* **Volumen Máximo Garantizado:** Eleva automáticamente el volumen multimedia de Android al tope (`15/15`) y sintetiza la voz en español (`termux-tts-speak -s MUSIC -l es-ES`).
-
----
-
-## 🎬 8. Servidor Multimedia & Dashboard Web (`:8090`)
-
-El móvil funciona como servidor de streaming local para Smart TVs (Samsung Tizen, LG webOS, Android TV) y como panel de control interactivo:
-
-* **Streaming DLNA (MiniDLNA en puerto 8200):** Lectura directa de disco sin transcodificación en el móvil. Consumo medido: **~17 MB de RAM y 0% de CPU**.
-* **Dashboard Web Moderno (puerto 8090):**
-  * Bento card con telemetría en tiempo real: temperatura, ecualizador de pulso, batería, memoria RAM y gigas libres de flash UFS.
-  * Subidas masivas Drag & Drop con streaming directo a disco en bloques de 64 KB y limpieza de parciales si se interrumpe la red.
-  * Carátulas HD automáticas descargadas desde IMDb y TVMaze (`fetch_cover.py`).
-  * Reproductor HTML5 con soporte de rangos HTTP (206) para saltar a cualquier minuto.
-* **El "Botón Mágico" para vídeos incompatibles:**
-  * Si una Smart TV rechaza archivos antiguos `.avi` (DivX/Xvid), el asistente local en tu ordenador (`mac_helper.py` o `enviar_al_servidor.sh`) convierte el archivo con `ffmpeg` nativo a MP4 H.264/AAC por hardware y lo sube directamente al servidor listo para la TV sin sobrecalentar el móvil.
-
----
-
-## 🚀 9. Instalación Paso a Paso desde Cero
-
-### 1. Requisitos previos en el móvil
-1. Descarga e instala **Termux** y **Termux:API** desde [F-Droid](https://f-droid.org) (evita Google Play).
-2. En los ajustes de Android del móvil, desactiva la optimización de batería para Termux (*Ajustes → Apps → Termux → Batería → "Sin restricciones"*).
-
-### 2. Clonar y configurar
-Abre Termux en el móvil y clona el repositorio:
+### 2. Clona el repositorio y configura variables
+Abre Termux y ejecuta:
 
 ```bash
-pkg install -y git
+pkg update -y && pkg install -y git
 git clone https://github.com/moisesvalero/android-home-server.git ~/.hermes-server
 cd ~/.hermes-server
 
-# Copiar plantilla de variables y editar con tus claves
+# Copia la plantilla y rellena tus claves
 cp .env.example .env
 nano .env
 ```
 
-### 3. Ejecutar el instalador automático
+### 3. Ejecuta el instalador automático
 ```bash
 chmod +x install.sh
 ./install.sh
 ```
 
-El script configurará los paquetes nativos, el entorno de Python, MiniDLNA y registrará los procesos en PM2.
+El script configurará automáticamente:
+* Dependencias nativas C/Rust, Python 3 y Node.js.
+* MiniDLNA y las carpetas de medios en `~/media/peliculas` y `~/media/series`.
+* Gestor de procesos **PM2** con auto-arranque en `~/.termux/boot/start-services.sh`.
 
 ---
 
-## 🔒 10. Hardening SSH en Termux
+## 🎬 Servidor Multimedia DLNA & Web Dashboard (`:8090`)
 
-Para garantizar que el acceso remoto a través del puerto `8022` sea seguro:
+Abre desde el navegador de tu ordenador o tablet en la misma red Wi-Fi:
 
-1. Añade tu clave pública SSH a `~/.ssh/authorized_keys`.
+👉 **`http://<IP-DE-TU-MOVIL>:8090`**
+
+* **Bento Telemetry Card:** Muestra en vivo la temperatura del procesador con código de color, pulso del sistema, nivel de batería, memoria RAM y gigas libres de almacenamiento flash UFS.
+* **Cola de Subidas Drag & Drop:** Suelta decenas de vídeos a la vez con subida concurrente y streaming a disco por bloques de 64 KB con limpieza de parciales si se interrumpe la red.
+* **Carátulas HD Automáticas (`fetch_cover.py`):** Rastrea las APIs de IMDb y TVMaze para asociar el póster oficial en alta definición a cada película o capítulo.
+* **Streaming a la Smart TV:** Pulsa **Fuentes** (o *Dispositivos Conectados*) en el mando de tu televisión y selecciona **Android Media Server**.
+
+---
+
+## 🤖 Hermes AI Agent y Soporte Multi-LLM
+
+Configura en tu archivo `.env` el proveedor de lenguaje que prefieras:
+
+```bash
+DEFAULT_LLM_PROVIDER="deepseek"       # deepseek | openai | groq | openrouter | ollama
+DEFAULT_LLM_MODEL="deepseek-flash"
+```
+
+* **DeepSeek:** `deepseek-flash`, `deepseek-chat`, `deepseek-reasoner` (económico, rápido y excelente en español).
+* **OpenAI:** `gpt-4o`, `gpt-4o-mini`.
+* **Groq:** Inferencia ultrarrápida en milisegundos con `llama-3.3-70b-versatile`.
+* **OpenRouter:** Acceso unificado a cientos de modelos comerciales y abiertos.
+* **Ollama / Local:** Modelos locales en tu PC en la red local (`http://192.168.1.X:11434/v1`).
+
+---
+
+## 🛠️ Comandos Útiles (PM2)
+
+```bash
+# Ver estado, consumo de memoria y CPU en tiempo real
+pm2 status
+
+# Inspeccionar logs en vivo
+pm2 logs hermes           # Logs del agente de IA
+pm2 logs media-dashboard  # Logs de subidas y panel web
+pm2 logs dlna-server      # Logs del servidor DLNA
+
+# Reiniciar todos los servicios
+pm2 restart all
+
+# Guardar la lista activa para auto-arranque tras reinicio
+pm2 save
+```
+
+---
+
+## 🔒 Hardening de Seguridad SSH
+
+Para administrar el móvil de forma remota sin cables desde tu terminal:
+
+1. Añade tu clave pública a `~/.ssh/authorized_keys`.
 2. Edita `$PREFIX/etc/ssh/sshd_config`:
    ```text
    PasswordAuthentication no
@@ -192,34 +210,30 @@ Para garantizar que el acceso remoto a través del puerto `8022` sea seguro:
    PermitEmptyPasswords no
    MaxAuthTries 3
    ```
-3. Reinicia el servicio SSH:
-   ```bash
-   pkill sshd && sshd
-   ```
-4. **Seguridad de red:** Nunca abras el puerto 8022 en tu router. El servidor solo debe ser accesible dentro de tu Wi-Fi local o mediante una VPN como WireGuard o Tailscale.
+3. Reinicia SSH: `pkill sshd && sshd`.
+4. **Seguridad de red:** Nunca abras el puerto `8022` hacia Internet en tu router. El acceso debe quedar restringido a la red Wi-Fi local o realizarse mediante una VPN segura como Tailscale o WireGuard.
 
 ---
 
-## 🛠️ 11. Gestión y Mantenimiento
+## 🌐 English Quick Overview
 
-```bash
-# Ver estado y consumo en vivo de todos los servicios
-pm2 status
+**Android Home Server** is an open-source lightweight server stack running on any spare Android phone via **Termux (no root required)**:
+- **Autonomous AI Agent:** Powered by Hermes Agent & Telegram bot (works with DeepSeek, OpenAI, Groq, or local Ollama).
+- **Zero-CPU Media Streaming:** MiniDLNA streams directly to Smart TVs (Samsung Tizen, LG webOS, Android TV) at 0% CPU and ~17 MB RAM, with an interactive web dashboard on port `8090`.
+- **Automated Crons:** Deduplicated daily job board scraper, tech deals radar, and news digest.
+- **Built-in UPS & Battery Safety:** Battery keeps the server alive during power outages. Mechanical timer cycles charging (45%-70%) to prevent battery degradation, backed by a thermal watchdog script.
+- **0 € / Month:** 100% self-hosted, consumes just 1-3W.
 
-# Inspeccionar logs en tiempo real
-pm2 logs hermes           # Logs del agente de IA
-pm2 logs media-dashboard  # Logs de peticiones HTTP y subidas
-pm2 logs dlna-server      # Logs del servidor DLNA
+---
 
-# Reiniciar servicios
-pm2 restart all
+## ⭐ ¿Te ha resultado útil?
 
-# Guardar lista de servicios activos para auto-arranque
-pm2 save
-```
+Si este proyecto te ha servido de inspiración para darle una segunda vida a tu móvil viejo o te ha ahorrado una cuota mensual en la nube:
+
+⭐ **¡Deja una estrella en el repositorio para apoyar el proyecto y que más personas lo descubran!** ⭐
 
 ---
 
 ## 📄 Licencia
 
-Distribuido bajo la licencia [MIT](LICENSE). Siéntete libre de utilizarlo, modificarlo y compartirlo para darle una segunda vida a tu hardware en desuso.
+Este proyecto está liberado bajo la licencia de código abierto **[MIT](LICENSE)**. Siéntete libre de clonarlo, adaptarlo y compartirlo.
