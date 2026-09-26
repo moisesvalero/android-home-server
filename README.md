@@ -13,6 +13,7 @@
 [![Telegram](https://img.shields.io/badge/Telegram-Bot%20API-229ed9.svg?style=for-the-badge&logo=telegram&logoColor=white)](https://core.telegram.org/bots)
 [![Cost](https://img.shields.io/badge/Cost-0%E2%82%AC%20%2F%20Forever-059669.svg?style=for-the-badge&logo=cashapp&logoColor=white)]()
 [![Consumption](https://img.shields.io/badge/Power-1--3W%20Ultra--Eco-f59e0b.svg?style=for-the-badge&logo=sparkfun&logoColor=white)]()
+[![AI Agents Ready](https://img.shields.io/badge/AI%20Agents-AGENTS.md%20Ready-8b5cf6.svg?style=for-the-badge&logo=openai&logoColor=white)](AGENTS.md)
 
 <br />
 
@@ -21,7 +22,7 @@
 </p>
 
 <p align="center">
-  🌐 <b>Idiomas / Languages:</b> <a href="#-español">🇪🇸 Español</a> • <a href="#-english">🇬🇧 English</a>
+  🌐 <b>Idiomas / Languages:</b> <a href="#-español">🇪🇸 Español</a> • <a href="#-english">🇬🇧 English</a> • <a href="AGENTS.md">🤖 AI Agents Guide</a>
 </p>
 
 </div>
@@ -70,9 +71,21 @@ Para garantizar máxima longevidad y seguridad contra sobrecalentamiento:
    * **Batería < 25%:** Emite alerta urgente por Telegram si falló el enchufe o se desconectó el cable.
    * **Temperatura ≥ 45°C:** Alerta crítica inmediata para retirar el cargador o mejorar la ventilación.
 
+### 🤖 ¿Prefieres que un Agente de IA lo monte por ti?
+
+> [!TIP]
+> **No tienes que hacer todo el proceso a mano si no te apetece.**
+> Puedes clonar este repositorio o pasarle el enlace a tu agente de IA preferido (**Claude Code, Cursor, Windsurf, Antigravity, OpenCode, Codex, Copilot...**) y decirle directamente:
+> 
+> ```text
+> "Quiero montar este servidor doméstico en mi móvil Android siguiendo las instrucciones de este repositorio. Léete AGENTS.md y haz todo el trabajo o guíame paso a paso."
+> ```
+> 
+> El agente leerá las instrucciones completas en [**`AGENTS.md`**](AGENTS.md), detectará si puede conectarse por **SSH** o **ADB** para hacerlo de forma 100% autónoma, o te pedirá únicamente tus claves de Telegram y LLM facilitándote los comandos exactos para dejar el servidor funcionando sin esfuerzo.
+
 ---
 
-### 🚀 Instalación Rápida en 3 Pasos
+### 🚀 Instalación Rápida en 3 Pasos (Manual)
 
 #### 1. Prepara Termux en el móvil Android
 1. Instala **Termux** y **Termux:API** desde [F-Droid](https://f-droid.org) (evita Google Play).
@@ -198,9 +211,21 @@ To ensure long-term reliability and safety:
    * **Battery < 25%:** Sends urgent Telegram alert if the plug failed or cable was disconnected.
    * **Temperature ≥ 45°C:** Immediate critical alert to unplug or improve ventilation.
 
+### 🤖 Want an AI Agent to deploy this for you?
+
+> [!TIP]
+> **You don't need to run all of this manually if you prefer automation.**
+> You can clone this repository or hand the repo URL to your favorite AI coding agent (**Claude Code, Cursor, Windsurf, Antigravity, OpenCode, Codex, Copilot...**) and tell it:
+> 
+> ```text
+> "I want to deploy this home server on my Android phone following this repository. Read AGENTS.md and do the work or guide me step-by-step."
+> ```
+> 
+> The agent will read [**`AGENTS.md`**](AGENTS.md), check whether it can connect via **SSH** or **ADB** for full autonomous execution, or prompt you only for your essential Telegram and LLM API keys while running the full deployment pipeline.
+
 ---
 
-### 🚀 Quickstart in 3 Steps
+### 🚀 Quickstart in 3 Steps (Manual)
 
 #### 1. Setup Termux on Android
 1. Install **Termux** and **Termux:API** from [F-Droid](https://f-droid.org) (avoid the outdated Play Store version).
