@@ -116,6 +116,10 @@ El script configurará automáticamente dependencias nativas C/Rust, Python 3, N
 
 ### 🎬 Servidor Multimedia DLNA & Web Dashboard (`:8090`)
 
+<p align="center">
+  <img src="assets/dashboard-preview.png" alt="Android Media Server Web Dashboard" width="100%" style="border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.25);" />
+</p>
+
 Abre desde el navegador de tu ordenador o tablet en la misma red Wi-Fi:
 
 👉 **`http://<IP-DE-TU-MOVIL>:8090`**
@@ -255,6 +259,10 @@ The script automatically sets up native C/Rust compilers, Python 3, Node.js, Min
 ---
 
 ### 🎬 DLNA Streaming & Web Dashboard (`:8090`)
+
+<p align="center">
+  <img src="assets/dashboard-preview.png" alt="Android Media Server Web Dashboard" width="100%" style="border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.25);" />
+</p>
 
 Open from any browser on your home Wi-Fi network:
 
