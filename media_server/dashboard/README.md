@@ -44,6 +44,7 @@ Las carátulas se guardan junto al vídeo como `<nombre-del-video>.jpg`; tambié
 - Enlaces de navegación que hacen scroll a cada sección.
 - **Subir** (`triggerFileInput`) — abre el selector de archivos.
 - **Biblioteca** (`openLibraryModal`) — abre el explorador completo.
+- **Selector de idioma (ES / EN)** (`toggleLanguage`) — conmuta al instante entre español e inglés toda la interfaz (navegación, telemetría, explorador modal, avisos y formatos de fecha), persistiendo la preferencia en `localStorage['dashboard_lang']` y respetando el idioma del navegador por defecto.
 - **Tema claro / oscuro** (`toggleTheme`) — se guarda en `localStorage['theme']` y se aplica
   antes de pintar para que no haya parpadeo.
 

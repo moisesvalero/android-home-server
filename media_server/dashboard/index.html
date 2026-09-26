@@ -9,15 +9,20 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   
   <script>
-    // Inmediata ejecución para evitar parpadeo de tema (FOUC)
+    // Inmediata ejecución para evitar parpadeo de tema e idioma (FOUC)
     (function() {
-      const saved = localStorage.getItem('theme');
+      const savedTheme = localStorage.getItem('theme');
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (saved === 'dark' || (!saved && prefersDark)) {
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
       }
+
+      const savedLang = localStorage.getItem('dashboard_lang');
+      const browserLang = (navigator.language || '').toLowerCase().startsWith('en') ? 'en' : 'es';
+      const initialLang = (savedLang === 'en' || savedLang === 'es') ? savedLang : browserLang;
+      document.documentElement.lang = initialLang;
     })();
   </script>
 
@@ -1200,26 +1205,38 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play size-3 fill-current"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"></path></svg>
           </div>
           <nav class="hidden gap-6 text-[13px] md:flex" aria-label="Navegación principal">
-            <span class="font-semibold cursor-pointer" onclick="filterType('all')">Media Server</span>
-            <span class="text-white/75 hover:text-white cursor-pointer transition" onclick="filterType('peliculas')">Películas</span>
-            <span class="text-white/75 hover:text-white cursor-pointer transition" onclick="filterType('series')">Series</span>
+            <span class="font-semibold cursor-pointer" onclick="filterType('all')" data-i18n="navMedia">Media Server</span>
+            <span class="text-white/75 hover:text-white cursor-pointer transition" onclick="filterType('peliculas')" data-i18n="navMovies">Películas</span>
+            <span class="text-white/75 hover:text-white cursor-pointer transition" onclick="filterType('series')" data-i18n="navSeries">Series</span>
           </nav>
         </div>
 
-        <!-- Right: Add, Grid, Sun/Moon Dark Mode Toggle -->
-        <div class="flex items-center gap-5 sm:gap-6">
+        <!-- Right: Add, Grid, Language Switcher, Sun/Moon Dark Mode Toggle -->
+        <div class="flex items-center gap-3.5 sm:gap-5">
           <!-- Add media button: bare icon -->
-          <button aria-label="Add media" onclick="triggerFileInput()" class="flex items-center justify-center p-1 text-white/80 hover:text-white transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer" title="Subir vídeos">
+          <button aria-label="Add media" onclick="triggerFileInput()" class="flex items-center justify-center p-1 text-white/80 hover:text-white transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer" title="Subir vídeos" data-i18n-title="uploadVideosTooltip">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus size-4"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
           </button>
           
           <!-- Grid view button: bare icon -->
-          <button aria-label="Ver cuadrícula" onclick="openLibraryModal('all')" class="flex items-center justify-center p-1 text-white/80 hover:text-white transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer" title="Abrir gestor de biblioteca">
+          <button aria-label="Ver cuadrícula" onclick="openLibraryModal('all')" class="flex items-center justify-center p-1 text-white/80 hover:text-white transition-all duration-200 hover:scale-110 active:scale-95 cursor-pointer" title="Abrir gestor de biblioteca" data-i18n-title="openLibraryTooltip">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-grid3x3 size-4"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M3 9h18"></path><path d="M3 15h18"></path><path d="M9 3v18"></path><path d="M15 3v18"></path></svg>
           </button>
 
+          <!-- INTERRUPTOR I18N (ES / EN) -->
+          <button id="lang-toggle-btn" onclick="toggleLanguage()"
+                  class="relative flex h-8 items-center justify-center gap-1.5 rounded-full border border-white/60 bg-white/20 px-2.5 text-xs font-semibold text-white shadow-sm backdrop-blur transition-all duration-300 hover:scale-105 hover:bg-white/35 active:scale-95 cursor-pointer"
+                  aria-label="Cambiar idioma (ES / EN)" title="Switch to English / Cambiar a inglés" data-i18n-title="langToggleTooltip" data-i18n-aria="langAria">
+            <svg class="size-3.5 opacity-85" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            <span id="lang-label" class="tracking-wide">ES</span>
+          </button>
+
           <!-- SOL / LUNA THEME TOGGLE -->
-          <button id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Cambiar tema claro / oscuro" title="Cambiar modo claro / oscuro"
+          <button id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Cambiar tema claro / oscuro" title="Cambiar modo claro / oscuro" data-i18n-title="themeToggleTooltip"
                   class="relative flex size-8 items-center justify-center rounded-full border-2 border-white/85 shadow-md transition-all duration-300 hover:scale-110 active:scale-95 cursor-pointer bg-gradient-to-br from-amber-300 via-amber-400 to-orange-500 shadow-orange-500/30">
             <!-- Icono Sol visible en modo claro -->
             <svg id="icon-sun" class="size-4 text-white drop-shadow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1241,13 +1258,13 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
       <!-- Greeting and Add Media Hero -->
       <div class="mb-7 flex flex-col justify-between gap-5 text-white sm:flex-row sm:items-end">
         <div>
-          <p id="hero-date" class="text-[13px] text-white/75">Cargando fecha...</p>
+          <p id="hero-date" class="text-[13px] text-white/75" data-i18n="loadingDate">Cargando fecha...</p>
           <h1 id="hero-greeting" class="mt-1 text-4xl font-semibold tracking-[-0.055em] sm:text-5xl">Buenos días.</h1>
-          <p class="mt-2 text-[15px] text-white/75">Tu servidor multimedia Android Server, de un vistazo.</p>
+          <p class="mt-2 text-[15px] text-white/75" data-i18n="heroSubtitle">Tu servidor multimedia Android Server, de un vistazo.</p>
         </div>
         <button onclick="triggerFileInput()" class="flex h-10 items-center justify-center gap-2 rounded-full bg-white/85 px-5 text-sm font-medium text-[#1763c5] shadow-lg shadow-blue-900/15 backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03] hover:bg-white hover:shadow-xl active:scale-95 cursor-pointer">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus size-4"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
-          Subir archivos
+          <span data-i18n="heroUploadBtn">Subir archivos</span>
         </button>
       </div>
 
@@ -1255,43 +1272,43 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
       <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         
         <!-- Card 1: Media -->
-        <div onclick="openLibraryModal('all')" class="group rounded-[22px] border border-white/45 bg-white/45 p-5 shadow-xl shadow-blue-900/10 backdrop-blur-2xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.015] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl hover:shadow-blue-900/20 active:scale-[.99] cursor-pointer" title="Ver biblioteca completa">
+        <div onclick="openLibraryModal('all')" class="group rounded-[22px] border border-white/45 bg-white/45 p-5 shadow-xl shadow-blue-900/10 backdrop-blur-2xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.015] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl hover:shadow-blue-900/20 active:scale-[.99] cursor-pointer" title="Ver biblioteca completa" data-i18n-title="dockLibraryTip">
           <div class="flex items-center justify-between">
-            <span class="text-[13px] text-[#31547b]">Media</span>
+            <span class="text-[13px] text-[#31547b]" data-i18n="cardMediaTitle">Media</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-video size-4 text-[#2867bf]"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"></path><rect x="2" y="6" width="14" height="12" rx="2"></rect></svg>
           </div>
           <p id="stat-media-count" class="mt-3 text-2xl font-semibold tracking-[-0.04em]">--</p>
-          <p id="stat-media-sub" class="mt-1 text-xs text-[#527294]">Películas y Series</p>
+          <p id="stat-media-sub" class="mt-1 text-xs text-[#527294]" data-i18n="cardMediaSub">Películas y Series</p>
         </div>
 
         <!-- Card 2: Storage -->
         <div onclick="scrollToElement('server-health-section')" class="group rounded-[22px] border border-white/45 bg-white/45 p-5 shadow-xl shadow-blue-900/10 backdrop-blur-2xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.015] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl hover:shadow-blue-900/20 active:scale-[.99] cursor-pointer">
           <div class="flex items-center justify-between">
-            <span class="text-[13px] text-[#31547b]">Almacenamiento</span>
+            <span class="text-[13px] text-[#31547b]" data-i18n="cardStorageTitle">Almacenamiento</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hard-drive size-4 text-[#2867bf]"><path d="M10 16h.01"></path><path d="M2.212 11.577a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path><path d="M21.946 12.013H2.054"></path><path d="M6 16h.01"></path></svg>
           </div>
           <p id="stat-storage-used" class="mt-3 text-2xl font-semibold tracking-[-0.04em]">-- GB</p>
-          <p id="stat-storage-total" class="mt-1 text-xs text-[#527294]">de -- GB disponibles</p>
+          <p id="stat-storage-total" class="mt-1 text-xs text-[#527294]" data-i18n="cardStorageSub">de -- GB disponibles</p>
         </div>
 
         <!-- Card 3: Real Android Server Battery -->
         <div id="card-battery" class="group rounded-[22px] border border-white/45 bg-white/45 p-5 shadow-xl shadow-blue-900/10 backdrop-blur-2xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.015] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl hover:shadow-blue-900/20 active:scale-[.99]">
           <div class="flex items-center justify-between">
-            <span class="text-[13px] text-[#31547b]">Batería Android Server</span>
+            <span class="text-[13px] text-[#31547b]" data-i18n="cardBatteryTitle">Batería Android Server</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap size-4 text-[#2867bf]"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
           </div>
           <p id="stat-battery-pct" class="mt-3 text-2xl font-semibold tracking-[-0.04em]">--%</p>
-          <p id="stat-battery-status" class="mt-1 text-xs text-[#527294]">Cargando · Estado óptimo</p>
+          <p id="stat-battery-status" class="mt-1 text-xs text-[#527294]" data-i18n="cardBatteryPlugged">Cargando · Estado óptimo</p>
         </div>
 
         <!-- Card 4: DLNA / Uptime -->
         <div onclick="openDlnaInfoModal()" class="group rounded-[22px] border border-white/45 bg-white/45 p-5 shadow-xl shadow-blue-900/10 backdrop-blur-2xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.015] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl hover:shadow-blue-900/20 active:scale-[.99] cursor-pointer">
           <div class="flex items-center justify-between">
-            <span class="text-[13px] text-[#31547b]">DLNA Samsung TV</span>
+            <span class="text-[13px] text-[#31547b]" data-i18n="cardDlnaTitle">DLNA Samsung TV</span>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud size-4 text-[#2867bf]"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path></svg>
           </div>
-          <p id="stat-dlna-status" class="mt-3 text-2xl font-semibold tracking-[-0.04em]">Puerto 8200</p>
-          <p id="stat-uptime" class="mt-1 text-xs text-[#527294]">Activo en red local</p>
+          <p id="stat-dlna-status" class="mt-3 text-2xl font-semibold tracking-[-0.04em]" data-i18n="cardDlnaPort">Puerto 8200</p>
+          <p id="stat-uptime" class="mt-1 text-xs text-[#527294]" data-i18n="cardDlnaActive">Activo en red local</p>
         </div>
       </div>
 
@@ -1302,29 +1319,29 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
         <section class="rounded-[24px] border border-white/50 bg-white/70 p-6 shadow-2xl shadow-blue-900/15 backdrop-blur-2xl transition-all duration-300 ease-out hover:-translate-y-1 hover:border-white/80 hover:bg-white/80 hover:shadow-[0_24px_60px_rgba(15,68,145,.22)] sm:p-8">
           <div class="flex items-start justify-between">
             <div>
-              <h2 class="text-xl font-semibold tracking-[-0.035em]">Añadir a tu biblioteca</h2>
-              <p class="mt-1 text-sm text-[#527294]">Sube vídeos para verlos al instante en tu Smart TV.</p>
+              <h2 class="text-xl font-semibold tracking-[-0.035em]" data-i18n="sectionAddTitle">Añadir a tu biblioteca</h2>
+              <p class="mt-1 text-sm text-[#527294]" data-i18n="sectionAddSub">Sube vídeos para verlos al instante en tu Smart TV.</p>
             </div>
             
             <!-- Category Segmented Control -->
             <div class="flex items-center gap-3">
-              <div class="segmented-control-wrapper" role="group" aria-label="Destino de subida">
-                <button id="btn-cat-pelis" type="button" aria-pressed="true" onclick="setUploadCategory('peliculas')" class="segmented-btn active">Películas</button>
-                <button id="btn-cat-series" type="button" aria-pressed="false" onclick="setUploadCategory('series')" class="segmented-btn">Series</button>
+              <div class="segmented-control-wrapper" role="group" aria-label="Destino de subida" data-i18n-aria="uploadTargetAria">
+                <button id="btn-cat-pelis" type="button" aria-pressed="true" onclick="setUploadCategory('peliculas')" class="segmented-btn active" data-i18n="catMovies">Películas</button>
+                <button id="btn-cat-series" type="button" aria-pressed="false" onclick="setUploadCategory('series')" class="segmented-btn" data-i18n="catSeries">Series</button>
               </div>
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-upload size-5 text-[#176fda]"><path d="M12 13v8"></path><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><path d="m8 17 4-4 4 4"></path></svg>
             </div>
           </div>
 
           <!-- Dropzone box matching exact classes -->
-          <div id="dropzone" role="button" tabindex="0" aria-label="Zona de arrastre de archivos"
+          <div id="dropzone" role="button" tabindex="0" aria-label="Zona de arrastre de archivos" data-i18n-aria="dropzoneAria"
                class="mt-6 flex min-h-[205px] cursor-pointer flex-col items-center justify-center rounded-[20px] border border-dashed border-[#92b8df] bg-white/45 text-center transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.01] hover:border-[#5da7ed] hover:bg-white/75 hover:shadow-lg">
             <div class="flex size-14 items-center justify-center rounded-[18px] bg-gradient-to-br from-[#3ca8ff] to-[#1764d1] text-white shadow-lg">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-upload size-7"><path d="M12 13v8"></path><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><path d="m8 17 4-4 4 4"></path></svg>
             </div>
-            <p class="mt-4 text-[15px] font-semibold">Arrastra archivos aquí</p>
-            <p class="mt-1 text-sm text-[#527294]">o <span class="text-[#176fda] font-medium">selecciona desde tu ordenador</span></p>
-            <p class="mt-4 text-xs text-[#6f8eac]">MP4, MKV, MOV, AVI · Soporta cola masiva (50+ archivos simultáneos)</p>
+            <p class="mt-4 text-[15px] font-semibold" data-i18n="dropzoneTitle">Arrastra archivos aquí</p>
+            <p class="mt-1 text-sm text-[#527294]"><span data-i18n="dropzoneOr">o </span><span class="text-[#176fda] font-medium" data-i18n="dropzoneBrowse">selecciona desde tu ordenador</span></p>
+            <p class="mt-4 text-xs text-[#6f8eac]" data-i18n="dropzoneFormats">MP4, MKV, MOV, AVI · Soporta cola masiva (50+ archivos simultáneos)</p>
           </div>
           <input id="file-input" type="file" multiple accept="video/*" class="hidden">
 
@@ -1339,8 +1356,8 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
             </div>
             <div class="hw-txt">
-              <h2 class="hw-title" style="font-size:17px">Estado del servidor</h2>
-              <p class="hw-sub">Android Server · ARM64</p>
+              <h2 class="hw-title" style="font-size:17px" data-i18n="hwHealthTitle">Estado del servidor</h2>
+              <p class="hw-sub" data-i18n="hwHealthSub">Android Server · ARM64</p>
             </div>
             <span class="hw-live" aria-hidden="true"></span>
           </div>
@@ -1378,7 +1395,7 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
               <div class="hw-tile hw-tile--green">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="17" height="10" rx="3"/><path d="M22 11v2"/></svg>
               </div>
-              <p class="hw-label hw-txt">Batería / Estado</p>
+              <p class="hw-label hw-txt" data-i18n="hwBatteryLabel">Batería / Estado</p>
               <p id="card-battery-sub" class="hw-strong">--% · --</p>
             </div>
 
@@ -1387,7 +1404,7 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
               <div class="hw-tile hw-tile--blue">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="18" height="8" rx="2"/><path d="M7 10V7M12 10V7M17 10V7M7 21v-3M17 21v-3"/></svg>
               </div>
-              <p class="hw-label hw-txt">Memoria RAM</p>
+              <p class="hw-label hw-txt" data-i18n="hwRamLabel">Memoria RAM</p>
               <p id="card-ram-val" class="hw-strong">-- / -- GB</p>
             </div>
 
@@ -1399,51 +1416,51 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
       <div class="mt-3 grid grid-cols-3 gap-3 sm:grid-cols-6">
         
         <!-- Button 1: Biblioteca (Abre el Gestor de Archivos) -->
-        <button onclick="openLibraryModal('all')" class="group flex flex-col items-center gap-2 rounded-[20px] border border-white/45 bg-white/35 py-4 text-[12px] shadow-lg shadow-blue-900/10 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.04] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl active:scale-95 cursor-pointer" title="Explorador y gestor de archivos multimedia del Android Server">
+        <button onclick="openLibraryModal('all')" class="group flex flex-col items-center gap-2 rounded-[20px] border border-white/45 bg-white/35 py-4 text-[12px] shadow-lg shadow-blue-900/10 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.04] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl active:scale-95 cursor-pointer" title="Explorador y gestor de archivos multimedia del Android Server" data-i18n-title="dockLibraryTip">
           <span class="flex size-12 items-center justify-center rounded-[15px] bg-gradient-to-br from-orange-400 to-red-500 text-white shadow-lg transition-transform group-hover:scale-105">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-film size-6"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M7 3v18"></path><path d="M3 7.5h4"></path><path d="M3 12h18"></path><path d="M3 16.5h4"></path><path d="M17 3v18"></path><path d="M17 7.5h4"></path><path d="M17 16.5h4"></path></svg>
           </span>
-          Biblioteca
+          <span data-i18n="dockLibrary">Biblioteca</span>
         </button>
 
         <!-- Button 2: Películas -->
-        <button onclick="openLibraryModal('peliculas')" class="group flex flex-col items-center gap-2 rounded-[20px] border border-white/45 bg-white/35 py-4 text-[12px] shadow-lg shadow-blue-900/10 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.04] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl active:scale-95 cursor-pointer" title="Ver y gestionar películas">
+        <button onclick="openLibraryModal('peliculas')" class="group flex flex-col items-center gap-2 rounded-[20px] border border-white/45 bg-white/35 py-4 text-[12px] shadow-lg shadow-blue-900/10 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.04] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl active:scale-95 cursor-pointer" title="Ver y gestionar películas" data-i18n-title="dockMoviesTip">
           <span class="flex size-12 items-center justify-center rounded-[15px] bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-lg transition-transform group-hover:scale-105">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-video size-6"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"></path><rect x="2" y="6" width="14" height="12" rx="2"></rect></svg>
           </span>
-          Películas
+          <span data-i18n="dockMovies">Películas</span>
         </button>
 
         <!-- Button 3: Series -->
-        <button onclick="openLibraryModal('series')" class="group flex flex-col items-center gap-2 rounded-[20px] border border-white/45 bg-white/35 py-4 text-[12px] shadow-lg shadow-blue-900/10 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.04] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl active:scale-95 cursor-pointer" title="Ver y gestionar series">
+        <button onclick="openLibraryModal('series')" class="group flex flex-col items-center gap-2 rounded-[20px] border border-white/45 bg-white/35 py-4 text-[12px] shadow-lg shadow-blue-900/10 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.04] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl active:scale-95 cursor-pointer" title="Ver y gestionar series" data-i18n-title="dockSeriesTip">
           <span class="flex size-12 items-center justify-center rounded-[15px] bg-gradient-to-br from-violet-400 to-indigo-600 text-white shadow-lg transition-transform group-hover:scale-105">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tv size-6"><rect width="20" height="15" x="2" y="7" rx="2" ry="2"></rect><polyline points="17 2 12 7 7 2"></polyline></svg>
           </span>
-          Series
+          <span data-i18n="dockSeries">Series</span>
         </button>
 
         <!-- Button 4: Subir vídeos -->
-        <button onclick="triggerFileInput()" class="group flex flex-col items-center gap-2 rounded-[20px] border border-white/45 bg-white/35 py-4 text-[12px] shadow-lg shadow-blue-900/10 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.04] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl active:scale-95 cursor-pointer" title="Abrir selector de archivos para subir vídeos">
+        <button onclick="triggerFileInput()" class="group flex flex-col items-center gap-2 rounded-[20px] border border-white/45 bg-white/35 py-4 text-[12px] shadow-lg shadow-blue-900/10 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.04] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl active:scale-95 cursor-pointer" title="Abrir selector de archivos para subir vídeos" data-i18n-title="dockUploadTip">
           <span class="flex size-12 items-center justify-center rounded-[15px] bg-gradient-to-br from-cyan-400 to-blue-500 text-white shadow-lg transition-transform group-hover:scale-105">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cloud-upload size-6"><path d="M12 13v8"></path><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><path d="m8 17 4-4 4 4"></path></svg>
           </span>
-          Subir vídeos
+          <span data-i18n="dockUpload">Subir vídeos</span>
         </button>
 
         <!-- Button 5: Smart TV DLNA -->
-        <button onclick="openDlnaInfoModal()" class="group flex flex-col items-center gap-2 rounded-[20px] border border-white/45 bg-white/35 py-4 text-[12px] shadow-lg shadow-blue-900/10 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.04] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl active:scale-95 cursor-pointer" title="Instrucciones para ver en tu Samsung Smart TV">
+        <button onclick="openDlnaInfoModal()" class="group flex flex-col items-center gap-2 rounded-[20px] border border-white/45 bg-white/35 py-4 text-[12px] shadow-lg shadow-blue-900/10 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.04] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl active:scale-95 cursor-pointer" title="Instrucciones para ver en tu Samsung Smart TV" data-i18n-title="dockSmartTvTip">
           <span class="flex size-12 items-center justify-center rounded-[15px] bg-gradient-to-br from-green-400 to-emerald-600 text-white shadow-lg transition-transform group-hover:scale-105">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cast size-6"><path d="M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path><path d="M2 12a9 9 0 0 1 8 8"></path><path d="M2 16a5 5 0 0 1 4 4"></path><line x1="2" x2="2.01" y1="20" y2="20"></line></svg>
           </span>
-          Smart TV
+          <span data-i18n="dockSmartTv">Smart TV</span>
         </button>
 
         <!-- Button 6: Hardware servidor -->
-        <button onclick="openHardwareModal()" class="group flex flex-col items-center gap-2 rounded-[20px] border border-white/45 bg-white/35 py-4 text-[12px] shadow-lg shadow-blue-900/10 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.04] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl active:scale-95 cursor-pointer" title="Ver estado detallado del hardware: CPU, RAM, Batería, Red">
+        <button onclick="openHardwareModal()" class="group flex flex-col items-center gap-2 rounded-[20px] border border-white/45 bg-white/35 py-4 text-[12px] shadow-lg shadow-blue-900/10 backdrop-blur-xl transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-[1.04] hover:border-white/80 hover:bg-white/65 hover:shadow-2xl active:scale-95 cursor-pointer" title="Ver estado detallado del hardware: CPU, RAM, Batería, Red" data-i18n-title="dockHardwareTip">
           <span class="flex size-12 items-center justify-center rounded-[15px] bg-gradient-to-br from-slate-400 to-slate-600 text-white shadow-lg transition-transform group-hover:scale-105">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap size-6"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
           </span>
-          Hardware
+          <span data-i18n="dockHardware">Hardware</span>
         </button>
 
       </div>
@@ -1452,17 +1469,17 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
   </main>
 
   <!-- VISIONOS MULTIMEDIA LIBRARY & FILE MANAGER MODAL -->
-  <div id="library-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 p-3 sm:p-6 transition-all" role="dialog" aria-modal="true" aria-label="Explorador y Gestor de Biblioteca">
+  <div id="library-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 p-3 sm:p-6 transition-all" role="dialog" aria-modal="true" aria-label="Explorador y Gestor de Biblioteca" data-i18n-aria="libModalAria">
     <div class="relative flex flex-col w-full max-w-5xl h-[88vh] overflow-hidden rounded-[28px] border border-white/40 bg-white/90 dark:bg-slate-900/90 shadow-2xl shadow-blue-900/30 text-[#152039] dark:text-slate-100">
       
       <!-- Barra de título macOS -->
       <div class="mac-titlebar">
         <div class="mac-lights">
-          <button class="mac-light mac-light--close" onclick="closeLibraryModal()" aria-label="Cerrar biblioteca" title="Cerrar"></button>
+          <button class="mac-light mac-light--close" onclick="closeLibraryModal()" aria-label="Cerrar biblioteca" title="Cerrar" data-i18n-aria="closeLibAria" data-i18n-title="close"></button>
           <span class="mac-light mac-light--min" aria-hidden="true"></span>
           <span class="mac-light mac-light--max" aria-hidden="true"></span>
         </div>
-        <h2 class="mac-title">Biblioteca Multimedia Android Server</h2>
+        <h2 class="mac-title" data-i18n="libTitle">Biblioteca Multimedia Android Server</h2>
         <span id="lib-count-badge" class="hw-strong" style="flex:0 0 auto">0 vídeos</span>
       </div>
 
@@ -1470,21 +1487,21 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
       <div class="lib-toolbar flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 px-6 py-3.5">
         
         <!-- Filter tabs -->
-        <div class="lib-tablist" role="tablist" aria-label="Filtrar la biblioteca">
-          <button id="tab-filter-all" class="lib-tab is-active" aria-selected="true" role="tab" data-tip="Mostrar todo" onclick="setLibraryFilter('all')">Todos</button>
-          <button id="tab-filter-peliculas" class="lib-tab" aria-selected="false" role="tab" data-tip="Mostrar solo películas" onclick="setLibraryFilter('peliculas')">Películas</button>
-          <button id="tab-filter-series" class="lib-tab" aria-selected="false" role="tab" data-tip="Mostrar solo series" onclick="setLibraryFilter('series')">Series</button>
+        <div class="lib-tablist" role="tablist" aria-label="Filtrar la biblioteca" data-i18n-aria="libModalAria">
+          <button id="tab-filter-all" class="lib-tab is-active" aria-selected="true" role="tab" data-tip="Mostrar todo" onclick="setLibraryFilter('all')" data-i18n="libFilterAll" data-i18n-tip="libTipFilterAll">Todos</button>
+          <button id="tab-filter-peliculas" class="lib-tab" aria-selected="false" role="tab" data-tip="Mostrar solo películas" onclick="setLibraryFilter('peliculas')" data-i18n="libFilterMovies" data-i18n-tip="libTipFilterMovies">Películas</button>
+          <button id="tab-filter-series" class="lib-tab" aria-selected="false" role="tab" data-tip="Mostrar solo series" onclick="setLibraryFilter('series')" data-i18n="libFilterSeries" data-i18n-tip="libTipFilterSeries">Series</button>
         </div>
 
         <!-- Buscador y actualizar (estilo macOS) -->
         <div class="flex items-center gap-2">
           <div class="lib-search">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></svg>
-            <input id="lib-search-input" type="text" placeholder="Buscar" oninput="handleLibrarySearch(this.value)" aria-label="Buscar en la biblioteca">
+            <input id="lib-search-input" type="text" placeholder="Buscar" oninput="handleLibrarySearch(this.value)" aria-label="Buscar en la biblioteca" data-i18n-placeholder="libSearchPlaceholder" data-i18n-aria="libSearchAria">
           </div>
-          <button onclick="fetchAllMedia()" class="mac-btn" aria-label="Actualizar lista" data-tip="Actualizar lista">
+          <button onclick="fetchAllMedia()" class="mac-btn" aria-label="Actualizar lista" data-tip="Actualizar lista" data-i18n-aria="libRefreshAria" data-i18n-tip="libRefreshAria">
             <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            <span>Actualizar</span>
+            <span data-i18n="libRefresh">Actualizar</span>
           </button>
         </div>
       </div>
@@ -1496,8 +1513,8 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
 
       <!-- Pie de ventana -->
       <div class="modal-foot modal-foot--between">
-        <span id="lib-footer-info" class="hw-sub">Cargando biblioteca...</span>
-        <button onclick="closeLibraryModal()" class="mac-btn mac-btn--primary">Cerrar</button>
+        <span id="lib-footer-info" class="hw-sub" data-i18n="libFooterLoading">Cargando biblioteca...</span>
+        <button onclick="closeLibraryModal()" class="mac-btn mac-btn--primary" data-i18n="close">Cerrar</button>
       </div>
     </div>
   </div>
@@ -1512,16 +1529,16 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
       <!-- Barra de título macOS (ventana de vídeo, siempre oscura) -->
       <div class="mac-titlebar">
         <div class="mac-lights">
-          <button class="mac-light mac-light--close" onclick="closeVideoModal()" aria-label="Cerrar reproductor" title="Cerrar"></button>
+          <button class="mac-light mac-light--close" onclick="closeVideoModal()" aria-label="Cerrar reproductor" title="Cerrar" data-i18n-aria="closePlayerAria" data-i18n-title="close"></button>
           <span class="mac-light mac-light--min" aria-hidden="true"></span>
           <span class="mac-light mac-light--max" aria-hidden="true"></span>
         </div>
-        <h3 id="modal-video-title" class="mac-title">Reproductor</h3>
+        <h3 id="modal-video-title" class="mac-title" data-i18n="videoPlayerTitle">Reproductor</h3>
         <span class="mac-lights" aria-hidden="true"></span>
       </div>
       <div class="aspect-video w-full bg-black">
         <video id="html-video-player" controls preload="metadata" class="size-full">
-          Tu navegador no soporta streaming HTML5.
+          <span data-i18n="videoNotSupported">Tu navegador no soporta streaming HTML5.</span>
         </video>
       </div>
     </div>
@@ -1535,27 +1552,27 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
       <!-- Barra de título macOS -->
       <div class="mac-titlebar">
         <div class="mac-lights">
-          <button class="mac-light mac-light--close" onclick="closeDeleteModal()" aria-label="Cerrar ventana" title="Cerrar"></button>
+          <button class="mac-light mac-light--close" onclick="closeDeleteModal()" aria-label="Cerrar ventana" title="Cerrar" data-i18n-aria="closeWindow" data-i18n-title="close"></button>
           <span class="mac-light mac-light--min" aria-hidden="true"></span>
           <span class="mac-light mac-light--max" aria-hidden="true"></span>
         </div>
-        <h3 id="delete-modal-title" class="mac-title">¿Eliminar este archivo?</h3>
+        <h3 id="delete-modal-title" class="mac-title" data-i18n="deleteModalTitle">¿Eliminar este archivo?</h3>
         <span class="mac-lights" aria-hidden="true"></span>
       </div>
 
       <!-- Cuerpo -->
       <div class="modal-body">
         <div class="modal-chip">
-          <p class="modal-chip-label">Archivo</p>
+          <p class="modal-chip-label" data-i18n="fileLabel">Archivo</p>
           <p id="delete-modal-filename" class="modal-chip-value">filename.mp4</p>
         </div>
-        <p class="mt-3 text-xs" style="color: var(--hw-red)">Esta acción no se puede deshacer y liberará espacio en el Android Server.</p>
+        <p class="mt-3 text-xs" style="color: var(--hw-red)" data-i18n="deleteWarning">Esta acción no se puede deshacer y liberará espacio en el Android Server.</p>
       </div>
 
       <!-- Pie -->
       <div class="modal-foot">
-        <button onclick="closeDeleteModal()" class="mac-btn">Cancelar</button>
-        <button id="btn-confirm-delete" class="mac-btn mac-btn--danger">Eliminar</button>
+        <button onclick="closeDeleteModal()" class="mac-btn" data-i18n="cancel">Cancelar</button>
+        <button id="btn-confirm-delete" class="mac-btn mac-btn--danger" data-i18n="delete">Eliminar</button>
       </div>
     </div>
   </div>
@@ -1568,30 +1585,30 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
       <!-- Barra de título macOS -->
       <div class="mac-titlebar">
         <div class="mac-lights">
-          <button class="mac-light mac-light--close" onclick="closeDlnaInfoModal()" aria-label="Cerrar ventana" title="Cerrar"></button>
+          <button class="mac-light mac-light--close" onclick="closeDlnaInfoModal()" aria-label="Cerrar ventana" title="Cerrar" data-i18n-aria="closeWindow" data-i18n-title="close"></button>
           <span class="mac-light mac-light--min" aria-hidden="true"></span>
           <span class="mac-light mac-light--max" aria-hidden="true"></span>
         </div>
-        <h3 id="dlna-modal-title" class="mac-title">Servidor DLNA</h3>
+        <h3 id="dlna-modal-title" class="mac-title" data-i18n="dlnaModalTitle">Servidor DLNA</h3>
         <span class="mac-lights" aria-hidden="true"></span>
       </div>
 
       <!-- Cuerpo -->
       <div class="modal-body">
-        <p class="hw-sub">Tu Samsung Smart TV o cualquier reproductor en tu red WiFi detecta automáticamente el servidor multimedia.</p>
+        <p class="hw-sub" data-i18n="dlnaModalDesc">Tu Samsung Smart TV o cualquier reproductor en tu red WiFi detecta automáticamente el servidor multimedia.</p>
         <div class="modal-chip mt-3">
-          <p class="modal-chip-label">Nombre en la red</p>
+          <p class="modal-chip-label" data-i18n="networkNameLabel">Nombre en la red</p>
           <p class="modal-chip-value">Android Media Server</p>
         </div>
         <div class="modal-chip mt-2">
-          <p class="modal-chip-label">Puerto</p>
+          <p class="modal-chip-label" data-i18n="portLabel">Puerto</p>
           <p class="modal-chip-value">8200</p>
         </div>
-        <p class="hw-sub mt-3">En el mando de la Smart TV pulsa <em>Source / Fuentes</em> y selecciona <em>Android Media Server</em>.</p>
+        <p class="hw-sub mt-3" data-i18n="dlnaInstructions">En el mando de la Smart TV pulsa <em>Source / Fuentes</em> y selecciona <em>Android Media Server</em>.</p>
       </div>
 
       <div class="modal-foot">
-        <button onclick="closeDlnaInfoModal()" class="mac-btn mac-btn--primary">Entendido</button>
+        <button onclick="closeDlnaInfoModal()" class="mac-btn mac-btn--primary" data-i18n="gotIt">Entendido</button>
       </div>
     </div>
   </div>
@@ -1603,11 +1620,11 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
       <!-- Barra de título: semáforos macOS (el rojo cierra) -->
       <div class="mac-titlebar">
         <div class="mac-lights">
-          <button class="mac-light mac-light--close" onclick="closeHardwareModal()" aria-label="Cerrar" title="Cerrar"></button>
+          <button class="mac-light mac-light--close" onclick="closeHardwareModal()" aria-label="Cerrar" title="Cerrar" data-i18n-aria="close" data-i18n-title="close"></button>
           <span class="mac-light mac-light--min" aria-hidden="true"></span>
           <span class="mac-light mac-light--max" aria-hidden="true"></span>
         </div>
-        <h2 id="hardware-modal-title" class="mac-title">Android Smartphone</h2>
+        <h2 id="hardware-modal-title" class="mac-title" data-i18n="hwModalTitle">Android Smartphone</h2>
         <span class="mac-lights" aria-hidden="true"></span>
       </div>
 
@@ -1615,13 +1632,13 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
 
         <!-- Grupo: Estado general -->
         <div>
-          <p class="mac-group-title">Estado general</p>
+          <p class="mac-group-title" data-i18n="hwGroupGeneral">Estado general</p>
           <div class="hw-card">
             <div class="hw-row">
               <div class="hw-tile hw-tile--green">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="17" height="10" rx="3"/><path d="M22 11v2"/></svg>
               </div>
-              <p class="hw-label hw-txt">Batería</p>
+              <p class="hw-label hw-txt" data-i18n="hwBattery">Batería</p>
               <p id="hw-battery-pct" class="hw-value">--%</p>
             </div>
             <div class="hw-track"><div id="hw-battery-bar" class="hw-fill" style="width:0%"></div></div>
@@ -1629,28 +1646,28 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
               <div class="hw-tile hw-tile--orange">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
               </div>
-              <p class="hw-label hw-txt">Temperatura</p>
+              <p class="hw-label hw-txt" data-i18n="hwTemp">Temperatura</p>
               <p id="hw-temp" class="hw-value">--°C</p>
             </div>
             <div class="hw-row">
               <div class="hw-tile hw-tile--teal">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4.5 13H11l-1 9 8.5-11H12l1-9z"/></svg>
               </div>
-              <p class="hw-label hw-txt">Estado de carga</p>
+              <p class="hw-label hw-txt" data-i18n="hwChargeStatus">Estado de carga</p>
               <p id="hw-battery-status" class="hw-strong">--</p>
             </div>
             <div class="hw-row">
               <div class="hw-tile hw-tile--indigo">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
               </div>
-              <p class="hw-label hw-txt">Voltaje</p>
+              <p class="hw-label hw-txt" data-i18n="hwVoltage">Voltaje</p>
               <p id="hw-voltage" class="hw-strong">--</p>
             </div>
             <div class="hw-row">
               <div class="hw-tile hw-tile--purple">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg>
               </div>
-              <p class="hw-label hw-txt">Salud de la batería</p>
+              <p class="hw-label hw-txt" data-i18n="hwHealth">Salud de la batería</p>
               <p id="hw-health" class="hw-strong">--</p>
             </div>
           </div>
@@ -1658,14 +1675,14 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
 
         <!-- Grupo: Recursos -->
         <div>
-          <p class="mac-group-title">Recursos</p>
+          <p class="mac-group-title" data-i18n="hwGroupResources">Recursos</p>
           <div class="hw-grid2">
             <div class="hw-card">
               <div class="hw-row">
                 <div class="hw-tile hw-tile--blue">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="18" height="8" rx="2"/><path d="M7 10V7M12 10V7M17 10V7M7 21v-3M17 21v-3"/></svg>
                 </div>
-                <p class="hw-label hw-txt">Memoria RAM</p>
+                <p class="hw-label hw-txt" data-i18n="hwRam">Memoria RAM</p>
                 <p id="hw-ram-pct" class="hw-value">--%</p>
               </div>
               <div class="hw-track"><div id="hw-ram-bar" class="hw-fill" style="width:0%"></div></div>
@@ -1679,7 +1696,7 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
                 <div class="hw-tile hw-tile--purple">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 16h.01"/><path d="M2.212 11.577a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><path d="M21.946 12.013H2.054"/><path d="M6 16h.01"/></svg>
                 </div>
-                <p class="hw-label hw-txt">Disco</p>
+                <p class="hw-label hw-txt" data-i18n="hwDisk">Disco</p>
                 <p id="hw-storage-pct" class="hw-value">--%</p>
               </div>
               <div class="hw-track"><div id="hw-storage-bar" class="hw-fill" style="width:0%"></div></div>
@@ -1692,13 +1709,13 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
 
         <!-- Grupo: Servicios -->
         <div>
-          <p class="mac-group-title">Servicios</p>
+          <p class="mac-group-title" data-i18n="hwGroupServices">Servicios</p>
           <div class="hw-card">
             <div class="hw-row">
               <div class="hw-tile hw-tile--green">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg>
               </div>
-              <p class="hw-label hw-txt">Servidor DLNA</p>
+              <p class="hw-label hw-txt" data-i18n="hwDlna">Servidor DLNA</p>
               <span id="hw-dlna-dot" class="hw-dot"></span>
               <p id="hw-dlna-label" class="hw-value">--</p>
             </div>
@@ -1706,14 +1723,14 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
               <div class="hw-tile hw-tile--blue">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
               </div>
-              <p class="hw-label hw-txt">Tiempo activo</p>
+              <p class="hw-label hw-txt" data-i18n="hwUptime">Tiempo activo</p>
               <p id="hw-uptime" class="hw-strong">--</p>
             </div>
             <div class="hw-row">
               <div class="hw-tile hw-tile--indigo">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
               </div>
-              <p class="hw-label hw-txt">Puerto DLNA</p>
+              <p class="hw-label hw-txt" data-i18n="hwDlnaPort">Puerto DLNA</p>
               <p class="hw-strong">8200</p>
             </div>
           </div>
@@ -1723,8 +1740,8 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
 
       <!-- Pie de ventana -->
       <div class="mac-foot">
-        <p class="hw-sub">Datos en tiempo real · cada 10 s</p>
-        <button onclick="closeHardwareModal()" class="mac-btn mac-btn--primary">Cerrar</button>
+        <p class="hw-sub" data-i18n="hwFooterSub">Datos en tiempo real · cada 10 s</p>
+        <button onclick="closeHardwareModal()" class="mac-btn mac-btn--primary" data-i18n="close">Cerrar</button>
       </div>
     </div>
   </div>
@@ -1737,38 +1754,38 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
       <!-- Barra de título macOS -->
       <div class="mac-titlebar">
         <div class="mac-lights">
-          <button class="mac-light mac-light--close" onclick="closeIncompatibleModal()" aria-label="Cerrar ventana" title="Cerrar"></button>
+          <button class="mac-light mac-light--close" onclick="closeIncompatibleModal()" aria-label="Cerrar ventana" data-i18n-aria="closeWindow" title="Cerrar" data-i18n-title="close"></button>
           <span class="mac-light mac-light--min" aria-hidden="true"></span>
           <span class="mac-light mac-light--max" aria-hidden="true"></span>
         </div>
-        <h3 id="incompatible-modal-title" class="mac-title">Vídeo Incompatible</h3>
+        <h3 id="incompatible-modal-title" class="mac-title" data-i18n="incompatibleModalTitle">Vídeo Incompatible</h3>
         <span class="mac-lights" aria-hidden="true"></span>
       </div>
 
       <!-- Cuerpo -->
       <div class="modal-body">
-        <p class="hw-sub">Tu Smart TV Samsung no reproduce archivos <strong>.avi</strong> (DivX/Xvid). Conviértelo en tu Mac con un clic para verlo sin problemas.</p>
+        <p class="hw-sub" data-i18n="incompatibleModalDesc">Tu Smart TV Samsung no reproduce archivos <strong>.avi</strong> (DivX/Xvid). Conviértelo en tu Mac con un clic para verlo sin problemas.</p>
 
         <div class="modal-chip mt-3">
-          <p class="modal-chip-label">Archivo</p>
+          <p class="modal-chip-label" data-i18n="incompatibleModalFile">Archivo</p>
           <p id="incompatible-modal-filename" class="modal-chip-value">video.avi</p>
         </div>
 
         <div class="modal-chip mt-2">
-          <p class="modal-chip-label">Destino</p>
-          <p class="modal-chip-value">Formato compatible .mp4 (H.264 / AAC)</p>
+          <p class="modal-chip-label" data-i18n="incompatibleModalDest">Destino</p>
+          <p class="modal-chip-value" data-i18n="incompatibleModalDestVal">Formato compatible .mp4 (H.264 / AAC)</p>
         </div>
 
         <div id="helper-status-badge" class="mt-3 flex items-center gap-2 text-xs text-slate-500">
           <span class="size-2 rounded-full bg-slate-400 inline-block"></span>
-          <span>Comprobando asistente en tu Mac...</span>
+          <span data-i18n="helperChecking">Comprobando asistente en tu Mac...</span>
         </div>
 
         <!-- Opción manual con detalle discreto -->
         <details class="mt-3 text-xs text-slate-500 group">
           <summary class="cursor-pointer text-[11px] font-medium text-[#176fda] hover:underline flex items-center justify-between">
-            <span>Ver comando manual para terminal</span>
-            <button id="btn-copy-ffmpeg" onclick="copyIncompatibleCmd()" type="button" class="ml-2 text-[10px] px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300">Copiar</button>
+            <span data-i18n="manualCommandLabel">Ver comando manual para terminal</span>
+            <button id="btn-copy-ffmpeg" onclick="copyIncompatibleCmd()" type="button" class="ml-2 text-[10px] px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300" data-i18n="copy">Copiar</button>
           </summary>
           <pre id="incompatible-modal-cmd" class="mt-2 p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-[10px] font-mono leading-relaxed overflow-x-auto whitespace-pre-wrap break-all select-all"></pre>
           <pre id="incompatible-modal-script-cmd" class="hidden"></pre>
@@ -1777,24 +1794,548 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
 
       <!-- Pie -->
       <div class="modal-foot">
-        <button onclick="closeIncompatibleModal()" class="mac-btn">Cancelar</button>
-        <button id="btn-magic-convert" onclick="startMagicConvert()" class="mac-btn mac-btn--primary">🪄 Convertir y Subir</button>
+        <button onclick="closeIncompatibleModal()" class="mac-btn" data-i18n="cancel">Cancelar</button>
+        <button id="btn-magic-convert" onclick="startMagicConvert()" class="mac-btn mac-btn--primary" data-i18n="magicConvertBtn">🪄 Convertir y Subir</button>
       </div>
     </div>
   </div>
 
   <!-- JAVASCRIPT APPLICATION LOGIC -->
   <script>
-    // State management
+    // State management & i18n
     let allMediaItems = [];
     let activeFilter = 'all';
     let activeUploadCategory = 'peliculas';
     let fileToDelete = null;
 
+    let currentLang = (() => {
+      try {
+        const saved = localStorage.getItem('dashboard_lang');
+        if (saved === 'es' || saved === 'en') return saved;
+        return (navigator.language && navigator.language.startsWith('es')) ? 'es' : 'en';
+      } catch (e) {
+        return 'es';
+      }
+    })();
+
+    const I18N = {
+      es: {
+        navMedia: "Media Server",
+        navMovies: "Películas",
+        navSeries: "Series",
+        uploadVideosTooltip: "Subir vídeos",
+        openLibraryTooltip: "Abrir gestor de biblioteca",
+        langToggleTooltip: "Switch to English / Cambiar a inglés",
+        langAria: "Cambiar idioma (ES / EN)",
+        themeToggleTooltip: "Cambiar modo claro / oscuro",
+        heroGreetingMorning: "Buenos días.",
+        heroGreetingAfternoon: "Buenas tardes.",
+        heroGreetingEvening: "Buenas noches.",
+        heroSubtitle: "Servidor multimedia DLNA y gestión de archivos en streaming activo 24/7.",
+        heroOpenLibrary: "Abrir Gestor de Medios",
+        statMediaTitle: "ARCHIVOS MULTIMEDIA",
+        statMediaBadge: "EN VIVO",
+        statMediaSub: "Películas y series en streaming",
+        statStorageTitle: "ALMACENAMIENTO",
+        statStorageTotal: "de {total} GB ({free} GB libres)",
+        statBatteryTitle: "BATERÍA",
+        statBatteryStatusCharging: "Conectado a corriente · Batería óptima",
+        statBatteryStatusDischarging: "En uso batería · Android Server",
+        statBatteryStatusDefault: "Cargando · Estado óptimo",
+        statDlnaTitle: "SERVIDOR DLNA",
+        statDlnaSub: "Activo en red local",
+        dropzoneTitle: "Arrastra vídeos aquí o haz clic para subir",
+        dropzoneSub: "Admite MP4, MKV, AVI, MOV, WEBM. Subida simultánea ilimitada sin cortes.",
+        dropzoneBrowse: "Explorar archivos",
+        categoryLabel: "Categoría:",
+        categoryMovies: "Películas",
+        categorySeries: "Series",
+        serverHealthTitle: "ESTADO DEL SERVIDOR",
+        serverHealthStatus: "OPERATIVO 24/7",
+        serverUptime: "Activo en red local",
+        dockLibrary: "Biblioteca",
+        dockMovies: "Películas",
+        dockSeries: "Series",
+        dockUpload: "Subir",
+        dockSmartTv: "Smart TV",
+        dockHardware: "Hardware",
+        dockLibraryTip: "Ver biblioteca multimedia completa",
+        dockMoviesTip: "Filtrar por películas",
+        dockSeriesTip: "Filtrar por series",
+        dockUploadTip: "Subir nuevos archivos",
+        dockSmartTvTip: "Instrucciones de conexión Smart TV",
+        dockHardwareTip: "Monitor de hardware del smartphone",
+        libTitle: "Biblioteca Multimedia Android Server",
+        libFilterAll: "Todos",
+        libFilterMovies: "Películas",
+        libFilterSeries: "Series",
+        libTipFilterAll: "Mostrar todo",
+        libTipFilterMovies: "Mostrar solo películas",
+        libTipFilterSeries: "Mostrar solo series",
+        libSearchPlaceholder: "Buscar por título o nombre de archivo...",
+        libSearchAria: "Buscar en la biblioteca",
+        libRefreshAria: "Actualizar lista",
+        libRefresh: "Actualizar",
+        libFooterLoading: "Cargando biblioteca...",
+        videoPlayerTitle: "Reproductor de Vídeo",
+        deleteModalTitle: "Eliminar Archivo",
+        deleteModalWarning: "¿Estás seguro de que deseas eliminar este archivo del servidor? Esta acción no se puede deshacer y el vídeo dejará de estar disponible en la red local.",
+        cancel: "Cancelar",
+        confirmDelete: "Eliminar archivo",
+        dlnaModalTitle: "Conectar con tu Smart TV",
+        dlnaStep1Title: "Misma red WiFi",
+        dlnaStep1Desc: "Asegúrate de que tu Smart TV (Samsung, LG, Sony, etc.) esté conectada a la misma red WiFi que tu smartphone Android Server.",
+        dlnaStep2Title: "Abrir fuente o entradas",
+        dlnaStep2Desc: "En el mando de tu TV, pulsa el botón <strong>Source</strong> (o <strong>Home</strong> → Dispositivos conectados).",
+        dlnaStep3Title: "Seleccionar el servidor",
+        dlnaStep3Desc: "Verás aparecer un icono de servidor llamado <strong>Android Home Server</strong> o <strong>MiniDLNA</strong>. Selecciónalo para navegar por tus carpetas.",
+        dlnaTipTitle: "¿No aparece tu televisor?",
+        dlnaTipDesc: "El protocolo DLNA/UPnP se anuncia automáticamente por la red cada 60 segundos. Si acabas de encender la TV, espera unos instantes o recarga la lista de fuentes.",
+        close: "Cerrar",
+        closeWindow: "Cerrar ventana",
+        closePlayerAria: "Cerrar reproductor",
+        closeLibAria: "Cerrar biblioteca",
+        libModalAria: "Explorador y Gestor de Biblioteca",
+        hwModalTitle: "Monitor de Hardware · Smartphone Android",
+        hwBentoMetrics: "MÉTRICAS BENTO",
+        hwBatteryCard: "Batería",
+        hwBatteryStatusDefault: "Cargando (AC)",
+        hwRamCard: "Memoria RAM",
+        hwStorageCard: "Almacenamiento",
+        hwTempCard: "Temperatura SoC",
+        hwTempSub: "Batería / CPU",
+        hwAdvTelemetry: "TELEMETRÍA AVANZADA",
+        hwArchLabel: "Arquitectura CPU",
+        hwArchVal: "ARM64-v8a (8 Cores)",
+        hwOsLabel: "Sistema Operativo",
+        hwOsVal: "Android (Termux / Linux)",
+        hwVoltage: "Voltaje Batería",
+        hwHealth: "Salud Batería",
+        hwUptime: "Tiempo Activo (Uptime)",
+        hwDlnaPort: "Puerto DLNA",
+        hwFooterSub: "Datos en tiempo real · cada 10 s",
+        incompatibleModalTitle: "Vídeo Incompatible",
+        incompatibleModalDesc: "Tu Smart TV Samsung no reproduce archivos <strong>.avi</strong> (DivX/Xvid). Conviértelo en tu Mac con un clic para verlo sin problemas.",
+        incompatibleModalFile: "Archivo",
+        incompatibleModalDest: "Destino",
+        incompatibleModalDestVal: "Formato compatible .mp4 (H.264 / AAC)",
+        helperChecking: "Comprobando asistente en tu Mac...",
+        manualCommandLabel: "Ver comando manual para terminal",
+        copy: "Copiar",
+        magicConvertBtn: "🪄 Convertir y Subir",
+        loadingDate: "Cargando fecha...",
+        heroUploadBtn: "Subir archivos",
+        cardMediaTitle: "Media",
+        cardMediaSub: "Películas y Series",
+        cardStorageTitle: "Almacenamiento",
+        cardStorageSub: "de -- GB disponibles",
+        cardBatteryTitle: "Batería Android Server",
+        cardBatteryPlugged: "Cargando · Estado óptimo",
+        cardDlnaTitle: "DLNA Samsung TV",
+        cardDlnaPort: "Puerto 8200",
+        cardDlnaActive: "Activo en red local",
+        sectionAddTitle: "Añadir a tu biblioteca",
+        sectionAddSub: "Sube vídeos para verlos al instante en tu Smart TV.",
+        uploadTargetAria: "Destino de subida",
+        catMovies: "Películas",
+        catSeries: "Series",
+        dropzoneAria: "Zona de arrastre de archivos",
+        dropzoneOr: "o",
+        dropzoneFormats: "MP4, MKV, MOV, AVI · Soporta cola masiva (50+ archivos simultáneos)",
+        hwHealthTitle: "Estado del servidor",
+        hwHealthSub: "Android Server · ARM64",
+        hwBatteryLabel: "Batería / Estado",
+        hwRamLabel: "Memoria RAM",
+        videoNotSupported: "Tu navegador no soporta streaming HTML5.",
+        fileLabel: "Archivo",
+        deleteWarning: "Esta acción no se puede deshacer y liberará espacio en el Android Server.",
+        delete: "Eliminar",
+        dlnaModalDesc: "Tu Samsung Smart TV o cualquier reproductor en tu red WiFi detecta automáticamente el servidor multimedia.",
+        networkNameLabel: "Nombre en la red",
+        portLabel: "Puerto",
+        dlnaInstructions: "En el mando de la Smart TV pulsa <em>Source / Fuentes</em> y selecciona <em>Android Media Server</em>.",
+        gotIt: "Entendido",
+        hwGroupGeneral: "Estado general",
+        hwBattery: "Batería",
+        hwTemp: "Temperatura",
+        hwChargeStatus: "Estado de carga",
+        hwGroupResources: "Recursos",
+        hwRam: "Memoria RAM",
+        hwDisk: "Disco",
+        hwGroupServices: "Servicios",
+        hwDlna: "Servidor DLNA",
+        videoBadge: "Película",
+        seriesBadge: "Serie",
+        badgeVideos: "vídeo",
+        badgeVideosPlural: "vídeos",
+        badgeItems: "elementos",
+        itemSingular: "elemento",
+        onAndroidServer: "en smartphone Android Server",
+        libEmptyTitle: "No hay archivos multimedia",
+        libEmptyDesc: "No se han encontrado vídeos en esta categoría. Puedes subir nuevos archivos desde el panel principal.",
+        btnPlay: "Ver",
+        btnRename: "Renombrar",
+        btnMoveTo: "Mover a {cat}",
+        btnCopyTo: "Copiar a {cat}",
+        btnCover: "Carátula",
+        moviesCategory: "Películas",
+        seriesCategory: "Series",
+        tipPlay: "Reproducir vídeo",
+        tipRename: "Renombrar archivo",
+        tipDownload: "Descargar al dispositivo",
+        tipDelete: "Eliminar definitivamente",
+        tipRefreshCover: "Refrescar carátula oficial",
+        promptRename: "Introduce el nuevo nombre para el archivo:",
+        confirmMove: "¿Mover este vídeo a la categoría de {cat}?",
+        confirmCopy: "¿Copiar este vídeo a la categoría de {cat}?",
+        renameError: "Error renombrando: ",
+        moveError: "Error moviendo archivo: ",
+        copyError: "Error copiando archivo: ",
+        networkError: "Error de red al realizar la operación.",
+        coverSearching: "Buscando carátula oficial en segundo plano (TVMaze / IMDb)... Se actualizará en breve.",
+        coverError: "Error: ",
+        networkCoverError: "Error de red al solicitar carátula.",
+        deleteError: "Error al eliminar el archivo.",
+        networkDeleteError: "Error de red al intentar eliminar.",
+        unsupportedFormat: 'El archivo "{file}" no es un formato de vídeo admitido.\nFormatos compatibles: MP4, MKV, AVI, MOV, WEBM, M4V, TS.',
+        selectFilePrompt: "Selecciona o arrastra el archivo directamente para poder convertirlo con el botón mágico.",
+        queuePending: "En cola",
+        queueRestarting: "🔄 Reiniciando...",
+        queueStarting: "📤 Iniciando...",
+        queueCompleted: "✅ Completado",
+        queueNoResponse: "❌ Sin respuesta del servidor",
+        queueNetworkError: "❌ Fallo de red",
+        tipRestartUpload: "Reiniciar desde 0%",
+        ariaRestartUpload: "Reiniciar subida",
+        tipCancelUpload: "Cancelar subida",
+        ariaCancelUpload: "Cancelar subida",
+        helperConnected: "Mac Helper conectado",
+        helperInactive: "Mac Helper inactivo (ejecuta ./media_server/iniciar_mac_helper.sh)",
+        helperBtnTip: "Convertir automáticamente en tu Mac y subir al servidor",
+        processingOnMac: "Procesando en tu Mac...",
+        convertingFfmpeg: "Convirtiendo con ffmpeg en el Mac y subiendo al servidor...",
+        convertCompleted: "✓ ¡Completado!",
+        convertSuccessMsg: "✓ ¡Vídeo convertido y subido al servidor con éxito!",
+        convertRetry: "🪄 Reintentar Convertir",
+        convertHelperError: "Error conectando con el Mac Helper. Inícialo con: python3 media_server/mac_helper.py",
+        copied: "¡Copiado!",
+        plugAc: "⚡ Cargando (AC)",
+        plugUsb: "⚡ Cargando (USB)",
+        plugUnplugged: "🔋 Sin carga",
+        plugWireless: "⚡ Carga inalámbrica",
+        batteryStatusInUse: "En uso",
+        batteryStatusCharging: "Cargando",
+        batteryStatusCharged: "Cargada",
+        storageUsedLabel: "usados",
+        dlnaPortLabel: "Puerto 8200",
+        dlnaStartingLabel: "Iniciando...",
+        uptimeOnLocalNet: "{uptime} en red local",
+        activeOnLocalNet: "Activo en red local",
+        ramActive: "Activo"
+      },
+      en: {
+        navMedia: "Media Server",
+        navMovies: "Movies",
+        navSeries: "TV Shows",
+        uploadVideosTooltip: "Upload videos",
+        openLibraryTooltip: "Open library manager",
+        langToggleTooltip: "Cambiar a español / Switch to Spanish",
+        langAria: "Change language (ES / EN)",
+        themeToggleTooltip: "Toggle light / dark mode",
+        heroGreetingMorning: "Good morning.",
+        heroGreetingAfternoon: "Good afternoon.",
+        heroGreetingEvening: "Good evening.",
+        heroSubtitle: "24/7 active DLNA media server and streaming file manager.",
+        heroOpenLibrary: "Open Media Manager",
+        statMediaTitle: "MEDIA FILES",
+        statMediaBadge: "LIVE",
+        statMediaSub: "Streaming movies and series",
+        statStorageTitle: "STORAGE",
+        statStorageTotal: "of {total} GB ({free} GB free)",
+        statBatteryTitle: "BATTERY",
+        statBatteryStatusCharging: "Connected to power · Optimal battery",
+        statBatteryStatusDischarging: "On battery power · Android Server",
+        statBatteryStatusDefault: "Charging · Optimal status",
+        statDlnaTitle: "DLNA SERVER",
+        statDlnaSub: "Active on local network",
+        dropzoneTitle: "Drag videos here or click to upload",
+        dropzoneSub: "Supports MP4, MKV, AVI, MOV, WEBM. Unlimited concurrent uploads.",
+        dropzoneBrowse: "Browse files",
+        categoryLabel: "Category:",
+        categoryMovies: "Movies",
+        categorySeries: "TV Shows",
+        serverHealthTitle: "SERVER HEALTH",
+        serverHealthStatus: "OPERATIONAL 24/7",
+        serverUptime: "Active on local network",
+        dockLibrary: "Library",
+        dockMovies: "Movies",
+        dockSeries: "TV Shows",
+        dockUpload: "Upload",
+        dockSmartTv: "Smart TV",
+        dockHardware: "Hardware",
+        dockLibraryTip: "View full media library",
+        dockMoviesTip: "Filter by movies",
+        dockSeriesTip: "Filter by TV shows",
+        dockUploadTip: "Upload new files",
+        dockSmartTvTip: "Smart TV connection instructions",
+        dockHardwareTip: "Smartphone hardware monitor",
+        libTitle: "Android Server Media Library",
+        libFilterAll: "All",
+        libFilterMovies: "Movies",
+        libFilterSeries: "TV Shows",
+        libTipFilterAll: "Show all",
+        libTipFilterMovies: "Show movies only",
+        libTipFilterSeries: "Show TV shows only",
+        libSearchPlaceholder: "Search by title or filename...",
+        libSearchAria: "Search in library",
+        libRefreshAria: "Refresh list",
+        libRefresh: "Refresh",
+        libFooterLoading: "Loading library...",
+        videoPlayerTitle: "Video Player",
+        deleteModalTitle: "Delete File",
+        deleteModalWarning: "Are you sure you want to delete this file from the server? This action cannot be undone and the video will no longer be available on the local network.",
+        cancel: "Cancel",
+        confirmDelete: "Delete file",
+        dlnaModalTitle: "Connect to your Smart TV",
+        dlnaStep1Title: "Same Wi-Fi network",
+        dlnaStep1Desc: "Ensure your Smart TV (Samsung, LG, Sony, etc.) is connected to the same Wi-Fi network as your Android Server smartphone.",
+        dlnaStep2Title: "Open Source or Inputs",
+        dlnaStep2Desc: "On your TV remote, press the <strong>Source</strong> button (or <strong>Home</strong> → Connected devices).",
+        dlnaStep3Title: "Select the server",
+        dlnaStep3Desc: "You will see a server icon named <strong>Android Home Server</strong> or <strong>MiniDLNA</strong>. Select it to browse your folders.",
+        dlnaTipTitle: "Can't see your TV?",
+        dlnaTipDesc: "The DLNA/UPnP protocol automatically announces itself on the network every 60 seconds. If you just turned on the TV, wait a few moments or reload the source list.",
+        close: "Close",
+        closeWindow: "Close window",
+        closePlayerAria: "Close player",
+        closeLibAria: "Close library",
+        libModalAria: "Library Explorer and Manager",
+        hwModalTitle: "Hardware Monitor · Android Smartphone",
+        hwBentoMetrics: "BENTO METRICS",
+        hwBatteryCard: "Battery",
+        hwBatteryStatusDefault: "Charging (AC)",
+        hwRamCard: "RAM Memory",
+        hwStorageCard: "Storage",
+        hwTempCard: "SoC Temperature",
+        hwTempSub: "Battery / CPU",
+        hwAdvTelemetry: "ADVANCED TELEMETRY",
+        hwArchLabel: "CPU Architecture",
+        hwArchVal: "ARM64-v8a (8 Cores)",
+        hwOsLabel: "Operating System",
+        hwOsVal: "Android (Termux / Linux)",
+        hwVoltage: "Battery Voltage",
+        hwHealth: "Battery Health",
+        hwUptime: "Uptime",
+        hwDlnaPort: "DLNA Port",
+        hwFooterSub: "Real-time data · every 10s",
+        incompatibleModalTitle: "Incompatible Video",
+        incompatibleModalDesc: "Your Smart TV might not play <strong>.avi</strong> (DivX/Xvid) files. Convert it on your Mac with one click to watch seamlessly.",
+        incompatibleModalFile: "File",
+        incompatibleModalDest: "Destination",
+        incompatibleModalDestVal: "Compatible format .mp4 (H.264 / AAC)",
+        helperChecking: "Checking assistant on your Mac...",
+        manualCommandLabel: "Show manual terminal command",
+        copy: "Copy",
+        magicConvertBtn: "🪄 Convert & Upload",
+        loadingDate: "Loading date...",
+        heroUploadBtn: "Upload files",
+        cardMediaTitle: "Media",
+        cardMediaSub: "Movies & TV Shows",
+        cardStorageTitle: "Storage",
+        cardStorageSub: "of -- GB available",
+        cardBatteryTitle: "Android Server Battery",
+        cardBatteryPlugged: "Charging · Optimal status",
+        cardDlnaTitle: "Samsung TV DLNA",
+        cardDlnaPort: "Port 8200",
+        cardDlnaActive: "Active on local network",
+        sectionAddTitle: "Add to your library",
+        sectionAddSub: "Upload videos to watch them instantly on your Smart TV.",
+        uploadTargetAria: "Upload target category",
+        catMovies: "Movies",
+        catSeries: "TV Shows",
+        dropzoneAria: "File drop zone",
+        dropzoneOr: "or",
+        dropzoneFormats: "MP4, MKV, MOV, AVI · Supports bulk queue (50+ concurrent files)",
+        hwHealthTitle: "Server status",
+        hwHealthSub: "Android Server · ARM64",
+        hwBatteryLabel: "Battery / Status",
+        hwRamLabel: "RAM Memory",
+        videoNotSupported: "Your browser does not support HTML5 streaming.",
+        fileLabel: "File",
+        deleteWarning: "This action cannot be undone and will free up space on the Android Server.",
+        delete: "Delete",
+        dlnaModalDesc: "Your Samsung Smart TV or any player on your Wi-Fi network automatically detects the media server.",
+        networkNameLabel: "Network name",
+        portLabel: "Port",
+        dlnaInstructions: "On your Smart TV remote press <em>Source / Inputs</em> and select <em>Android Media Server</em>.",
+        gotIt: "Got it",
+        hwGroupGeneral: "General status",
+        hwBattery: "Battery",
+        hwTemp: "Temperature",
+        hwChargeStatus: "Charging status",
+        hwGroupResources: "Resources",
+        hwRam: "RAM Memory",
+        hwDisk: "Disk",
+        hwGroupServices: "Services",
+        hwDlna: "DLNA Server",
+        videoBadge: "Movie",
+        seriesBadge: "TV Show",
+        badgeVideos: "video",
+        badgeVideosPlural: "videos",
+        badgeItems: "items",
+        itemSingular: "item",
+        onAndroidServer: "on Android Server smartphone",
+        libEmptyTitle: "No media files found",
+        libEmptyDesc: "No videos found in this category. You can upload new files from the main panel.",
+        btnPlay: "Play",
+        btnRename: "Rename",
+        btnMoveTo: "Move to {cat}",
+        btnCopyTo: "Copy to {cat}",
+        btnCover: "Cover",
+        moviesCategory: "Movies",
+        seriesCategory: "TV Shows",
+        tipPlay: "Play video",
+        tipRename: "Rename file",
+        tipDownload: "Download to device",
+        tipDelete: "Delete permanently",
+        tipRefreshCover: "Refresh official cover",
+        promptRename: "Enter the new filename:",
+        confirmMove: "Move this video to {cat} category?",
+        confirmCopy: "Copy this video to {cat} category?",
+        renameError: "Error renaming: ",
+        moveError: "Error moving file: ",
+        copyError: "Error copying file: ",
+        networkError: "Network error during operation.",
+        coverSearching: "Searching official cover in background (TVMaze / IMDb)... It will update shortly.",
+        coverError: "Error: ",
+        networkCoverError: "Network error requesting cover.",
+        deleteError: "Error deleting file.",
+        networkDeleteError: "Network error trying to delete.",
+        unsupportedFormat: 'The file "{file}" is not a supported video format.\nSupported formats: MP4, MKV, AVI, MOV, WEBM, M4V, TS.',
+        selectFilePrompt: "Select or drag the file directly to convert it with the magic button.",
+        queuePending: "Queued",
+        queueRestarting: "🔄 Restarting...",
+        queueStarting: "📤 Starting...",
+        queueCompleted: "✅ Completed",
+        queueNoResponse: "❌ No response from server",
+        queueNetworkError: "❌ Network error",
+        tipRestartUpload: "Restart from 0%",
+        ariaRestartUpload: "Restart upload",
+        tipCancelUpload: "Cancel upload",
+        ariaCancelUpload: "Cancel upload",
+        helperConnected: "Mac Helper connected",
+        helperInactive: "Mac Helper inactive (run ./media_server/iniciar_mac_helper.sh)",
+        helperBtnTip: "Convert automatically on your Mac and upload to server",
+        processingOnMac: "Processing on your Mac...",
+        convertingFfmpeg: "Converting with ffmpeg on Mac and uploading to server...",
+        convertCompleted: "✓ Completed!",
+        convertSuccessMsg: "✓ Video converted and uploaded to server successfully!",
+        convertRetry: "🪄 Retry Conversion",
+        convertHelperError: "Error connecting to Mac Helper. Start it with: python3 media_server/mac_helper.py",
+        copied: "Copied!",
+        plugAc: "⚡ Charging (AC)",
+        plugUsb: "⚡ Charging (USB)",
+        plugUnplugged: "🔋 On battery",
+        plugWireless: "⚡ Wireless charging",
+        batteryStatusInUse: "In use",
+        batteryStatusCharging: "Charging",
+        batteryStatusCharged: "Charged",
+        storageUsedLabel: "used",
+        dlnaPortLabel: "Port 8200",
+        dlnaStartingLabel: "Starting...",
+        uptimeOnLocalNet: "{uptime} on local network",
+        activeOnLocalNet: "Active on local network",
+        ramActive: "Active"
+      }
+    };
+
+    function t(key, params = {}) {
+      const dict = I18N[currentLang] || I18N.es;
+      let str = dict[key] !== undefined ? dict[key] : (I18N.es[key] !== undefined ? I18N.es[key] : key);
+      for (const [k, v] of Object.entries(params)) {
+        str = str.replace(new RegExp(`\\{${k}\\}`, 'g'), v);
+      }
+      return str;
+    }
+
+    function applyTranslations() {
+      const dict = I18N[currentLang] || I18N.es;
+
+      // Text nodes with data-i18n
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key] !== undefined) {
+          el.innerHTML = dict[key];
+        }
+      });
+
+      // Tooltips and titles
+      document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        const key = el.getAttribute('data-i18n-title');
+        if (dict[key] !== undefined) {
+          el.setAttribute('title', dict[key]);
+        }
+      });
+
+      // Data tips (macOS custom tooltip system)
+      document.querySelectorAll('[data-i18n-tip]').forEach(el => {
+        const key = el.getAttribute('data-i18n-tip');
+        if (dict[key] !== undefined) {
+          el.setAttribute('data-tip', dict[key]);
+        }
+      });
+
+      // Accessibility aria-labels
+      document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+        const key = el.getAttribute('data-i18n-aria');
+        if (dict[key] !== undefined) {
+          el.setAttribute('aria-label', dict[key]);
+        }
+      });
+
+      // Input placeholders
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (dict[key] !== undefined) {
+          el.setAttribute('placeholder', dict[key]);
+        }
+      });
+
+      // Language toggle button label
+      const langLabel = document.getElementById('lang-label');
+      if (langLabel) {
+        langLabel.textContent = currentLang.toUpperCase();
+      }
+
+      // Root HTML lang attribute
+      document.documentElement.lang = currentLang;
+
+      // Re-trigger dynamic UI elements
+      updateDateAndGreeting();
+      if (typeof renderLibraryExplorer === 'function') {
+        renderLibraryExplorer(document.getElementById('lib-search-input')?.value || '');
+      }
+      if (window._lastSystemMetrics && typeof populateHardwareModal === 'function') {
+        populateHardwareModal(window._lastSystemMetrics);
+      }
+      if (typeof fetchSystemMetrics === 'function') {
+        fetchSystemMetrics();
+      }
+    }
+
+    function setLanguage(lang) {
+      currentLang = (lang === 'en') ? 'en' : 'es';
+      try {
+        localStorage.setItem('dashboard_lang', currentLang);
+      } catch (e) {}
+      applyTranslations();
+    }
+
+    function toggleLanguage() {
+      setLanguage(currentLang === 'es' ? 'en' : 'es');
+    }
+
     // Formato de tamaños, igual que format_bytes() del servidor.
-    // Sin esto renderLibraryExplorer lanzaba ReferenceError y el explorador de
-    // biblioteca se quedaba en blanco, y el progreso de subida nunca pasaba de
-    // "Iniciando..." porque el handler de progreso también la usa.
     function formatBytes(bytes) {
       const value = Number(bytes);
       if (!Number.isFinite(value) || value <= 0) return '0 B';
@@ -1810,15 +2351,20 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
     }
 
     // El comando `uptime` de Linux devuelve el tiempo en inglés ("16 days");
-    // se traduce para que la interfaz quede entera en español.
-    function localizarUptime(texto) {
-      return String(texto || '--')
-        .replace(/\bdays\b/g, 'días')
-        .replace(/\bday\b/g, 'día')
-        .replace(/\bhours\b/g, 'horas')
-        .replace(/\bhour\b/g, 'hora')
-        .replace(/\bmins?\b/g, 'min');
+    // se formatea según el idioma activo.
+    function formatUptime(texto) {
+      if (!texto || texto === '--') return '--';
+      if (currentLang === 'es') {
+        return String(texto)
+          .replace(/\bdays\b/g, 'días')
+          .replace(/\bday\b/g, 'día')
+          .replace(/\bhours\b/g, 'horas')
+          .replace(/\bhour\b/g, 'hora')
+          .replace(/\bmins?\b/g, 'min');
+      }
+      return String(texto);
     }
+    const localizarUptime = formatUptime;
 
     // Colores de sistema de Apple. Para RAM y disco mucho es malo; para la
     // batería es al revés, y iOS la pinta en rojo por debajo del 20%.
@@ -1858,8 +2404,9 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
     // Date & Greeting formatting
     function updateDateAndGreeting() {
       const now = new Date();
+      const locale = currentLang === 'es' ? 'es-ES' : 'en-US';
       const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      const dateStr = now.toLocaleDateString('es-ES', options);
+      const dateStr = now.toLocaleDateString(locale, options);
       const dateEl = document.getElementById('hero-date');
       if (dateEl) {
         dateEl.textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
@@ -1868,9 +2415,9 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
       const hour = now.getHours();
       const greetingEl = document.getElementById('hero-greeting');
       if (greetingEl) {
-        if (hour < 12) greetingEl.textContent = 'Buenos días.';
-        else if (hour < 20) greetingEl.textContent = 'Buenas tardes.';
-        else greetingEl.textContent = 'Buenas noches.';
+        if (hour < 12) greetingEl.textContent = t('heroGreetingMorning');
+        else if (hour < 20) greetingEl.textContent = t('heroGreetingAfternoon');
+        else greetingEl.textContent = t('heroGreetingEvening');
       }
     }
 
@@ -1907,15 +2454,15 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
         .then(r => r.json())
         .then(data => {
           if (data && data.status === 'ok') {
-            badge.innerHTML = '<span class="size-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span><span class="text-emerald-700 dark:text-emerald-400 font-medium">Mac Helper conectado</span>';
+            badge.innerHTML = `<span class="size-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span><span class="text-emerald-700 dark:text-emerald-400 font-medium">${t('helperConnected')}</span>`;
             if (btn) {
               btn.disabled = false;
-              btn.title = "Convertir automáticamente en tu Mac y subir al servidor";
+              btn.title = t('helperBtnTip');
             }
           }
         })
         .catch(() => {
-          badge.innerHTML = '<span class="size-2 rounded-full bg-amber-500 inline-block"></span><span>Mac Helper inactivo (ejecuta ./media_server/iniciar_mac_helper.sh)</span>';
+          badge.innerHTML = `<span class="size-2 rounded-full bg-amber-500 inline-block"></span><span>${t('helperInactive')}</span>`;
         });
     }
 
@@ -1948,7 +2495,7 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
 
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<span>🪄 Convertir y Subir</span>';
+        btn.innerHTML = `<span>${t('magicConvertBtn')}</span>`;
       }
 
       checkHelperStatus();
@@ -1970,16 +2517,16 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
       const badge = document.getElementById('helper-status-badge');
 
       if (!currentIncompatibleFile) {
-        alert("Selecciona o arrastra el archivo directamente para poder convertirlo con el botón mágico.");
+        alert(t('selectFilePrompt'));
         return;
       }
 
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '<svg class="size-3.5 animate-spin inline-block" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg><span>Procesando en tu Mac...</span>';
+        btn.innerHTML = `<svg class="size-3.5 animate-spin inline-block" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg><span>${t('processingOnMac')}</span>`;
       }
       if (badge) {
-        badge.innerHTML = '<span class="size-2 rounded-full bg-blue-500 inline-block animate-pulse"></span><span class="text-blue-600 font-medium">Convirtiendo con ffmpeg en el Mac y subiendo al servidor...</span>';
+        badge.innerHTML = `<span class="size-2 rounded-full bg-blue-500 inline-block animate-pulse"></span><span class="text-blue-600 font-medium">${t('convertingFfmpeg')}</span>`;
       }
 
       const servidorUploadUrl = `${window.location.origin}/api/upload`;
@@ -1999,11 +2546,11 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
       })
       .then(data => {
         if (btn) {
-          btn.innerHTML = '<span>✓ ¡Completado!</span>';
+          btn.innerHTML = `<span>${t('convertCompleted')}</span>`;
           btn.classList.add('bg-emerald-600');
         }
         if (badge) {
-          badge.innerHTML = '<span class="size-2 rounded-full bg-emerald-500 inline-block"></span><span class="text-emerald-700 dark:text-emerald-400 font-semibold">✓ ¡Vídeo convertido y subido al servidor con éxito!</span>';
+          badge.innerHTML = `<span class="size-2 rounded-full bg-emerald-500 inline-block"></span><span class="text-emerald-700 dark:text-emerald-400 font-semibold">${t('convertSuccessMsg')}</span>`;
         }
         setTimeout(() => {
           closeIncompatibleModal();
@@ -2014,10 +2561,10 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
       .catch(err => {
         if (btn) {
           btn.disabled = false;
-          btn.innerHTML = '<span>🪄 Reintentar Convertir</span>';
+          btn.innerHTML = `<span>${t('convertRetry')}</span>`;
         }
         if (badge) {
-          badge.innerHTML = '<span class="size-2 rounded-full bg-red-500 inline-block"></span><span class="text-red-600">Error conectando con el Mac Helper. Inícialo con: python3 media_server/mac_helper.py</span>';
+          badge.innerHTML = `<span class="size-2 rounded-full bg-red-500 inline-block"></span><span class="text-red-600">${t('convertHelperError')}</span>`;
         }
       });
     }
@@ -2030,7 +2577,7 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
       const showSuccess = () => {
         if (!btn) return;
         const originalHTML = btn.innerHTML;
-        btn.innerHTML = '<svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span>¡Copiado!</span>';
+        btn.innerHTML = `<svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg><span>${t('copied')}</span>`;
         btn.classList.add('bg-emerald-600');
         btn.classList.remove('bg-[#176fda]');
         setTimeout(() => {
@@ -2102,7 +2649,12 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
       // Estado batería
       const battStatus = document.getElementById('hw-battery-status');
       if (battStatus) {
-        const plugMap = { 'AC': '⚡ Cargando (AC)', 'USB': '⚡ Cargando (USB)', 'UNPLUGGED': '🔋 Sin carga', 'WIRELESS': '⚡ Carga inalámbrica' };
+        const plugMap = {
+          'AC': t('plugAc'),
+          'USB': t('plugUsb'),
+          'UNPLUGGED': t('plugUnplugged'),
+          'WIRELESS': t('plugWireless')
+        };
         const status = plugMap[battery.plugged] || battery.status || '--';
         battStatus.textContent = status;
       }
@@ -2131,7 +2683,7 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
           stBar.style.width = `${storage.percent_used}%`;
           stBar.style.setProperty('--hw-fill', colorDeNivel(storage.percent_used));
         }
-        if (stVal) stVal.textContent = `${storage.used_gb} / ${storage.total_gb} GB usados`;
+        if (stVal) stVal.textContent = `${storage.used_gb} / ${storage.total_gb} GB ${t('storageUsedLabel')}`;
       }
 
       // DLNA
@@ -2142,7 +2694,7 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
 
       // Uptime
       const uptimeEl = document.getElementById('hw-uptime');
-      if (uptimeEl) uptimeEl.textContent = localizarUptime(uptime);
+      if (uptimeEl) uptimeEl.textContent = formatUptime(uptime);
 
       // Voltaje y salud de la batería
       // (el estado de carga lo muestra ya #hw-battery-status, que traduce `plugged`)
@@ -2252,12 +2804,14 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
         return true;
       });
 
+      const countLabel = filtered.length === 1 ? t('badgeVideos') : t('badgeVideosPlural');
       const badgeEl = document.getElementById('lib-count-badge');
-      if (badgeEl) badgeEl.textContent = `${filtered.length} vídeo${filtered.length === 1 ? '' : 's'}`;
+      if (badgeEl) badgeEl.textContent = `${filtered.length} ${countLabel}`;
 
       const footerInfo = document.getElementById('lib-footer-info');
       const totalBytes = filtered.reduce((acc, it) => acc + (it.size_bytes || 0), 0);
-      if (footerInfo) footerInfo.textContent = `${filtered.length} elementos · ${formatBytes(totalBytes)} en smartphone Android Server`;
+      const itemLabel = filtered.length === 1 ? t('itemSingular') : t('badgeItems');
+      if (footerInfo) footerInfo.textContent = `${filtered.length} ${itemLabel} · ${formatBytes(totalBytes)} ${t('onAndroidServer')}`;
 
       if (filtered.length === 0) {
         container.innerHTML = `
@@ -2265,8 +2819,8 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
             <div class="flex size-16 items-center justify-center rounded-3xl bg-blue-100/60 dark:bg-white/10 text-[#176fda] mb-4">
               <svg class="size-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"/></svg>
             </div>
-            <h3 class="text-base font-bold text-[#152039] dark:text-slate-100">No hay archivos multimedia</h3>
-            <p class="mt-1 text-xs text-[#527294] dark:text-slate-400 max-w-sm">No se han encontrado vídeos en esta categoría. Puedes subir nuevos archivos desde el panel principal.</p>
+            <h3 class="text-base font-bold text-[#152039] dark:text-slate-100">${t('libEmptyTitle')}</h3>
+            <p class="mt-1 text-xs text-[#527294] dark:text-slate-400 max-w-sm">${t('libEmptyDesc')}</p>
           </div>`;
         return;
       }
@@ -2274,10 +2828,11 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
       container.innerHTML = filtered.map(item => {
         const isMovie = item.category === 'peliculas';
         const otherCat = isMovie ? 'series' : 'peliculas';
-        const otherCatLabel = isMovie ? 'Series' : 'Películas';
-        const typeLabel = isMovie ? 'Película' : 'Serie';
+        const otherCatTarget = isMovie ? t('seriesCategory') : t('moviesCategory');
+        const typeLabel = isMovie ? t('videoBadge') : t('seriesBadge');
         const typeBadgeClass = isMovie ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/60 dark:text-blue-300' : 'bg-violet-100 text-violet-700 dark:bg-violet-900/60 dark:text-violet-300';
-        const dateStr = new Date(item.mtime * 1000).toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric' });
+        const dateLocale = currentLang === 'es' ? 'es-ES' : 'en-US';
+        const dateStr = new Date(item.mtime * 1000).toLocaleDateString(dateLocale, { month: 'short', day: 'numeric', year: 'numeric' });
         const ext = item.filename.split('.').pop().toUpperCase();
 
         let coverHtml = `
@@ -2317,42 +2872,42 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
             <!-- Action buttons toolbar -->
             <div class="lib-actions">
               <button onclick="playMedia('${item.rel_path}', '${item.clean_title.replace(/'/g, "\\'")}')" 
-                      class="flex items-center gap-1 rounded-xl bg-blue-100 dark:bg-blue-900/50 px-3 py-1.5 text-xs font-semibold text-[#176fda] dark:text-blue-300 hover:bg-blue-200 transition cursor-pointer" aria-label="Reproducir vídeo" data-tip="Reproducir vídeo">
+                      class="flex items-center gap-1 rounded-xl bg-blue-100 dark:bg-blue-900/50 px-3 py-1.5 text-xs font-semibold text-[#176fda] dark:text-blue-300 hover:bg-blue-200 transition cursor-pointer" aria-label="${t('tipPlay')}" data-tip="${t('tipPlay')}">
                 <svg class="size-3.5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                <span>Ver</span>
+                <span>${t('btnPlay')}</span>
               </button>
 
               <button onclick="promptRenameMedia('${item.rel_path}', '${item.filename.replace(/'/g, "\\'")}')" 
-                      class="flex items-center gap-1 rounded-xl bg-slate-100 dark:bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-200/80 transition cursor-pointer" aria-label="Renombrar archivo" data-tip="Renombrar archivo">
+                      class="flex items-center gap-1 rounded-xl bg-slate-100 dark:bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-200/80 transition cursor-pointer" aria-label="${t('tipRename')}" data-tip="${t('tipRename')}">
                 <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                <span class="hidden sm:inline">Renombrar</span>
+                <span class="hidden sm:inline">${t('btnRename')}</span>
               </button>
 
               <button onclick="moveMedia('${item.rel_path}', '${otherCat}')" 
-                      class="flex items-center gap-1 rounded-xl bg-slate-100 dark:bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-200/80 transition cursor-pointer" aria-label="Mover a ${otherCatLabel}" data-tip="Mover a ${otherCatLabel}">
+                      class="flex items-center gap-1 rounded-xl bg-slate-100 dark:bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-200/80 transition cursor-pointer" aria-label="${t('btnMoveTo', { cat: otherCatTarget })}" data-tip="${t('btnMoveTo', { cat: otherCatTarget })}">
                 <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-                <span class="hidden sm:inline">Mover a ${otherCatLabel}</span>
+                <span class="hidden sm:inline">${t('btnMoveTo', { cat: otherCatTarget })}</span>
               </button>
 
               <button onclick="copyMedia('${item.rel_path}', '${otherCat}')" 
-                      class="flex items-center gap-1 rounded-xl bg-slate-100 dark:bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-200/80 transition cursor-pointer" aria-label="Copiar a ${otherCatLabel}" data-tip="Copiar a ${otherCatLabel}">
+                      class="flex items-center gap-1 rounded-xl bg-slate-100 dark:bg-white/10 px-2.5 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-200/80 transition cursor-pointer" aria-label="${t('btnCopyTo', { cat: otherCatTarget })}" data-tip="${t('btnCopyTo', { cat: otherCatTarget })}">
                 <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-                <span class="hidden sm:inline">Copiar</span>
+                <span class="hidden sm:inline">${t('btnCopyTo', { cat: otherCatTarget })}</span>
               </button>
 
               <button onclick="refreshCover('${item.rel_path}')" 
-                      class="flex items-center gap-1 rounded-xl bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400 hover:bg-amber-100 transition cursor-pointer" aria-label="Refrescar carátula oficial" data-tip="Refrescar carátula oficial">
+                      class="flex items-center gap-1 rounded-xl bg-amber-50 dark:bg-amber-950/40 px-2.5 py-1.5 text-xs font-semibold text-amber-600 dark:text-amber-400 hover:bg-amber-100 transition cursor-pointer" aria-label="${t('tipRefreshCover')}" data-tip="${t('tipRefreshCover')}">
                 <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                <span class="hidden sm:inline">Carátula</span>
+                <span class="hidden sm:inline">${t('btnCover')}</span>
               </button>
 
               <a href="/api/stream?path=${encodeURIComponent(item.rel_path)}" download="${item.filename}" 
-                 class="flex items-center justify-center size-8 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-200 hover:bg-slate-200/80 transition cursor-pointer" aria-label="Descargar al dispositivo" data-tip="Descargar al dispositivo">
+                 class="flex items-center justify-center size-8 rounded-xl bg-slate-100 dark:bg-white/10 text-slate-700 dark:text-slate-200 hover:bg-slate-200/80 transition cursor-pointer" aria-label="${t('tipDownload')}" data-tip="${t('tipDownload')}">
                 <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
               </a>
 
               <button onclick="promptDelete('${item.rel_path}', '${item.filename.replace(/'/g, "\\'")}')" 
-                      class="flex items-center justify-center size-8 rounded-xl bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 hover:bg-red-100 transition cursor-pointer" aria-label="Eliminar definitivamente" data-tip="Eliminar definitivamente">
+                      class="flex items-center justify-center size-8 rounded-xl bg-red-50 dark:bg-red-950/50 text-red-600 dark:text-red-400 hover:bg-red-100 transition cursor-pointer" aria-label="${t('tipDelete')}" data-tip="${t('tipDelete')}">
                 <svg class="size-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
               </button>
             </div>
@@ -2363,7 +2918,7 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
 
     // Métodos de gestión de archivos
     async function promptRenameMedia(rel_path, old_name) {
-      const new_name = prompt('Introduce el nuevo nombre para el archivo:', old_name);
+      const new_name = prompt(t('promptRename'), old_name);
       if (!new_name || new_name.trim() === '' || new_name.trim() === old_name) return;
       try {
         const res = await fetch('/api/media/rename', {
@@ -2375,16 +2930,16 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
         if (res.ok) {
           fetchAllMedia();
         } else {
-          alert('Error renombrando: ' + (data.error || 'Desconocido'));
+          alert(t('renameError') + (data.error || 'Desconocido'));
         }
       } catch (e) {
-        alert('Error de red al renombrar archivo.');
+        alert(t('networkError'));
       }
     }
 
     async function moveMedia(rel_path, destination) {
-      const label = destination === 'series' ? 'Series' : 'Películas';
-      if (!confirm(`¿Mover este vídeo a la categoría de ${label}?`)) return;
+      const label = destination === 'series' ? t('seriesCategory') : t('moviesCategory');
+      if (!confirm(t('confirmMove', { cat: label }))) return;
       try {
         const res = await fetch('/api/media/move', {
           method: 'POST',
@@ -2395,16 +2950,16 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
         if (res.ok) {
           fetchAllMedia();
         } else {
-          alert('Error moviendo archivo: ' + (data.error || 'Desconocido'));
+          alert(t('moveError') + (data.error || 'Desconocido'));
         }
       } catch (e) {
-        alert('Error de red al mover archivo.');
+        alert(t('networkError'));
       }
     }
 
     async function copyMedia(rel_path, destination) {
-      const label = destination === 'series' ? 'Series' : 'Películas';
-      if (!confirm(`¿Copiar este vídeo a la categoría de ${label}?`)) return;
+      const label = destination === 'series' ? t('seriesCategory') : t('moviesCategory');
+      if (!confirm(t('confirmCopy', { cat: label }))) return;
       try {
         const res = await fetch('/api/media/copy', {
           method: 'POST',
@@ -2415,10 +2970,10 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
         if (res.ok) {
           fetchAllMedia();
         } else {
-          alert('Error copiando archivo: ' + (data.error || 'Desconocido'));
+          alert(t('copyError') + (data.error || 'Desconocido'));
         }
       } catch (e) {
-        alert('Error de red al copiar archivo.');
+        alert(t('networkError'));
       }
     }
 
@@ -2430,20 +2985,23 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
           body: JSON.stringify({ path: rel_path })
         });
         if (res.ok) {
-          alert('Buscando carátula oficial en segundo plano (TVMaze / IMDb)... Se actualizará en breve.');
+          alert(t('coverSearching'));
           setTimeout(() => fetchAllMedia(), 3000);
         } else {
           const data = await res.json();
-          alert('Error: ' + (data.error || 'Desconocido'));
+          alert(t('coverError') + (data.error || 'Desconocido'));
         }
       } catch (e) {
-        alert('Error de red al solicitar carátula.');
+        alert(t('networkError'));
       }
     }
 
     function updateTopCounts() {
       const countEl = document.getElementById('stat-media-count');
-      if (countEl) countEl.textContent = allMediaItems.length.toLocaleString('es-ES');
+      if (countEl) {
+        const locale = currentLang === 'es' ? 'es-ES' : 'en-US';
+        countEl.textContent = allMediaItems.length.toLocaleString(locale);
+      }
     }
 
     // Real Hardware System Metrics Polling
@@ -2469,14 +3027,14 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
           if (statPct) statPct.textContent = pct;
 
           const isPlugged = b.plugged && b.plugged !== 'UNPLUGGED';
-          const statusText = isPlugged ? 'Conectado a corriente · Batería óptima' : 'En uso batería · Android Server';
+          const statusText = isPlugged ? t('statBatteryStatusCharging') : t('statBatteryStatusDischarging');
           if (statStatus) statStatus.textContent = statusText;
 
-          // Etiqueta compacta en español para no desbordar el diseño
-          let statusLabel = 'En uso';
-          if (isPlugged || b.status === 'CHARGING') statusLabel = 'Cargando';
-          else if (b.status === 'FULL') statusLabel = 'Cargada';
-          else if (b.status === 'DISCHARGING') statusLabel = 'En uso';
+          // Etiqueta compacta para no desbordar el diseño
+          let statusLabel = t('batteryStatusInUse');
+          if (isPlugged || b.status === 'CHARGING') statusLabel = t('batteryStatusCharging');
+          else if (b.status === 'FULL') statusLabel = t('batteryStatusCharged');
+          else if (b.status === 'DISCHARGING') statusLabel = t('batteryStatusInUse');
           else if (b.status) statusLabel = b.status.charAt(0).toUpperCase() + b.status.slice(1).toLowerCase();
 
           if (cardBatterySub) {
@@ -2504,7 +3062,7 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
           const usedEl = document.getElementById('stat-storage-used');
           const totalEl = document.getElementById('stat-storage-total');
           if (usedEl) usedEl.textContent = `${s.used_gb} GB`;
-          if (totalEl) totalEl.textContent = `de ${s.total_gb} GB (${s.free_gb} GB libres)`;
+          if (totalEl) totalEl.textContent = t('statStorageTotal', { total: s.total_gb, free: s.free_gb });
         }
 
         // 4. RAM
@@ -2514,7 +3072,7 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
             if (data.ram.available) {
               ramVal.innerHTML = `<span class="text-sm font-semibold">${data.ram.used_gb} / ${data.ram.total_gb} GB</span> <span class="text-xs font-normal text-[#527294] dark:text-slate-400">(${Math.round(data.ram.percent)}%)</span>`;
             } else {
-              ramVal.innerHTML = `<span class="text-sm font-semibold">3.8 / 6.0 GB</span> <span class="text-xs font-normal text-[#527294] dark:text-slate-400">(Activo)</span>`;
+              ramVal.innerHTML = `<span class="text-sm font-semibold">3.8 / 6.0 GB</span> <span class="text-xs font-normal text-[#527294] dark:text-slate-400">(${t('ramActive')})</span>`;
             }
           }
         }
@@ -2523,10 +3081,10 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
         const dlnaEl = document.getElementById('stat-dlna-status');
         const uptimeEl = document.getElementById('stat-uptime');
         if (dlnaEl) {
-          dlnaEl.textContent = data.dlna_online ? 'Puerto 8200' : 'Iniciando...';
+          dlnaEl.textContent = data.dlna_online ? t('dlnaPortLabel') : t('dlnaStartingLabel');
         }
         if (uptimeEl) {
-          uptimeEl.textContent = data.uptime ? `${localizarUptime(data.uptime)} en red local` : 'Activo en red local';
+          uptimeEl.textContent = data.uptime ? t('uptimeOnLocalNet', { uptime: formatUptime(data.uptime) }) : t('activeOnLocalNet');
         }
 
         // Animate Equalizer Bars based on dynamic activity
@@ -2609,10 +3167,10 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
           fetchAllMedia();
           fetchSystemMetrics();
         } else {
-          alert('Error al eliminar el archivo.');
+          alert(t('deleteError'));
         }
       } catch (err) {
-        alert('Error de red al intentar eliminar.');
+        alert(t('networkDeleteError'));
       }
     });
 
@@ -2641,7 +3199,7 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
           const dotIdx = file.name.lastIndexOf('.');
           const ext = dotIdx !== -1 ? file.name.substring(dotIdx).toLowerCase() : '';
           if (!validExts.includes(ext)) {
-            alert(`El archivo "${file.name}" no es un formato de vídeo admitido.\nFormatos compatibles: MP4, MKV, AVI, MOV, WEBM, M4V, TS.`);
+            alert(t('unsupportedFormat', { file: file.name }));
             return;
           }
           hasValid = true;
@@ -2677,17 +3235,17 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
             
             <!-- Controls and status badge -->
             <div class="flex items-center gap-2 shrink-0">
-              <span id="${item.id}_status" class="text-[11px] font-medium text-[#527294] dark:text-slate-400">En cola</span>
+              <span id="${item.id}_status" class="text-[11px] font-medium text-[#527294] dark:text-slate-400">${t('queuePending')}</span>
 
               <!-- Restart button -->
-              <button onclick="uploadManager.restartUpload('${item.id}')" aria-label="Reiniciar subida" 
-                      class="flex size-6 items-center justify-center rounded-full bg-slate-200/70 dark:bg-white/10 hover:bg-slate-300 dark:hover:bg-white/20 text-slate-700 dark:text-slate-200 transition cursor-pointer" title="Reiniciar desde 0%">
+              <button onclick="uploadManager.restartUpload('${item.id}')" aria-label="${t('ariaRestartUpload')}" 
+                      class="flex size-6 items-center justify-center rounded-full bg-slate-200/70 dark:bg-white/10 hover:bg-slate-300 dark:hover:bg-white/20 text-slate-700 dark:text-slate-200 transition cursor-pointer" title="${t('tipRestartUpload')}">
                 <svg class="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
               </button>
 
               <!-- Cancel button -->
-              <button onclick="uploadManager.cancelUpload('${item.id}')" aria-label="Cancelar subida" 
-                      class="flex size-6 items-center justify-center rounded-full bg-red-100 dark:bg-red-950/60 hover:bg-red-200 dark:hover:bg-red-900/80 text-red-600 transition cursor-pointer" title="Cancelar subida">
+              <button onclick="uploadManager.cancelUpload('${item.id}')" aria-label="${t('ariaCancelUpload')}" 
+                      class="flex size-6 items-center justify-center rounded-full bg-red-100 dark:bg-red-950/60 hover:bg-red-200 dark:hover:bg-red-900/80 text-red-600 transition cursor-pointer" title="${t('tipCancelUpload')}">
                 <svg class="size-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
               </button>
             </div>
@@ -2716,7 +3274,7 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
         const barEl = document.getElementById(`${id}_bar`);
         const statusEl = document.getElementById(`${id}_status`);
         if (barEl) barEl.style.width = '0%';
-        if (statusEl) statusEl.textContent = '🔄 Reiniciando...';
+        if (statusEl) statusEl.textContent = t('queueRestarting');
         this.queue.unshift(item);
         this.processNext();
       }
@@ -2772,7 +3330,7 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
           this.activeCount = Math.max(0, this.activeCount - 1);
           const statusEl = document.getElementById(`${item.id}_status`);
           const barEl = document.getElementById(`${item.id}_bar`);
-          if (statusEl) statusEl.textContent = '❌ Sin respuesta del servidor';
+          if (statusEl) statusEl.textContent = t('queueNoResponse');
           if (barEl) barEl.className = 'h-full bg-red-500';
           this.processNext();
         }, UploadQueueManager.STALL_MS);
@@ -2786,7 +3344,7 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
         const containerEl = document.getElementById(item.id);
 
         // Feedback inmediato al usuario
-        if (statusEl) statusEl.textContent = '📤 Iniciando...';
+        if (statusEl) statusEl.textContent = t('queueStarting');
 
         const uploadUrl = `/api/upload?name=${encodeURIComponent(item.file.name)}&filename=${encodeURIComponent(item.file.name)}&category=${encodeURIComponent(item.category || 'peliculas')}`;
 
@@ -2811,7 +3369,7 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
           this.activeCount = Math.max(0, this.activeCount - 1);
           if (xhr.status >= 200 && xhr.status < 300) {
             item.status = 'completed';
-            if (statusEl) statusEl.textContent = '✅ Completado';
+            if (statusEl) statusEl.textContent = t('queueCompleted');
             if (barEl) barEl.className = 'h-full bg-emerald-500';
             setTimeout(() => {
               containerEl?.remove();
@@ -2850,7 +3408,7 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
           if (item.status !== 'uploading') return;
           this.activeCount = Math.max(0, this.activeCount - 1);
           item.status = 'error';
-          if (statusEl) statusEl.textContent = '❌ Fallo de red';
+          if (statusEl) statusEl.textContent = t('queueNetworkError');
           if (barEl) barEl.className = 'h-full bg-red-500';
           this.processNext();
         };
@@ -3004,7 +3562,7 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
     window.addEventListener('DOMContentLoaded', () => {
       const isDark = document.documentElement.classList.contains('dark');
       updateThemeIcons(isDark);
-      updateDateAndGreeting();
+      setLanguage(currentLang);
       setupModalInteractions();
       setupMacTooltips();
       fetchAllMedia();
