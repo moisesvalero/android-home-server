@@ -1,8 +1,8 @@
 <div align="center">
 
 # 📱 Android Home Server
-### Convierte cualquier smartphone viejo en un servidor doméstico 24/7 con IA autónoma, streaming multimedia y automatización por crons
-### *Turn any old Android smartphone into a 24/7 home server with autonomous AI, media streaming & cron automation*
+### Convierte cualquier smartphone Android en un servidor doméstico 24/7 con IA autónoma, streaming multimedia y automatización por crons
+### *Turn any Android smartphone into a 24/7 home server with autonomous AI, media streaming & cron automation*
 
 [![Stars](https://img.shields.io/github/stars/moisesvalero/android-home-server?style=for-the-badge&logo=github&color=eab308)](https://github.com/moisesvalero/android-home-server/stargazers)
 [![Forks](https://img.shields.io/github/forks/moisesvalero/android-home-server?style=for-the-badge&logo=github&color=64748b)](https://github.com/moisesvalero/android-home-server/network/members)
@@ -33,7 +33,7 @@
 
 ### 🌟 ¿Qué es Android Home Server?
 
-**Android Home Server** es una suite completa y de código abierto para transformar un teléfono Android en desuso en un servidor doméstico continuo, seguro y de bajísimo consumo (1 a 3 vatios), sin necesidad de rootear el terminal y operando sobre **Termux**.
+**Android Home Server** es una suite completa y de código abierto para transformar un smartphone Android en un servidor doméstico continuo, seguro y de bajísimo consumo (1 a 3 vatios), sin necesidad de rootear el terminal y operando sobre **Termux**.
 
 Sustituye por completo las costosas instancias VPS en la nube y supera ampliamente a una Raspberry Pi básica, integrando en un solo dispositivo:
 
@@ -45,7 +45,7 @@ Sustituye por completo las costosas instancias VPS en la nube y supera ampliamen
 
 ---
 
-### ⚡ Comparativa: Móvil Viejo vs Raspberry Pi 4 vs VPS en la Nube
+### ⚡ Comparativa: Smartphone Android vs Raspberry Pi 4 vs VPS en la Nube
 
 | Característica | VPS Básica (AWS / GCP / Hetzner) | Raspberry Pi 4 (4 GB) | Smartphone Android (6 GB RAM) |
 | :--- | :--- | :--- | :--- |
@@ -173,7 +173,7 @@ pm2 save
 
 ### 🌟 What is Android Home Server?
 
-**Android Home Server** is a complete, open-source stack designed to repurpose any spare or old Android phone into a continuous, secure, and ultra-low-power (1 to 3 Watts) 24/7 home server using **Termux (no root required)**.
+**Android Home Server** is a complete, open-source stack designed to transform any Android smartphone into a continuous, secure, and ultra-low-power (1 to 3 Watts) 24/7 home server using **Termux (no root required)**.
 
 It replaces expensive cloud VPS instances and easily outperforms a standard Raspberry Pi by integrating into a single device:
 
@@ -185,7 +185,7 @@ It replaces expensive cloud VPS instances and easily outperforms a standard Rasp
 
 ---
 
-### ⚡ Hardware Comparison: Spare Phone vs Raspberry Pi 4 vs Cloud VPS
+### ⚡ Hardware Comparison: Android Smartphone vs Raspberry Pi 4 vs Cloud VPS
 
 | Feature | Basic Cloud VPS (AWS/GCP/Hetzner) | Raspberry Pi 4 (4 GB) | Android Smartphone (6 GB RAM) |
 | :--- | :--- | :--- | :--- |
@@ -324,7 +324,7 @@ To manage the device over Wi-Fi without cables:
 
 ## ⭐ Found this useful?
 
-If this project inspired you to give a second life to an old phone or saved you from monthly cloud VPS fees:
+If this project inspired you to turn an Android smartphone into a server or saved you from monthly cloud VPS fees:
 
 ⭐ **Please star this repository to support the project and help others discover it!** ⭐
 
