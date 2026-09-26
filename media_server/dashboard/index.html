@@ -1242,7 +1242,7 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
       <div class="mb-7 flex flex-col justify-between gap-5 text-white sm:flex-row sm:items-end">
         <div>
           <p id="hero-date" class="text-[13px] text-white/75">Cargando fecha...</p>
-          <h1 id="hero-greeting" class="mt-1 text-4xl font-semibold tracking-[-0.055em] sm:text-5xl">Buenos días, Moisés.</h1>
+          <h1 id="hero-greeting" class="mt-1 text-4xl font-semibold tracking-[-0.055em] sm:text-5xl">Buenos días.</h1>
           <p class="mt-2 text-[15px] text-white/75">Tu servidor multimedia Android Server, de un vistazo.</p>
         </div>
         <button onclick="triggerFileInput()" class="flex h-10 items-center justify-center gap-2 rounded-full bg-white/85 px-5 text-sm font-medium text-[#1763c5] shadow-lg shadow-blue-900/15 backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.03] hover:bg-white hover:shadow-xl active:scale-95 cursor-pointer">
@@ -1868,9 +1868,9 @@ html.dark #upload-queue-container::-webkit-scrollbar-thumb {
       const hour = now.getHours();
       const greetingEl = document.getElementById('hero-greeting');
       if (greetingEl) {
-        if (hour < 12) greetingEl.textContent = 'Buenos días, Moisés.';
-        else if (hour < 20) greetingEl.textContent = 'Buenas tardes, Moisés.';
-        else greetingEl.textContent = 'Buenas noches, Moisés.';
+        if (hour < 12) greetingEl.textContent = 'Buenos días.';
+        else if (hour < 20) greetingEl.textContent = 'Buenas tardes.';
+        else greetingEl.textContent = 'Buenas noches.';
       }
     }
 
